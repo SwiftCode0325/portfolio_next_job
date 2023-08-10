@@ -1,5 +1,22 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 
+export function getUserId() {
+    const auth = localStorage.getItem("auth")
+    if(auth) {
+        return JSON.parse(auth)["userId"]
+    }
+    return null
+}
+
+export function getTokenFromLocalStorage() {
+    const auth = localStorage.getItem("auth")
+    if (auth) {
+        return JSON.parse(auth)["token"]
+    }
+    return null
+}
+
+// login function //
 export async function authenticateUser(username, password) {
     const resp = await fetch(
         PUBLIC_BACKEND_BASE_URL + 'api/collections/users/auth-with-password',
