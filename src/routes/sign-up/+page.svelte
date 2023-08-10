@@ -119,12 +119,12 @@ let formErrors = {};
         </div>
 
         <!-- Form div -->
+        <!-- Outer div -->
         <div class="flex items-center justify-center w-7/12 ">
-            <div class="flex flex-col w-9/12 h-full items-center justify-center">
-
-                <div class="slide-down transition">
-                    <div class="flex flex-col items-center justify-center w-96">
-                        <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-5 dark:bg-gray-800 dark:border-gray-700">
+            <!-- Inner div -->
+            <div class="flex w-9/12 h-full items-center justify-center ml-10 slide-down">
+                  <!-- Form section -->
+                  <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-5 dark:bg-gray-800 dark:border-gray-700">
                         <form class="space-y-3" on:submit={createUser}>
                             <div class="flex">
                                 <div class="tooltip tooltip-top pr-2" data-tip="Home">
@@ -273,9 +273,7 @@ let formErrors = {};
                                 Registered? <a href="/log-in" class="text-pink-600 hover:underline dark:text-blue-500">Log in HERE</a>
                             </div>
                         </form>
-                        </div>
                     </div>
-                </div>
-            </div>
+              </div>
         </div>
 </div>
