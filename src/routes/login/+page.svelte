@@ -64,22 +64,6 @@
 .slide-down {
   animation: slideDown 2s ease forwards;
 }
-
-  @keyframes slideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(100%);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-  }
-
-  .slide-up {
-    animation: slideUp ease forwards;
-  }
-
 </style>
 
 <div class="flex h-screen w-screen">
