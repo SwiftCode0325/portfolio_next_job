@@ -10,6 +10,7 @@
 	let currentPosition = writable(0);
 	let showModal = writable(false);
     let isLoading = writable(false);
+	let formErrors = {};
 
 	onMount(() => {
 		// Initialize the Carousel once the component is mounted
@@ -33,6 +34,10 @@
 			{
 				position: 4,
 				el: document.getElementById('carousel-item-5')
+			},
+			{
+				position: 5,
+				el: document.getElementById('carousel-item-6')
 			}
 		];
 		const options = {
@@ -62,6 +67,10 @@
 					{
 						position: 4,
 						el: document.getElementById('carousel-indicator-5')
+					},
+					{
+						position: 5,
+						el: document.getElementById('carousel-indicator-6')
 					}
 				]
 			},
@@ -110,8 +119,13 @@
             requirements: evt.target['requirements'].value,
             applicationInstructions: evt.target['application-instructions'].value,
             employer: evt.target['company-name'].value,
-            location: evt.target['job-location'].value
+            location: evt.target['job-location'].value, 
+			job_type: [evt.target['list-checklist-full'].checked ? "Full Time" : "",
+			evt.target['list-checklist-part'].checked ? "Part Time" : "",
+			evt.target['list-checklist-remote'].checked ? "Remote" : ""]
             };  
+
+			console.log(JobsData)
 
             const resp = await fetch(PUBLIC_BACKEND_BASE_URL + 'api/collections/jobs/records', {
             method: 'POST',
@@ -147,7 +161,7 @@
 	</div>
 
 	<!-- Image div -->
-	<div class="w-6/12 border h-full">
+	<div class="w-6/12 h-full">
 		<img src="/background-img2.png" alt="" class="w-full h-full object-cover" />
 	</div>
 
@@ -155,11 +169,11 @@
 	<div class="flex items-center justify-center w-7/12">
 		<div class="flex flex-col w-9/12 h-full pt-2 items-center justify-center">
 			<div class="slide-down transition">
-				<form>
+				<form on:submit={createJob}>
 					<div class="space-y-12">
 						<div class="pb-12">
 							<div class="flex">
-								<div class="tooltip tooltip-top pr-2" data-tip="Home">
+								<div class="tooltip tooltip-left pr-2" data-tip="Home">
 									<a href="/Home">
 										<svg
 											version="1.1"
@@ -434,6 +448,44 @@
 												</div>
 											</div>
 										</div>
+
+										<!-- item 6 -->
+										<div id="carousel-item-6" class="carousel-item hidden" data-carousel-item>
+											<div
+												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+											>
+												<div
+													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80 flex items-center"
+												>
+												    <!-- job type -->
+													<div class="sm:col-span-6 p-1 flex flex-col items-center justify-center mb-8">
+
+<h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Job Type</h3>
+<ul class="w-48 ml-1 text-sm font-medium text-gray-900 bg-white rounded-lg  dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <li class="rounded-t-lg border-b border-gray-200 dark:border-gray-600">
+        <div class="flex items-center pl-3">
+            <input id="list-checklist-full" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
+            <label for="list-checklist-full" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Full Time</label>
+        </div>
+    </li>
+    <li class="rounded-t-lg border-b border-gray-200 dark:border-gray-600">
+        <div class="flex items-center pl-3">
+            <input id="list-checklist-part" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
+            <label for="list-checklist-part" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Part Time</label>
+        </div>
+    </li>
+    <li class="rounded-t-lg dark:border-gray-600">
+        <div class="flex items-center pl-3">
+            <input id="list-checklist-remote" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
+            <label for="list-checklist-remote" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remote</label>
+        </div>
+    </li>
+</ul>
+
+													</div>
+												</div>
+											</div>
+										</div>
 									</div>
 
 									<!-- Slider indicators -->
@@ -443,12 +495,13 @@
 										<button id="carousel-indicator-3" type="button" class="w-3 h-3 rounded-full" />
 										<button id="carousel-indicator-4" type="button" class="w-3 h-3 rounded-full" />
 										<button id="carousel-indicator-5" type="button" class="w-3 h-3 rounded-full" />
+										<button id="carousel-indicator-6" type="button" class="w-3 h-3 rounded-full" />
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</form>
+				
 
 				<div class="flex items-center justify-center p-2">
 					<div class="flex justify-center space-x-4 p-2 w-56">
@@ -478,7 +531,7 @@
 							</button>
 						{/if}
 
-						{#if $currentPosition >= 0 && $currentPosition < 4}
+						{#if $currentPosition >= 0 && $currentPosition < 5}
 							<!-- Next Button -->
 							<button
 								on:click={nextSlide}
@@ -504,7 +557,7 @@
 							</button>
 						{/if}
 
-						{#if $currentPosition == 4}
+						{#if $currentPosition == 5}
 							<!-- cancel -->
 							<button
 								on:click={popUpModal}
@@ -610,8 +663,7 @@
 
 							<!-- save -->
 							<button
-                                on:click={createJob}
-								type="button"
+								type="submit"
 								class="slide-up bounce text-white bg-green-400 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 							>
@@ -642,6 +694,7 @@
 						{/if}
 					</div>
 				</div>
+				</form>
 			</div>
 		</div>
 	</div>
