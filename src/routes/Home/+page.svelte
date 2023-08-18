@@ -1,5 +1,8 @@
 <script>
   import { writable } from "svelte/store";
+  import humanize from 'humanize-plus';
+
+  export let data;
   const show_menu = writable(false);
   const show_menu1 = writable(false);
   function openDropDownMenu() {
@@ -33,7 +36,7 @@
     <!-- Left-hand side content -->
   <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full p-2 group">
       <span class="self-center text-3xl whitespace-nowrap text-gray-200 dark:text-white font-extrabold group-hover:text-black">NEXT JOB</span>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="40px" height="40px" viewBox="0 0 511.626 511.627" style="enable-background:new 0 0 511.626 511.627;"
 	 xml:space="preserve" class="fill-gray-200 dark:text-white ml-1 group-hover:fill-black">
@@ -111,21 +114,6 @@
   <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down">
 	<h1>Find Your Dream Job Here</h1>
   </div>
-
-
-<form class="absolute inset-y-0 left-1/2 transform -translate-x-1/2 top-72 w-3/5">   
-    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-    <div class="relative">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-            </svg>
-        </div>
-        <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Jobs..." required>
-        <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
-    </div>
-</form>
-
 </nav>
 
 <div class="flex p-2 m-2 space-x-5">
@@ -177,7 +165,7 @@
 <div class="flex flex-col">
 <!-- Job Type Selection -->
 <button
-  id="dropdownCheckboxButton"
+  id="dropdownDefaultCheckbox"
   data-dropdown-toggle="dropdownDefaultCheckbox"
   class="text-black bg-white focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
   type="button"
@@ -220,7 +208,6 @@
   <!-- Dropdown menu -->
 {#if $show_menu == true}
   <div
-    id="dropdownDefaultCheckbox"
     class="slide-down mt-2 ml-2 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
 >
     <ul
@@ -309,12 +296,12 @@
         </div>
       </li>
     </ul>
-  </div>
+  </div> 
 {/if}
 
 <!-- Salary indicator -->
 <button
-  id="dropdownCheckboxButton"
+  id="dropdownDefaultCheckbox"
   data-dropdown-toggle="dropdownDefaultCheckbox"
   class="text-black bg-white focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
   type="button"
@@ -360,34 +347,43 @@ cursor-pointer dark:bg-gray-700">
 </div>
 
 <!-- Job Listing -->
-<ul role="list" class="divide-y divide-gray-100 ml-28 w-full pr-20">
-  <li class="flex justify-between gap-x-6 py-5 ">
+<ul class="w-full divide-y divide-gray-200 dark:divide-gray-700 ml-10">
+  {#each data.jobs as job}
+  <li class="p-3 sm:pb-4 hover:bg-gray-100 flex justify-between">
     <div class="flex gap-x-4">
-      <img class="h-12 w-12 flex-none rounded-full bg-gray-50" src="netflix-logo.jpg" alt="netflix-logo">
-      <div class="min-w-0 flex-auto">
-        <p class="text-sm font-semibold leading-6 text-gray-900">UX Researcher</p>
-        <p class="mt-1 truncate text-xs leading-5 text-gray-500">Netflix</p>
+      <img class="h-12 w-12 flex-none rounded-full" src="netflix-logo.jpg" alt="netflix-logo">
+      <div class="w-42 flex-auto">
+        <p class="text-sm font-semibold leading-6 text-gray-900 w-36 capitalize">{job.title}</p>
+        <p class="mt-1 truncate text-xs leading-5 text-gray-500 capitalize">{job.employer}</p>
+        <p class="mt-1 truncate text-xs leading-5 text-gray-500">USD {humanize.formatNumber(job.minAnnualCompensation)} - USD {humanize.formatNumber(job.maxAnnualCompensation)}</p>
       </div>
 
-    <div class="flex justify-center ml-20">
-        <div class="border bg-gradient-to-br from-pink-500 to-orange-400 text-gray-200 round rounded-xl p-4 h-10 flex items-center justify-center mt-1.5 ml-2">
-          full time
+    <div class="flex items-center ml-16">
+        {#if job.job_type.includes('Full Time')}
+        <div class="border bg-gradient-to-br from-pink-500 to-orange-400 text-white round rounded-xl p-4 h-10 flex items-center justify-center mt-1.5 ml-2">
+          Full Time
         </div>
+        {/if}
 
-        <div class="border bg-gradient-to-br from-pink-500 to-orange-400 text-gray-200 round rounded-xl p-4 h-10 flex items-center justify-center mt-1.5 ml-2">
-          Senior Level
+        {#if job.job_type.includes('Part Time')}
+        <div class="border bg-gradient-to-br from-pink-500 to-orange-400 text-white round rounded-xl p-4 h-10 flex items-center justify-center mt-1.5 ml-2">
+          Part Time
         </div>
+        {/if}
 
-        <div class="border bg-gradient-to-br from-pink-500 to-orange-400 text-gray-200 round rounded-xl p-4 h-10 flex items-center justify-center mt-1.5 ml-2">
+        {#if job.job_type.includes('Remote')}
+        <div class="border bg-gradient-to-br from-pink-500 to-orange-400 text-white round rounded-xl p-4 h-10 flex items-center justify-center mt-1.5 ml-2">
           Remote
         </div>
+        {/if}
     </div>
     </div>
-    <div class="hidden sm:flex sm:flex-col sm:items-end">
-      <p class="text-sm leading-6 text-gray-900">California, CA</p>
-      <p class="mt-1 text-xs leading-5 text-gray-500">Created At 24/07/2023</p>
+    <div class="hidden sm:flex sm:flex-col sm:items-end flex flex-col justify-center">
+      <p class="text-sm leading-6 text-gray-900 capitalize">{job.location}</p>
+      <p class="mt-1 text-xs leading-5 text-gray-500">Created At {new Date(job.created).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
     </div>
   </li>
+  {/each}
 </ul>
 
 </div>
