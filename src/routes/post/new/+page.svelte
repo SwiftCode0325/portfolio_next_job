@@ -5,12 +5,15 @@
 	import { goto } from '$app/navigation';
     import { getUserId } from '../../../util/auth.js'
     import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
+	import { uploadMedia } from '../../../util/s3-uploader.js'
 
 	let carousel = 0;
 	let currentPosition = writable(0);
 	let showModal = writable(false);
     let isLoading = writable(false);
 	let formErrors = {};
+	let selectedFile = "No File Chosen";
+	let isUpload = writable(false);
 
 	onMount(() => {
 		// Initialize the Carousel once the component is mounted
@@ -34,10 +37,6 @@
 			{
 				position: 4,
 				el: document.getElementById('carousel-item-5')
-			},
-			{
-				position: 5,
-				el: document.getElementById('carousel-item-6')
 			}
 		];
 		const options = {
@@ -67,10 +66,6 @@
 					{
 						position: 4,
 						el: document.getElementById('carousel-indicator-5')
-					},
-					{
-						position: 5,
-						el: document.getElementById('carousel-indicator-6')
 					}
 				]
 			},
@@ -86,9 +81,7 @@
 	function nextSlide() {
 		carousel.next();
 	}
-	function saveData() {
-		goto('/Home');
-	}
+	
 	// show up modal function //
 	function popUpModal() {
 		showModal.set(true);
@@ -101,6 +94,22 @@
 		goto('/Home');
 	}
 
+	//change the default message to selected image file name in choose file button//
+    function handleFileInputChange(event) {
+    /*assigns the selected file to the file variable. 
+    If no file is selected, it will be undefined / show no file chosen message.*/
+    	const file = event.target.files[0];
+
+		if(selectedFile = file){
+			selectedFile = file.name
+			isUpload.set(true);
+		}else {
+			selectedFile = 'No File Chosen'
+			isUpload.set(false);
+		}
+	}
+	isUpload.set(false);
+
     // post job into database //
     async function createJob(evt){
         //prevent page go to the top when the button is clicked//
@@ -109,6 +118,9 @@
         isLoading.set(true);
 
         const userID = await getUserId();
+
+		//Target id = fileInput, catch the first file//
+    	const [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
 
         const JobsData = {
             user: userID,
@@ -122,10 +134,9 @@
             location: evt.target['job-location'].value, 
 			job_type: [evt.target['list-checklist-full'].checked ? "Full Time" : "",
 			evt.target['list-checklist-part'].checked ? "Part Time" : "",
-			evt.target['list-checklist-remote'].checked ? "Remote" : ""]
+			evt.target['list-checklist-remote'].checked ? "Remote" : ""],
+			image_url : fileUrl
             };  
-
-			console.log(JobsData)
 
             const resp = await fetch(PUBLIC_BACKEND_BASE_URL + 'api/collections/jobs/records', {
             method: 'POST',
@@ -150,6 +161,7 @@
 
 <svelte:head>
 	<title>Create New Jobs | Next Jobs</title>
+	<script src="/aws-sdk-s3.min.js"></script>
 </svelte:head>
 
 <div class="flex h-screen w-screen">
@@ -167,11 +179,11 @@
 
 	<!-- Carousel div -->
 	<div class="flex items-center justify-center w-7/12">
-		<div class="flex flex-col w-9/12 h-full pt-2 items-center justify-center">
+		<div class="flex flex-col w-9/12 h-full items-center justify-center">
 			<div class="slide-down transition">
 				<form on:submit={createJob}>
 					<div class="space-y-12">
-						<div class="pb-12">
+						<div class="pb-4">
 							<div class="flex">
 								<div class="tooltip tooltip-left pr-2" data-tip="Home">
 									<a href="/Home">
@@ -235,7 +247,7 @@
 							<div class="flex flex-col items-center justify-center">
 								<div id="indicators-carousel" class="relative w-full mt-2" data-carousel="static">
 									<!-- Carousel wrapper -->
-									<div class="relative h-56 overflow-hidden rounded-lg md:h-80">
+									<div class="relative h-56 overflow-hidden rounded-lg md:h-96">
 										<!-- Item 1 -->
 										<div
 											id="carousel-item-1"
@@ -249,7 +261,7 @@
 													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80"
 												>
 													<!-- Job Title section -->
-													<div class="sm:col-span-6 mt-8">
+													<div class="sm:col-span-6">
 														<label
 															for="job-title"
 															class="block text-sm font-medium leading-6 text-gray-900 p-1"
@@ -266,7 +278,31 @@
 															/>
 														</div>
 
-														<div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+																										    <!-- job type -->
+													
+<div class="mt-2 py-4"> 
+<h3 class="font-semibold text-gray-900 dark:text-white">Job Type : </h3>
+<ul class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg  dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+    <li class="rounded-t-lg dark:border-gray-600">
+        <div class="flex items-center mt-1 py-3">
+
+			<!-- full time selection -->
+            <input id="list-checklist-full" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
+            <label for="list-checklist-full" class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Full Time</label>
+			
+			<!-- part time selection -->
+			<input id="list-checklist-part" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
+            <label for="list-checklist-part" class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Part Time</label>
+		
+			<!-- remote selection -->
+			<input id="list-checklist-remote" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
+            <label for="list-checklist-remote" class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remote</label>
+		</div>
+    </li>
+</ul>
+</div>
+
+														<div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 															<!-- Min Annual Compensation section -->
 															<div class="sm:col-span-3">
 																<label
@@ -319,7 +355,7 @@
 													class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 overflow-y-auto h-80 mb-4"
 												>
 													<!-- Company Name section -->
-													<div class="sm:col-span-6 mt-8">
+													<div class="sm:col-span-6">
 														<label
 															for="company-name"
 															class="block text-sm font-medium leading-6 text-gray-900"
@@ -337,8 +373,36 @@
 														</div>
 													</div>
 
+													<!-- Company Logo Image -->
+													<div class="sm:col-span-6 col-span-full p-2">												
+          <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">Upload Company Logo Image</label>
+          <div class="mt-2 flex items-center gap-x-3">
+            
+			{#if $isUpload}
+              <div class="rounded-full w-8 h-8">
+				<img src="/{selectedFile}" class="w-8 h-8 object-cover rounded-full" alt=""/>
+			  </div>
+			{:else}
+			<div class="border p-3 rounded-full bg-gray-200">
+				<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                	<path d="M17 16h-1V2a1 1 0 1 0 0-2H2a1 1 0 0 0 0 2v14H1a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM5 4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4Zm0 5V8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Zm6 7H7v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3Zm2-7a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1Zm0-4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1Z"/>
+              	</svg>
+			</div>
+			{/if}
+            
+            <label for="file-upload" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              <input type="file" name="file-upload" class="sr-only" id="file-upload"
+              on:change={handleFileInputChange}
+              accept=".jpg, .jpeg, .png"/>
+              <span>Change Image</span>
+            </label>
+            <label for="fileInput" class="text-gray-500 h-4 flex items-center">{selectedFile}</label>
+          </div>
+          <p class="mt-2 text-xs">*Only accept, jpg, jpeg, png image that size 32px / 2rem</p>
+													</div>
+
 													<!-- Job Location section -->
-													<div class="sm:col-span-6 mb-8">
+													<div class="sm:col-span-6 mb-2">
 														<label
 															for="job-location"
 															class="block text-sm font-medium leading-6 text-gray-900"
@@ -448,44 +512,6 @@
 												</div>
 											</div>
 										</div>
-
-										<!-- item 6 -->
-										<div id="carousel-item-6" class="carousel-item hidden" data-carousel-item>
-											<div
-												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
-											>
-												<div
-													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80 flex items-center"
-												>
-												    <!-- job type -->
-													<div class="sm:col-span-6 p-1 flex flex-col items-center justify-center mb-8">
-
-<h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Job Type</h3>
-<ul class="w-48 ml-1 text-sm font-medium text-gray-900 bg-white rounded-lg  dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-    <li class="rounded-t-lg border-b border-gray-200 dark:border-gray-600">
-        <div class="flex items-center pl-3">
-            <input id="list-checklist-full" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
-            <label for="list-checklist-full" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Full Time</label>
-        </div>
-    </li>
-    <li class="rounded-t-lg border-b border-gray-200 dark:border-gray-600">
-        <div class="flex items-center pl-3">
-            <input id="list-checklist-part" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
-            <label for="list-checklist-part" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Part Time</label>
-        </div>
-    </li>
-    <li class="rounded-t-lg dark:border-gray-600">
-        <div class="flex items-center pl-3">
-            <input id="list-checklist-remote" type="checkbox" value="" name="list-checklist" class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500">
-            <label for="list-checklist-remote" class="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remote</label>
-        </div>
-    </li>
-</ul>
-
-													</div>
-												</div>
-											</div>
-										</div>
 									</div>
 
 									<!-- Slider indicators -->
@@ -495,7 +521,6 @@
 										<button id="carousel-indicator-3" type="button" class="w-3 h-3 rounded-full" />
 										<button id="carousel-indicator-4" type="button" class="w-3 h-3 rounded-full" />
 										<button id="carousel-indicator-5" type="button" class="w-3 h-3 rounded-full" />
-										<button id="carousel-indicator-6" type="button" class="w-3 h-3 rounded-full" />
 									</div>
 								</div>
 							</div>
@@ -531,7 +556,7 @@
 							</button>
 						{/if}
 
-						{#if $currentPosition >= 0 && $currentPosition < 5}
+						{#if $currentPosition >= 0 && $currentPosition < 4}
 							<!-- Next Button -->
 							<button
 								on:click={nextSlide}
@@ -557,7 +582,7 @@
 							</button>
 						{/if}
 
-						{#if $currentPosition == 5}
+						{#if $currentPosition == 4}
 							<!-- cancel -->
 							<button
 								on:click={popUpModal}
