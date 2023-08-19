@@ -351,7 +351,11 @@ cursor-pointer dark:bg-gray-700">
   {#each data.jobs as job}
   <li class="p-3 sm:pb-4 hover:bg-gray-100 flex justify-between">
     <div class="flex gap-x-4">
-      <img class="h-12 w-12 flex-none rounded-full" src="netflix-logo.jpg" alt="netflix-logo">
+      {#if job.image_url}
+      <img class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="netflix-logo">
+      {:else}
+      <img class="h-12 w-12 flex-none rounded-full" src="question-mark.png" alt="netflix-logo">
+      {/if}
       <div class="w-42 flex-auto">
         <p class="text-sm font-semibold leading-6 text-gray-900 w-36 capitalize">{job.title}</p>
         <p class="mt-1 truncate text-xs leading-5 text-gray-500 capitalize">{job.employer}</p>
@@ -387,3 +391,33 @@ cursor-pointer dark:bg-gray-700">
 </ul>
 
 </div>
+
+<div class="flex justify-center border-gray-200 bg-white px-4 py-3 sm:px-6 mt-5">
+  <div class="sm:flex sm:items-center sm:justify-between w-full flex justify-between">
+
+        <a href="#" class="inline-flex items-center rounded-l-md px-2 text-gray-400 focus:z-20 focus:outline-offset-0 hover:text-pink-600">
+          <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+          </svg>
+          <span class="mb-0.5 px-2">Previous</span>
+        </a>
+
+      <nav class="inline-flex -space-x-px" aria-label="Pagination">
+        <a href="#" class="relative items-center text-gray-400 px-5 py-4 text-sm font-semibold hover:text-orange-400 hover:underline hover:border-orange-400 focus:text-pink-600 focus:underline focus:border-pink-600">1</a>
+      </nav>
+
+      <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 focus:z-20 focus:outline-offset-0 hover:text-pink-600">
+          <span class="mb-0.5 px-2">Next</span>
+          <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+          </svg>
+      </a>
+    </div>
+</div>
+
+<footer>
+  <div class="bg-gradient-to-br from-pink-500 to-orange-400 w-full h-16 flex items-center text-gray-300 fill-gray-300">
+    <svg xmlns="http://www.w3.org/2000/svg" class="p-2 w-12 h-12" stroke="current" viewBox="0 0 24 24" id="copyright"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91c.48.22 1.05.34 1.7.34.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+    <span class="font-bold uppercase">next job</span>
+  </div>
+</footer>
