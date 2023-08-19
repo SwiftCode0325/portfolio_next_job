@@ -167,6 +167,12 @@
 <div class="flex h-screen w-screen">
 	<!-- Post Job Section -->
 	<div class="absolute text-gray-200 m-2 top-40 left-14 text-5xl font-bold slideRight">
+		<div class="flex">
+			<a href="/Home" class="text-lg mb-3 hover:underline">Home</a>
+			<svg class="w-4 h-4 text-gray-200 ml-2 mt-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+    			<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+  			</svg>
+		</div>
 		<h1>Post Job</h1>
 		<br />
 		<h1 class="absolute text-gray-200 left-16 text-5xl font-bold">Section</h1>
@@ -182,11 +188,9 @@
 		<div class="flex flex-col w-9/12 h-full items-center justify-center">
 			<div class="slide-down transition">
 				<form on:submit={createJob}>
-					<div class="space-y-12">
-						<div class="pb-4">
+					<div class="space-y-10">
+						<div class="pb-2">
 							<div class="flex">
-								<div class="tooltip tooltip-left pr-2" data-tip="Home">
-									<a href="/Home">
 										<svg
 											version="1.1"
 											id="Capa_1"
@@ -194,12 +198,12 @@
 											xmlns:xlink="http://www.w3.org/1999/xlink"
 											x="0px"
 											y="0px"
-											width="40px"
-											height="40px"
+											width="50px"
+											height="50px"
 											viewBox="0 0 511.626 511.627"
 											style="enable-background:new 0 0 511.626 511.627;"
 											xml:space="preserve"
-											class="fill-gray-200 dark:text-white group-hover:fill-black"
+											class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
 										>
 											<g>
 												<g>
@@ -234,8 +238,7 @@
 											<g />
 											<g />
 										</svg>
-									</a>
-								</div>
+									
 								<h2 class="text-base font-semibold leading-7 text-gray-900 flex items-center">
 									Job Details
 								</h2>
@@ -273,7 +276,7 @@
 																name="job-title"
 																id="job-title"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 capitalize"
 																placeholder="Software Engineer"
 															/>
 														</div>

@@ -69,6 +69,12 @@
 <div class="flex h-screen w-screen">
     <!-- Log In Section -->
     <div class="absolute text-gray-200 m-2 top-40 left-80 text-5xl font-bold slideRight">
+        <div class="flex">
+			      <a href="/Home" class="text-lg mb-3 hover:underline">Home</a>
+			        <svg class="w-4 h-4 text-gray-200 ml-2 mt-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+    			        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+  			      </svg>
+		    </div>
         <h1>Log In</h1>
     </div>
 
@@ -99,15 +105,13 @@
             </div>
             {/if}
 
-            <div class="flex justify-center w-9/12 ml-10 mb-5">
+            <div class="flex justify-center w-9/12 ml-10 mb-5 slide-down">
                   <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
                     <form class="space-y-6" on:submit={signIn}>
                       <div class="flex">
-                        <div class="tooltip tooltip-top pr-2" data-tip="Home">
-                          <a href="/Home">
                           <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	                        width="40px" height="40px" viewBox="0 0 511.626 511.627" style="enable-background:new 0 0 511.626 511.627;"
-	                        xml:space="preserve" class="fill-gray-200 dark:text-white group-hover:fill-black">
+	                        width="50px" height="50px" viewBox="0 0 511.626 511.627" style="enable-background:new 0 0 511.626 511.627;"
+	                        xml:space="preserve" class="fill-gray-200 dark:text-white group-hover:fill-black p-2">
                           <g>
 	                        <g>
 		                      <path d="M319.77,338.039c0,4.949-1.811,9.236-5.424,12.847c-3.617,3.621-7.902,5.428-12.851,5.428h-91.361
@@ -152,8 +156,6 @@
                           <g>
                           </g>
                           </svg>
-                          </a>
-                        </div>
                           <h5 class="text-xl font-medium text-gray-900 dark:text-white flex items-center">Sign in to our platform</h5>
                       </div>
 
