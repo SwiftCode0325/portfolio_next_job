@@ -3,8 +3,14 @@
   import humanize from 'humanize-plus';
 
   export let data;
+  let joblist = data.jobs;
+  let filteredJobs = joblist;
+  let filter = '';
+  let search = '';
+
   const show_menu = writable(false);
   const show_menu1 = writable(false);
+
   function openDropDownMenu() {
     show_menu.update(value => !value);
   }
@@ -28,6 +34,27 @@
       currentMax = maxSalary;
     }
     
+  }
+
+  function filterJobs() {
+    // Modify the search variable before filtering//
+    // const capitalizedSearch = search.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    // filter = capitalizedSearch;
+
+    if (filter === '') {
+    filteredJobs = joblist;
+  } else {
+    const lowercaseSearch = filter.toLowerCase();
+    filteredJobs = joblist.filter(job => {
+      return (
+      // Assuming job.job_type is an array of strings //
+      job.job_type.some(type => type.toLowerCase().includes(lowercaseSearch)) ||
+      job.employer.toLowerCase() == lowercaseSearch ||
+      job.location.toLowerCase() == lowercaseSearch ||
+      job.title.toLowerCase().includes(lowercaseSearch)
+      );
+    });
+  }
   }
 </script>
 
@@ -95,7 +122,7 @@
   </div>
 
   <style>
-	@keyframes slideDown {
+	@keyframes slideDown1 {
   0% {
     opacity: 0;
     transform: translateY(-100%);
@@ -105,41 +132,63 @@
     transform: translateY(0);
   }
 }
-.slide-down {
-  animation: slideDown 2s ease forwards;
+.slide-down1 {
+  animation: slideDown1 2s ease forwards;
 }
+
+@keyframes slideDown2 {
+  0% {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.slide-down2 {
+  animation: slideDown2 1s ease forwards;
+}
+
+footer{
+  background-color: #20333a;
+}
+
+input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background-color: rgb(225 29 72);
+      }
   </style>
 
 
-  <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down">
+  <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
 	<h1>Find Your Dream Job Here</h1>
   </div>
 </nav>
 
 <div class="flex p-2 m-2 space-x-5">
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+    on:click={() => { filter = "Full Time"; filterJobs(); }}>
         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
         Full-Time
         </span>
     </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+    on:click={() => { filter = "Part Time"; filterJobs(); }}>
         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
         Part-Time
         </span>
     </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+    on:click={() => { filter ="Remote"; filterJobs(); }}>
         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
         Remote
         </span>
     </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
+    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+    on:click={() => { filter = ""; filterJobs(); }}>
         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-        Junior Level
-        </span>
-    </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800">
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-        Senior Level
+        Clear Filter
         </span>
     </button>
 </div>
@@ -149,16 +198,17 @@
 <div>
   <span class="ml-4">Filter</span>
 
-<form class="w-64 m-4">   
-    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+<form class="w-64 m-4" on:submit|preventDefault={ () => { filter = search; filterJobs(); }} >   
+    <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div class="relative">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
         </div>
-        <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Company, skill, tag..." required>
-        <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+        <input type="text" id="search" name="search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-pink-600 focus:border-pink-600" placeholder="Company, skill, tag..." required
+        bind:value={search}>
+        <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-4 py-2">Search</button>
     </div>
 </form>
 
@@ -172,6 +222,8 @@
   on:click={openDropDownMenu}
 >
   Employment
+
+  {#if $show_menu == true}
   <svg
     class="w-2.5 h-2.5 ml-2.5"
     aria-hidden="true"
@@ -187,32 +239,20 @@
       d="m1 1 4 4 4-4"
     />
   </svg>
+  {:else}
+  <svg class="w-2.5 h-2.5 ml-2.5 mt-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+  </svg>
+  {/if}
 </button>
 
-<style>
-@keyframes slideDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-10%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.slide-down {
-  animation: slideDown 1s ease forwards;
-}
-</style>
-
-  <!-- Dropdown menu -->
+<!-- Dropdown menu -->
 {#if $show_menu == true}
   <div
-    class="slide-down mt-2 ml-2 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
+    class="slide-down2 mt-2 ml-2 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
 >
     <ul
       class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200"
-      aria-labelledby="dropdownCheckboxButton"
     >
       <li>
         <div class="flex items-center">
@@ -226,14 +266,14 @@
             for="checkbox-item-1"
             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
           >
-            Fulltime
+            Full Time
           </label>
         </div>
       </li>
+  
       <li>
         <div class="flex items-center">
           <input
-            checked
             id="checkbox-item-2"
             type="checkbox"
             value=""
@@ -243,26 +283,11 @@
             for="checkbox-item-2"
             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
           >
-            Junior Level
+            Part Time
           </label>
         </div>
       </li>
-      <li>
-        <div class="flex items-center">
-          <input
-            id="checkbox-item-3"
-            type="checkbox"
-            value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-          />
-          <label
-            for="checkbox-item-3"
-            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            Senior Level
-          </label>
-        </div>
-      </li>
+
       <li>
         <div class="flex items-center">
           <input
@@ -279,22 +304,6 @@
           </label>
         </div>
       </li>
-      <li>
-        <div class="flex items-center">
-          <input
-            id="checkbox-item-3"
-            type="checkbox"
-            value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-          />
-          <label
-            for="checkbox-item-3"
-            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            Contract
-          </label>
-        </div>
-      </li>
     </ul>
   </div> 
 {/if}
@@ -308,8 +317,10 @@
   on:click={openSalaryDropDownMenu}
 >
   Salary Range
+
+  {#if $show_menu1 == true}
   <svg
-    class="w-2.5 h-2.5 ml-2.5"
+    class="w-2.5 h-2.5 ml-2.5 mt-1"
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -323,12 +334,19 @@
       d="m1 1 4 4 4-4"
     />
   </svg>
+
+  {:else}
+  <svg class="w-2.5 h-2.5 ml-2.5 mt-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+  </svg>
+  {/if}
+
 </button>
 
 {#if $show_menu1 == true}
     <div
     id="dropdownDefaultCheckbox"
-    class="slide-down mt-2 ml-5 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
+    class="slide-down2 mt-2 ml-5 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
 >
 
 <label for="minmax-range" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{currentMin} - {currentMax}</label>
@@ -339,7 +357,7 @@ max={maxSalary}
 on:change={handleRangeChange}
 step="1000"
 class="w-full h-2 bg-gray-200 rounded-lg appearance-none 
-cursor-pointer dark:bg-gray-700">
+cursor-pointer dark:bg-gray-700"/>
 </div>
 {/if}
 
@@ -348,11 +366,11 @@ cursor-pointer dark:bg-gray-700">
 
 <!-- Job Listing -->
 <ul class="w-full divide-y divide-gray-200 dark:divide-gray-700 ml-10">
-  {#each data.jobs as job}
+  {#each filteredJobs as job (job.id)}
   <li class="p-3 sm:pb-4 hover:bg-gray-100 flex justify-between">
     <div class="flex gap-x-4">
       {#if job.image_url}
-      <img class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="netflix-logo">
+      <img class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="">
       {:else}
       <img class="h-12 w-12 flex-none rounded-full" src="question-mark.png" alt="netflix-logo">
       {/if}
@@ -416,7 +434,7 @@ cursor-pointer dark:bg-gray-700">
 </div>
 
 <footer>
-  <div class="bg-gradient-to-br from-pink-500 to-orange-400 w-full h-16 flex items-center text-gray-300 fill-gray-300">
+  <div class="w-full h-16 flex items-center text-gray-300 fill-gray-300">
     <svg xmlns="http://www.w3.org/2000/svg" class="p-2 w-12 h-12" stroke="current" viewBox="0 0 24 24" id="copyright"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91c.48.22 1.05.34 1.7.34.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
     <span class="font-bold uppercase">next job</span>
   </div>
