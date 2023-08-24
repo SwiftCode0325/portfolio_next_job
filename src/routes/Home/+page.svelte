@@ -7,7 +7,10 @@
   let filteredJobs = joblist;
   let filter = '';
   let search = '';
-
+  let jobType = '';
+  let selectedJobType = [];
+  let formattedJobTypes = '';
+  
   const show_menu = writable(false);
   const show_menu1 = writable(false);
 
@@ -36,26 +39,43 @@
     
   }
 
-  function filterJobs() {
-    // Modify the search variable before filtering//
-    // const capitalizedSearch = search.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    // filter = capitalizedSearch;
+  //this function is used to get the desired job type and set into selectedJobType array//
+  function updateSelectedJobTypes (jobType) {
+    if(selectedJobType.includes(jobType)) {
+      selectedJobType = selectedJobType.filter(item => item !== jobType)
+    }else{
+      selectedJobType = [...selectedJobType, jobType]
+    }
+  }
 
-    if (filter === '') {
+  function filterJobs() {
+  
+  if (selectedJobType === 0 && search === ''){
     filteredJobs = joblist;
-  } else {
-    const lowercaseSearch = filter.toLowerCase();
-    filteredJobs = joblist.filter(job => {
-      return (
-      // Assuming job.job_type is an array of strings //
-      job.job_type.some(type => type.toLowerCase().includes(lowercaseSearch)) ||
-      job.employer.toLowerCase() == lowercaseSearch ||
-      job.location.toLowerCase() == lowercaseSearch ||
-      job.title.toLowerCase().includes(lowercaseSearch)
-      );
-    });
-  }
-  }
+  }else {
+  // Convert selectedJobType to lowercase
+  const lowercaseSelectedJobTypes = selectedJobType.map(type => type.toLowerCase());
+
+  // Filter based on selectedJobType and search filter
+  filteredJobs = joblist.filter(job => {
+    const jobTypeLowerCase = job.job_type.map(type => type.toLowerCase());
+    const lowercaseFilterSearches = filter.toLowerCase();
+
+    // Check if job type or other properties match the search filter
+    return (
+      // Check if job type matches any selected job type
+      (lowercaseSelectedJobTypes.length === 0 || jobTypeLowerCase.some(type => lowercaseSelectedJobTypes.includes(type))) &&
+      // Check if employer, location, or title matches search filter
+      (
+
+        job.employer.toLowerCase().includes(lowercaseFilterSearches) ||
+        job.location.toLowerCase().includes(lowercaseFilterSearches) ||
+        job.title.toLowerCase().includes(lowercaseFilterSearches)
+      )
+    );
+  })
+  };
+}
 </script>
 
 <nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover content-center" style="background-image: url('background-img5.png');">
@@ -167,27 +187,9 @@ input[type=range]::-webkit-slider-thumb {
 </nav>
 
 <div class="flex p-2 m-2 space-x-5">
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-    on:click={() => { filter = "Full Time"; filterJobs(); }}>
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-        Full-Time
-        </span>
-    </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-    on:click={() => { filter = "Part Time"; filterJobs(); }}>
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-        Part-Time
-        </span>
-    </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
-    on:click={() => { filter ="Remote"; filterJobs(); }}>
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-        Remote
-        </span>
-    </button>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800"
+    <button class="items-center justify-center p-0.5 mb-2 h-10 mr-2 text-white text-sm font-medium rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl"
     on:click={() => { filter = ""; filterJobs(); }}>
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-transparent dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
         Clear Filter
         </span>
     </button>
@@ -206,8 +208,8 @@ input[type=range]::-webkit-slider-thumb {
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
         </div>
-        <input type="text" id="search" name="search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-pink-600 focus:border-pink-600" placeholder="Company, skill, tag..." required
-        bind:value={search}>
+        <input type="text" id="search" name="search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-pink-600 focus:border-pink-600" placeholder="Company, job role..."
+        bind:value={search}/>
         <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-4 py-2">Search</button>
     </div>
 </form>
@@ -260,8 +262,8 @@ input[type=range]::-webkit-slider-thumb {
             id="checkbox-item-1"
             type="checkbox"
             value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-          />
+            class="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-600 focus:ring-2"
+            on:change={() => { updateSelectedJobTypes('Full Time'), filterJobs()} }/>
           <label
             for="checkbox-item-1"
             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
@@ -277,8 +279,8 @@ input[type=range]::-webkit-slider-thumb {
             id="checkbox-item-2"
             type="checkbox"
             value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-          />
+            class="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-600 focus:ring-2"
+            on:change={() => { updateSelectedJobTypes('Part Time'), filterJobs()}}/>
           <label
             for="checkbox-item-2"
             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
@@ -294,8 +296,8 @@ input[type=range]::-webkit-slider-thumb {
             id="checkbox-item-3"
             type="checkbox"
             value=""
-            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-          />
+            class="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-600 focus:ring-2"
+            on:change={() => {updateSelectedJobTypes('Remote'), filterJobs()}} />
           <label
             for="checkbox-item-3"
             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
