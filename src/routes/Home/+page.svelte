@@ -7,9 +7,12 @@
   let filteredJobs = joblist;
   let filter = '';
   let search = '';
-  let jobType = '';
   let selectedJobType = [];
-  let formattedJobTypes = '';
+  let minSalary = 0;
+  let maxSalary = 20000;
+  let maxValue = 19000;
+  let currentMin = minSalary;
+  let currentMax = 1000;
   
   const show_menu = writable(false);
   const show_menu1 = writable(false);
@@ -23,11 +26,6 @@
   show_menu.set(false);
   show_menu1.set(false);
   
-  let minSalary = 0;
-  let maxSalary = 20000;
-  let maxValue = 19000;
-  let currentMin = minSalary;
-  let currentMax = 1000;
   function handleRangeChange(event) {
     currentMin = parseInt(event.target.value);
     currentMax = currentMin + 1000;
@@ -36,7 +34,6 @@
       currentMin = maxValue;
       currentMax = maxSalary;
     }
-    
   }
 
   //this function is used to get the desired job type and set into selectedJobType array//
@@ -50,7 +47,7 @@
 
   function filterJobs() {
   
-  if (selectedJobType === 0 && search === ''){
+  if (selectedJobType === 0 && search === '' && currentMin === 0){
     filteredJobs = joblist;
   }else {
   // Convert selectedJobType to lowercase
@@ -58,24 +55,40 @@
 
   // Filter based on selectedJobType and search filter
   filteredJobs = joblist.filter(job => {
-    const jobTypeLowerCase = job.job_type.map(type => type.toLowerCase());
-    const lowercaseFilterSearches = filter.toLowerCase();
+  const jobTypeLowerCase = job.job_type.map(type => type.toLowerCase());
+  const lowercaseFilterSearches = filter.toLowerCase();
+  const minJobSalary = currentMin;
 
-    // Check if job type or other properties match the search filter
-    return (
-      // Check if job type matches any selected job type
-      (lowercaseSelectedJobTypes.length === 0 || jobTypeLowerCase.some(type => lowercaseSelectedJobTypes.includes(type))) &&
-      // Check if employer, location, or title matches search filter
-      (
-
-        job.employer.toLowerCase().includes(lowercaseFilterSearches) ||
-        job.location.toLowerCase().includes(lowercaseFilterSearches) ||
-        job.title.toLowerCase().includes(lowercaseFilterSearches)
-      )
-    );
-  })
-  };
+  // Check if job type or other properties match the search filter
+  return (
+    // Check if job type matches any selected job type
+    (lowercaseSelectedJobTypes.length === 0 || jobTypeLowerCase.some(type => lowercaseSelectedJobTypes.includes(type))) &&
+    // Check if employer, location, or title matches search filter
+    (
+      job.employer.toLowerCase().includes(lowercaseFilterSearches) ||
+      job.location.toLowerCase().includes(lowercaseFilterSearches) ||
+      job.title.toLowerCase().includes(lowercaseFilterSearches)
+    ) && 
+    // Check if minimum annual compensation is within the specified salary range
+    (minJobSalary === 0 || job.minAnnualCompensation == minJobSalary)
+  );
+});
 }
+  }
+
+  function clearFilter() {
+    filter = '';
+    search = '';
+    selectedJobType = [];
+    currentMin = 0;
+    //Get all checkbox element and uncheck them//
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(box => {box.checked = false});
+
+    // Reset the slider to its minimum value
+    minSalary = 0;
+    filterJobs()
+  }
 </script>
 
 <nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover content-center" style="background-image: url('background-img5.png');">
@@ -188,7 +201,7 @@ input[type=range]::-webkit-slider-thumb {
 
 <div class="flex p-2 m-2 space-x-5">
     <button class="items-center justify-center p-0.5 mb-2 h-10 mr-2 text-white text-sm font-medium rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl"
-    on:click={() => { filter = ""; filterJobs(); }}>
+    on:click={clearFilter}>
         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-transparent dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
         Clear Filter
         </span>
@@ -351,12 +364,12 @@ input[type=range]::-webkit-slider-thumb {
     class="slide-down2 mt-2 ml-5 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
 >
 
-<label for="minmax-range" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{currentMin} - {currentMax}</label>
+<label for="minmax-range" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Min Job Salary : {currentMin}</label>
 <input id="minmax-range" 
 type="range"
 min={minSalary}
 max={maxSalary}
-on:change={handleRangeChange}
+on:change={(event) => {handleRangeChange(event); filterJobs(); }}
 step="1000"
 class="w-full h-2 bg-gray-200 rounded-lg appearance-none 
 cursor-pointer dark:bg-gray-700"/>
