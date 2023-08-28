@@ -149,7 +149,7 @@
 
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
-    <a href="/post/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
+    <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
     <a href="/login" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log In</a>
     <a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
   </div>
@@ -382,6 +382,7 @@ cursor-pointer dark:bg-gray-700"/>
 <!-- Job Listing -->
 <ul class="w-full divide-y divide-gray-200 dark:divide-gray-700 ml-10">
   {#each filteredJobs as job (job.id)}
+  <a href="/job/{job.id}">
   <li class="p-3 sm:pb-4 hover:bg-gray-100 flex justify-between">
     <div class="flex gap-x-4">
       {#if job.image_url}
@@ -420,6 +421,7 @@ cursor-pointer dark:bg-gray-700"/>
       <p class="mt-1 text-xs leading-5 text-gray-500">Created At {new Date(job.created).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
     </div>
   </li>
+  </a>
   {/each}
 </ul>
 
