@@ -1,0 +1,156 @@
+<svelte:head>
+  <title>Dashboard | Next Jobs</title>
+</svelte:head>
+
+<script>
+    import { writable } from "svelte/store";
+    import {isLoggedIn} from "../../util/auth.js"
+
+    let selectedFile = "No File Chosen";
+    let isUpload = writable(false);
+    let authData = '';
+
+    //change the default message to selected image file name in choose file button//
+    function handleFileInputChange(event) {
+    /*assigns the selected file to the file variable. 
+    If no file is selected, it will be undefined / show no file chosen message.*/
+    	const file = event.target.files[0];
+
+		if(selectedFile = file){
+			selectedFile = file.name
+			isUpload.set(true);
+		}else {
+			selectedFile = 'No File Chosen'
+			isUpload.set(false);
+		}
+	}
+
+  async function load(){
+    const userIsLoggedIn = await isLoggedIn();
+    if (userIsLoggedIn) {
+       authData = JSON.parse(localStorage.getItem("auth"));
+       console.log(authData, authData.userEmail)
+    }
+}
+
+load();
+
+ 
+
+</script>
+
+<style>
+/* slide to right */
+@keyframes slide-to-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.slideRight {
+  animation: slide-to-right 2s
+}
+
+	@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.slide-down {
+  animation: slideDown 2s ease forwards;
+}
+
+.userData {
+    background-color: #20333a;
+}
+</style>
+
+<div class="flex h-screen w-screen">
+    <!-- Profile Section -->
+    <div class="absolute text-gray-200 m-2 top-40 left-10 text-5xl font-bold slideRight">
+        <div class="flex">
+			      <a href="/Home" class="text-lg mb-3 hover:underline">Home</a>
+			        <svg class="w-4 h-4 text-gray-200 ml-2 mt-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+    			        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+  			      </svg>
+		    </div>
+        <h1>Dashboard</h1>
+    </div>
+
+    <!-- Image div -->
+    <div class="w-6/12 h-full">
+        <img src="background-img1.png" alt="" class="w-full h-full object-cover">
+    </div>
+
+    <!-- Profile detail -->
+    <div class="w-1/2 flex justify-center bg-gradient-to-br from-pink-500 to-orange-400">
+
+        <div class="mt-20 w-10/12 flex justify-center slide-down">
+          <div class="w-full flex flex-col items-center">
+          {#if $isUpload}
+            <div class="rounded-full w-40 h-40">
+				      <img src="/{selectedFile}" class="w-32 h-40 object-cover rounded-full" alt=""/>
+			      </div>
+			    {:else}
+			    <div class="p-3 rounded-full relative w-40 h-40 bg-gray-200 ">
+				    <svg id="avatarButton" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="rounded-full cursor-pointer w-32 h-40 text-gray-400 text-center ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+			    </div>
+			    {/if}
+            
+        <label for="file-upload" class="mt-5 rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              <input type="file" name="file-upload" class="sr-only" id="file-upload"
+              on:change={handleFileInputChange}
+              accept=".jpg, .jpeg, .png"/>
+              <span>Change Image</span>
+        </label>
+
+        <div class="mt-5 flex flex-col items-center justify-between w-full">
+        <!-- Username -->
+        <div class="flex">
+        <p class="p-2 m-2 flex flex-row gap-1">
+            <span class="userData p-2 text-white rounded-lg text-center w-24">Username</span>
+              <svg class="w-6 h-6 text-gray-800 mt-2 mr-10" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                <path d="m19.822 7.431-4.846-7A1 1 0 0 0 14.153 0H1a1 1 0 0 0-.822 1.569L4.63 8 .178 14.431A1 1 0 0 0 1 16h13.153a1.001 1.001 0 0 0 .823-.431l4.846-7a1 1 0 0 0 0-1.138Z"/>
+              </svg>
+            <span class="py-2 w-48 text-black text-center border bg-white rounded-lg">{authData.userName}</span>
+        </p>
+
+        <button class="rounded-lg w-10 h-10 text-center flex items-center justify-center bg-white p-2 my-4">
+              <svg class="w-6 h-6 text-emerald-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
+                <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
+              </svg>
+        </button> 
+        </div>
+
+        <!-- email -->
+        <div class="flex">
+        <p class="p-2 m-2 flex flex-row gap-1">
+            <span class="userData p-2 text-white rounded-lg text-center w-24">Email</span> 
+            <svg class="w-6 h-6 text-gray-800 dark:text-white mt-2 mr-10" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+              <path d="m19.822 7.431-4.846-7A1 1 0 0 0 14.153 0H1a1 1 0 0 0-.822 1.569L4.63 8 .178 14.431A1 1 0 0 0 1 16h13.153a1.001 1.001 0 0 0 .823-.431l4.846-7a1 1 0 0 0 0-1.138Z"/>
+            </svg>
+            <span class="py-2 w-48 text-black text-center bg-white rounded-lg">{authData.userEmail}</span>
+        </p>
+
+        <button class="border rounded-lg w-10 h-10 text-center flex items-center justify-center bg-white p-2 my-4">
+              <svg class="w-6 h-6 text-emerald-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
+                <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
+              </svg>
+        </button> 
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
