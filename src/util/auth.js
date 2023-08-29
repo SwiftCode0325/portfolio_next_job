@@ -16,6 +16,45 @@ export function getTokenFromLocalStorage() {
     return null
 }
 
+//perform other things when user already logged in//
+export async function isLoggedIn(){
+    const token = getTokenFromLocalStorage();
+    if(!getTokenFromLocalStorage()){
+        return false;
+    }
+
+    try {
+        const resp = await fetch(
+            PUBLIC_BACKEND_BASE_URL + 'api/collections/users/auth-refresh',
+            {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getTokenFromLocalStorage()
+                },
+            }
+        );
+
+        const res = await resp.json()
+        if (resp.status == 200) {
+            localStorage.setItem("auth", JSON.stringify({
+                "token": res.token,
+                "userId": res.record.id,
+                "userName": res.record.username,
+                "userEmail": res.record.email
+            }));
+
+            const localData = localStorage.getItem("auth");
+            
+            return true, localData;
+        } 
+        return false;
+    } catch {
+        return false;
+    }
+}
+
 // login function //
 export async function authenticateUser(username, password) {
     const resp = await fetch(
