@@ -13,19 +13,22 @@
   let maxValue = 19000;
   let currentMin = minSalary;
   let currentMax = 1000;
-  
-  const show_menu = writable(false);
-  const show_menu1 = writable(false);
+  let jobTypeDropDownMenu = writable(false);
+  let salaryDropDownMenu = writable(false);
+  let profileDropDownMenu = writable(false);
 
   function openDropDownMenu() {
-    show_menu.update(value => !value);
+    jobTypeDropDownMenu.update(value => !value);
   }
   function openSalaryDropDownMenu () {
-    show_menu1.update(value => !value);
+    salaryDropDownMenu.update(value => !value);
   }
-  show_menu.set(false);
-  show_menu1.set(false);
   
+  function openProfileDropDownMenu () {
+    profileDropDownMenu.update( value => !value );
+    console.log(profileDropDownMenu)
+  }
+
   function handleRangeChange(event) {
     currentMin = parseInt(event.target.value);
     currentMax = currentMin + 1000;
@@ -91,6 +94,45 @@
   }
 </script>
 
+<style>
+	@keyframes slideDown1 {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.slide-down1 {
+  animation: slideDown1 2s ease forwards;
+}
+
+@keyframes slideDown2 {
+  0% {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.slide-down2 {
+  animation: slideDown2 1s ease forwards;
+}
+
+footer{
+  background-color: #20333a;
+}
+
+input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background-color: rgb(225 29 72);
+      }
+  </style>
+
 <nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover content-center" style="background-image: url('background-img5.png');">
   <div class="flex items-center p-4 h-24">
     <!-- Left-hand side content -->
@@ -152,46 +194,27 @@
     <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
     <a href="/login" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log In</a>
     <a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    <button on:click={openProfileDropDownMenu} class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
+      <svg id="avatarButton" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="rounded-full cursor-pointer w-10 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+    </button>
   </div>
 
-  <style>
-	@keyframes slideDown1 {
-  0% {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.slide-down1 {
-  animation: slideDown1 2s ease forwards;
-}
-
-@keyframes slideDown2 {
-  0% {
-    opacity: 0;
-    transform: translateY(-10%);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.slide-down2 {
-  animation: slideDown2 1s ease forwards;
-}
-
-footer{
-  background-color: #20333a;
-}
-
-input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        background-color: rgb(225 29 72);
-      }
-  </style>
+  <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+  {#if $profileDropDownMenu}
+  <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+      <div>username</div>
+      <div class="font-medium truncate">email</div>
+    </div>
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+      <li>
+        <a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+      </li>
+      <li>
+        <a href="/job-post" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
+      </li>
+    </ul>
+    {/if}
+  </div>
 
 
   <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
@@ -238,7 +261,7 @@ input[type=range]::-webkit-slider-thumb {
 >
   Employment
 
-  {#if $show_menu == true}
+  {#if $jobTypeDropDownMenu == true}
   <svg
     class="w-2.5 h-2.5 ml-2.5"
     aria-hidden="true"
@@ -262,7 +285,7 @@ input[type=range]::-webkit-slider-thumb {
 </button>
 
 <!-- Dropdown menu -->
-{#if $show_menu == true}
+{#if $jobTypeDropDownMenu == true}
   <div
     class="slide-down2 mt-2 ml-2 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
 >
@@ -333,7 +356,7 @@ input[type=range]::-webkit-slider-thumb {
 >
   Salary Range
 
-  {#if $show_menu1 == true}
+  {#if $salaryDropDownMenu == true}
   <svg
     class="w-2.5 h-2.5 ml-2.5 mt-1"
     aria-hidden="true"
@@ -358,7 +381,7 @@ input[type=range]::-webkit-slider-thumb {
 
 </button>
 
-{#if $show_menu1 == true}
+{#if $salaryDropDownMenu == true}
     <div
     id="dropdownDefaultCheckbox"
     class="slide-down2 mt-2 ml-5 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
