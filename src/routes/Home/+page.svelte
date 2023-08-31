@@ -1,6 +1,7 @@
 <script>
   import { writable } from "svelte/store";
   import humanize from 'humanize-plus';
+  import {isLoggedIn, logOut, isAuthenticated} from "../../util/auth.js"
 
   export let data;
   let joblist = data.jobs;
@@ -16,6 +17,8 @@
   let jobTypeDropDownMenu = writable(false);
   let salaryDropDownMenu = writable(false);
   let profileDropDownMenu = writable(false);
+  let authData = '';
+  let userloggedIn = writable(false);
 
   function openDropDownMenu() {
     jobTypeDropDownMenu.update(value => !value);
@@ -92,6 +95,19 @@
     minSalary = 0;
     filterJobs()
   }
+
+    async function loadUserData(){
+    const userIsLoggedIn = await isLoggedIn();
+    if (userIsLoggedIn) {
+       authData = JSON.parse(localStorage.getItem("auth"));
+       userloggedIn.set(true)
+    } else {
+      authData = '';
+      userloggedIn.set(false)
+    }
+    }
+
+    loadUserData();
 </script>
 
 <style>
@@ -192,20 +208,34 @@ input[type=range]::-webkit-slider-thumb {
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
     <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
-    <a href="/login" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log In</a>
+    {#if $isAuthenticated}
+    <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
+    {:else}
+    <button class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
+    {/if}
     <a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
-    <button on:click={openProfileDropDownMenu} class="relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
-      <svg id="avatarButton" data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start" class="rounded-full cursor-pointer w-10 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+    <button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
+      {#if $userloggedIn == true}
+      <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
+      {:else}
+      <svg class="rounded-full cursor-pointer w-10 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+      {/if}
     </button>
   </div>
+    <div class="z-10 absolute right-6 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+    {#if $profileDropDownMenu}
+    <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+      {#if $isAuthenticated}
+      <div>{authData.userName}</div>
+      <div class="font-medium truncate">{authData.userEmail}</div>
+      {:else}
+      <div>user name</div>
+      <div class="font-medium truncate">user email</div>
+      {/if}
 
-  <div id="userDropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-  {#if $profileDropDownMenu}
-  <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-      <div>username</div>
-      <div class="font-medium truncate">email</div>
+      
     </div>
-    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
       <li>
         <a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
       </li>
@@ -215,7 +245,6 @@ input[type=range]::-webkit-slider-thumb {
     </ul>
     {/if}
   </div>
-
 
   <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
 	<h1>Find Your Dream Job Here</h1>
@@ -231,9 +260,9 @@ input[type=range]::-webkit-slider-thumb {
     </button>
 </div>
 
-<div class="flex flex-row">
+<div class="flex">
 <!-- Filter search -->
-<div>
+<div class="flex flex-col">
   <span class="ml-4">Filter</span>
 
 <form class="w-64 m-4" on:submit|preventDefault={ () => { filter = search; filterJobs(); }} >   
@@ -250,16 +279,13 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 </form>
 
-<div class="flex flex-col">
 <!-- Job Type Selection -->
 <button
-  id="dropdownDefaultCheckbox"
-  data-dropdown-toggle="dropdownDefaultCheckbox"
   class="text-black bg-white focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
   type="button"
   on:click={openDropDownMenu}
 >
-  Employment
+Employment
 
   {#if $jobTypeDropDownMenu == true}
   <svg
@@ -348,8 +374,6 @@ input[type=range]::-webkit-slider-thumb {
 
 <!-- Salary indicator -->
 <button
-  id="dropdownDefaultCheckbox"
-  data-dropdown-toggle="dropdownDefaultCheckbox"
   class="text-black bg-white focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
   type="button"
   on:click={openSalaryDropDownMenu}
@@ -383,7 +407,6 @@ input[type=range]::-webkit-slider-thumb {
 
 {#if $salaryDropDownMenu == true}
     <div
-    id="dropdownDefaultCheckbox"
     class="slide-down2 mt-2 ml-5 w-48 bg-white divide-y divide-gray-100 rounded-lg dark:bg-gray-700 dark:divide-gray-600"
 >
 
@@ -399,7 +422,6 @@ cursor-pointer dark:bg-gray-700"/>
 </div>
 {/if}
 
-</div>
 </div>
 
 <!-- Job Listing -->
