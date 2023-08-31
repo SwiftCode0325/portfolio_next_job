@@ -1,4 +1,18 @@
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
+import { writable } from 'svelte/store';
+
+const emptyAuth = {
+    "token": "",
+    "userId": ""
+}
+
+export let isAuthenticated = writable(false);
+
+export function logOut() {
+    localStorage.setItem("auth", JSON.stringify(emptyAuth));
+    isAuthenticated.set(false);
+    return true;
+}
 
 export function getUserId() {
     const auth = localStorage.getItem("auth")
@@ -42,14 +56,15 @@ export async function isLoggedIn(){
                 "token": res.token,
                 "userId": res.record.id,
                 "userName": res.record.username,
-                "userEmail": res.record.email
+                "userEmail": res.record.email,
+                "userProfilePicture": res.record.profile_picture
             }));
-
-            const localData = localStorage.getItem("auth");
-            
+            isAuthenticated.set(true);
+            const localData = localStorage.getItem("auth");     
             return true, localData;
-        } 
+        }
         return false;
+        
     } catch {
         return false;
     }
@@ -77,14 +92,17 @@ export async function authenticateUser(username, password) {
     if(resp.status == 200) {
         localStorage.setItem("auth", JSON.stringify({
             "token": res.token,
-            "userId": res.record.id
+            "userId": res.record.id,
+            "userName": res.record.username,
+            "userEmail": res.record.email,
+            "userProfilePicture": res.record.profile_picture
         }));
+        isAuthenticated.set(true);
         return {
             success: true,
             res: res
         }
     }
-
     return {
         success: false,
         res: res
