@@ -4,26 +4,34 @@ import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 import { authenticateUser } from '../../util/auth.js'
 import { goto } from '$app/navigation';
 import { writable } from 'svelte/store';
+import { uploadMedia } from '../../util/s3-uploader.js';
 
 let showPassword = writable(true)
 let showPasswordConfirmation = writable(true)
 let isLoading = writable(false)
 let formErrors = {};
+let selectedFile = "No File Chosen";
+let isUpload = writable(false);
 
   async function postSignUp() {
-      goto('/post/new');
+      goto('/job/new');
     }
 
   async function createUser(evt) {
     //prevent the page go to the top when button is clicked//
     evt.preventDefault();
     isLoading.set(true);
+
+    const [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+
     const userData = {
       username: evt.target['username'].value,
+      profile_picture: fileUrl,
       email: evt.target['email'].value,
       password: evt.target['password'].value,
       passwordConfirm: evt.target['password-confirmation'].value
     };
+
     //create and insert the new user data into database//
     const resp = await fetch(PUBLIC_BACKEND_BASE_URL + 'api/collections/users/records', {
       method: 'POST',
@@ -75,6 +83,20 @@ let formErrors = {};
     }
   }
 
+  //change the default message to selected image file name in choose file button//
+    function handleFileInputChange(event) {
+    /*assigns the selected file to the file variable. 
+    If no file is selected, it will be undefined / show no file chosen message.*/
+    	const file = event.target.files[0];
+
+		if(selectedFile = file){
+			selectedFile = file.name
+			isUpload.set(true);
+		}else {
+			selectedFile = 'No File Chosen'
+			isUpload.set(false);
+		}
+  }
 </script>
 
 <style>
@@ -105,7 +127,16 @@ let formErrors = {};
 .slide-down {
   animation: slideDown 2s ease forwards;
 }
+
+.createUserWindow{
+  height: 550px;
+}
 </style>
+
+<svelte:head>
+	<title>Create User | Next Jobs</title>
+	<script src="/aws-sdk-s3.min.js"></script>
+</svelte:head>
 
 <div class="flex h-screen w-screen">
         <!-- Sign Up Section -->
@@ -126,11 +157,11 @@ let formErrors = {};
 
         <!-- Form div -->
         <!-- Outer div -->
-        <div class="flex items-center justify-center w-7/12 ">
+        <div class="flex items-center justify-center w-7/12">
             <!-- Inner div -->
             <div class="flex w-9/12 h-full items-center justify-center ml-10 slide-down">
                   <!-- Form section -->
-                  <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-5 dark:bg-gray-800 dark:border-gray-700">
+                  <div class="w-full p-5 max-w-sm bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-5 dark:bg-gray-800 dark:border-gray-700 overflow-y-auto createUserWindow">
                         <form class="space-y-3" on:submit={createUser}>
                             <div class="flex">
                                         <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -193,6 +224,27 @@ let formErrors = {};
                                     <span class="label-text-alt text-red-500">{formErrors['username'].message}</span>
                                 </label>
                                 {/if}
+                                
+          <div class="mt-2 flex items-center gap-x-3">
+      
+      
+			{#if $isUpload}
+				<img src="/{selectedFile}" class="w-10 h-10 object-cover rounded-full" alt=""/>
+			{:else}
+			<div class="border p-3 rounded-full bg-gray-200 my-1">
+				<svg class="rounded-full cursor-pointer w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+			</div>
+			{/if}
+            
+            <label for="file-upload" class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+              <input type="file" name="file-upload" class="sr-only" id="file-upload"
+              on:change={handleFileInputChange}
+              accept=".jpg, .jpeg, .png"/>
+              <span>Add Profile Picture</span>
+            </label>
+            <label for="fileInput" class="text-gray-500 h-4 flex items-center">{selectedFile}</label>
+          </div>
+                                
                             </div>
                             
                             <!-- email section -->
