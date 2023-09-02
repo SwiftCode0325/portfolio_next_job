@@ -240,7 +240,7 @@ input[type=range]::-webkit-slider-thumb {
         <a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
       </li>
       <li>
-        <a href="/job-post" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
+        <a href="/job-posted" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
       </li>
     </ul>
     {/if}
@@ -433,7 +433,7 @@ cursor-pointer dark:bg-gray-700"/>
       {#if job.image_url}
       <img class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="">
       {:else}
-      <img class="h-12 w-12 flex-none rounded-full" src="question-mark.png" alt="netflix-logo">
+      <img class="h-12 w-12 flex-none rounded-full" src="question-mark.png" alt="question-mark logo">
       {/if}
       <div class="w-42 flex-auto">
         <p class="text-sm font-semibold leading-6 text-gray-900 w-36 capitalize">{job.title}</p>
