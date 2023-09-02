@@ -162,7 +162,7 @@ footer, .job-title, .job-type{
 </nav>
 
 <div class="p-4">
-    <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg">{data.job.title}</h1>
+    <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg capitalize">{data.job.title}</h1>
     <p class="text-xl">{data.job.employer}</p>
  
     <div class="flex flex-row w-full mt-8">
