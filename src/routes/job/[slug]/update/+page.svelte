@@ -19,6 +19,8 @@
   	let isPartTime = writable(false);
     export let data;
     let jobType = data.job.job_type
+	let fileName = '';
+	let fileUrl = '';
 
     console.log(jobType)
 
@@ -127,7 +129,11 @@
         const userID = await getUserId();
 
 		//Target id = fileInput, catch the first file//
-    	const [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		if ( $isUpload == true ){
+    		 [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		} else {
+			 [fileName, fileUrl] = [data.job.image_url]
+		}
 
         const JobsData = {
             user: userID,
@@ -411,11 +417,11 @@
             
 			{#if $isUpload}
               <div class="rounded-full w-8 h-8">
-				<img src="/{selectedFile}" class="w-8 h-8 object-cover rounded-full" alt=""/>
+				<img src="/{selectedFile}" class="w-8 h-8 object-contain rounded-full" alt=""/>
 			  </div>
 			{:else}
-			<div class="border p-3 rounded-full bg-gray-200">
-				<img src="{data.job.image_url}" class="w-8 h-8 object-cover rounded-full" alt=""/>
+			<div class="border rounded-full bg-gray-200 p-1">
+				<img src="{data.job.image_url}" class="w-8 h-8 object-contain rounded-full" alt=""/>
 			</div>
 			{/if}
             
@@ -435,19 +441,19 @@
 													</div>
 
 													<!-- Job Location section -->
-													<div class="sm:col-span-6 mb-2">
+													<div class="sm:col-span-6 mb-2 ">
 														<label
 															for="job-location"
 															class="block text-sm font-medium leading-6 text-gray-900"
 															>Job Location</label
 														>
-														<div class="mt-2">
+														<div class="mt-2 p-1">
 															<input
 																type="text"
 																name="job-location"
 																id="job-location"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 																value={data.job.location}
 															/>
 														</div>
