@@ -1,12 +1,27 @@
 <script>
 import { writable } from 'svelte/store'
-import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public'; 
-import { getTokenFromLocalStorage, getUserId } from '../../util/auth.js';
+import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
+import { isAuthenticated, logOut, isLoggedIn } from '../../util/auth.js';
 
 export let data;
 let showModal = writable(false)
-let jobId = '';
 let jobIndex = '';
+let profileDropDownMenu = writable(false);
+let userloggedIn = writable(false);
+let authData = '';
+
+async function loadUserData(){
+    const userIsLoggedIn = await isLoggedIn();
+    if (userIsLoggedIn) {
+       authData = JSON.parse(localStorage.getItem("auth"));
+       userloggedIn.set(true)
+    } else {
+      authData = '';
+      userloggedIn.set(false)
+    }
+    }
+
+    loadUserData();
 
 function popUpModal(job, index){
   showModal.set(true)
@@ -18,6 +33,10 @@ function popUpModal(job, index){
 function hideModal(){
   showModal.set(false)
 }
+
+function openProfileDropDownMenu () {
+    profileDropDownMenu.update( value => !value );
+  }
 
 //function to delete specific record//
 async function deleteRecord(id){
@@ -42,6 +61,11 @@ async function deleteRecord(id){
 
 
 <style>
+
+.body{
+	height: 700px;
+}
+
   @keyframes slideDown1 {
   0% {
     opacity: 0;
@@ -60,8 +84,8 @@ footer, .job-title{
   background-color: #20333a;
 }
 </style>
-
-<div class="bg-gradient-to-bl from-pink-500 to-orange-400 body flex flex-col">
+<div class="h-full m-0 p-0">
+<div class="bg-gradient-to-bl from-pink-500 to-orange-400 flex flex-col">
 
 <nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover content-center" style="background-image: url('/background-img5.png');">
   <div class="flex items-center p-4 h-24">
@@ -122,8 +146,44 @@ footer, .job-title{
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
     <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
-    <a href="/login" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log In</a>
-    <a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    {#if $isAuthenticated}
+    <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
+    {:else}
+    <button class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
+	<a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    {/if}
+
+	<button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
+      {#if $userloggedIn == true}
+      <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
+      {:else}
+      <svg class="rounded-full cursor-pointer w-10 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+      {/if}
+    </button>
+  </div>
+
+  <div class="z-10 absolute right-6 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+    {#if $profileDropDownMenu}
+    <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+      {#if $isAuthenticated}
+      <div>{authData.userName}</div>
+      <div class="font-medium truncate">{authData.userEmail}</div>
+      {:else}
+      <div>user name</div>
+      <div class="font-medium truncate">user email</div>
+      {/if}
+
+      
+    </div>
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+      <li>
+        <a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+      </li>
+      <li>
+        <a href="/job-posted" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
+      </li>
+    </ul>
+    {/if}
   </div>
 
   <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
@@ -131,21 +191,25 @@ footer, .job-title{
   </div>
 </nav>
 
-<div class="p-4">
+<div class="p-4 body">
   <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg">Job Posted</h1>
     
 <div class="grid grid-cols-4 gap-2">
 
 {#each data.jobs as job, index}
-<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mt-5">
-    <div class="h-80 flex items-center justify-center">
-    <a href="/job/{job.id}">
-        <img class="mt-2 object-contain h-full w-auto" src="{job.image_url}" alt="" />
+<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 my-5">
+    <div class="h-72 flex items-center justify-center">
+    <a href="/job/{job.id}" class="h-full w-auto overflow-hidden p-2">
+		{#if job.image_url == ''}
+        <img class="object-contain h-full w-full" src="question-mark.png" alt="" />
+		{:else}
+		<img class="object-contain h-full w-full" src="{job.image_url}" alt="" />
+		{/if}
     </a>
     </div>
     <div class="p-5 bg-green-200 rounded-b-lg">
         <a href="/job/{job.id}">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{job.title}</h5>
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{job.title}</h5>
         </a>
         <p class="mb-3 font-normal text-lg text-gray-700">{job.description.slice(0, 240)}... </p>
         <p class="mb-3 font-bold text-xs">Job id: {job.id}</p>
@@ -229,9 +293,9 @@ footer, .job-title{
 													<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
 														Are you sure you want to delete this record?
 													</h3>
-                          <p class="mb-3 font-bold">Job id: {job.id}</p>
+                          								<p class="mb-3 font-bold">Job id: {job.id}</p>
 													<button
-                            on:click|preventDefault={deleteRecord(job.id)}
+                            							on:click|preventDefault={deleteRecord(job.id)}
 														data-modal-hide="popup-modal"
 														type="button"
 														class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
@@ -255,8 +319,12 @@ footer, .job-title{
               {/each}
 </div>
 
- <footer class="w-full h-16 flex items-center text-gray-300 fill-gray-300">
+<footer class="w-full h-16 flex items-center text-gray-300 fill-gray-300">
     <svg xmlns="http://www.w3.org/2000/svg" class="p-2 w-12 h-12" stroke="current" viewBox="0 0 24 24" id="copyright"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91c.48.22 1.05.34 1.7.34.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
     <span class="font-bold uppercase">next job</span>  
  </footer>
+
+</div>
+
+
 
