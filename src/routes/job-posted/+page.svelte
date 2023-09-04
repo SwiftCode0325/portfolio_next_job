@@ -197,17 +197,18 @@ footer, .job-title{
 <div class="grid grid-cols-4 gap-2">
 
 {#each data.jobs as job, index}
-<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 my-5">
-    <div class="h-72 flex items-center justify-center">
-    <a href="/job/{job.id}" class="h-full w-auto overflow-hidden p-2">
+<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mt-5">
+    <div class="h-64 flex items-center justify-center">
+    <a href="/job/{job.id}" class="h-full w-full">
 		{#if job.image_url == ''}
-        <img class="object-contain h-full w-full" src="question-mark.png" alt="" />
+        <img class="object-contain h-full w-full p-1" src="question-mark.png" alt="" />
 		{:else}
-		<img class="object-contain h-full w-full" src="{job.image_url}" alt="" />
+		<img class="object-cover h-full w-full rounded-t-lg" src="{job.image_url}" alt="" />
 		{/if}
     </a>
     </div>
     <div class="p-5 bg-green-200 rounded-b-lg">
+        <div class="h-52">
         <a href="/job/{job.id}">
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{job.title}</h5>
         </a>
@@ -215,6 +216,7 @@ footer, .job-title{
         <p class="mb-3 font-bold text-xs">Job id: {job.id}</p>
         <p class="mb-3 font-bold text-xs">Created At: {new Date(job.created).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
         <p class="mb-3 font-bold text-xs">Updated At: {new Date(job.updated).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
+        </div>
         <div class="flex justify-end">
         <a href="/job/{job.id}/update" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-emerald-600 rounded-lg">
             Edit
