@@ -3,14 +3,44 @@
 <script>
  import SvelteMarkdown from 'svelte-markdown';
  import humanize from "humanize-plus";
+ import { isAuthenticated, getUserId, isLoggedIn, logOut} from '../../../util/auth.js';
+ import { writable } from 'svelte/store';
+ import { goto } from '$app/navigation';
+ import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
  export let data;
 
- let showModal = writable(false)
- let profileDropDownMenu = writable(false);
+let showModal = writable(false)
+let profileDropDownMenu = writable(false);
 let userloggedIn = writable(false);
 let authData = '';
+let animationTrigger = false;
 
- // get scroll Y position and show up the division when meet the position//
+ function popUpModal () {
+  showModal.set(true)
+ }
+
+ function hideModal () {
+  showModal.set(false)
+ }
+
+ function openProfileDropDownMenu () {
+    profileDropDownMenu.update( value => !value );
+  }
+
+ async function loadUserData(){
+    const userIsLoggedIn = await isLoggedIn();
+    if (userIsLoggedIn) {
+       authData = JSON.parse(localStorage.getItem("auth"));
+       userloggedIn.set(true)
+    } else {
+      authData = '';
+      userloggedIn.set(false)
+    }
+    }
+
+  loadUserData()
+
+  // get scroll Y position and show up the division when meet the position//
  window.addEventListener('scroll', function(){
     const currentposition = window.scrollY
 
@@ -37,6 +67,24 @@ let authData = '';
     slideUpDivision1.style.display = "none";
   }
  })
+
+ //function to delete specific record//
+async function deleteRecord(id){
+
+    const response = await fetch( PUBLIC_BACKEND_BASE_URL + 'api/collections/jobs/records/' + `${id}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      if(response.ok){
+        goto('/job-posted')
+      }else{
+        data.jobs = '';
+      }
+    }
 </script>
 
 <svelte:head>
@@ -155,8 +203,20 @@ footer, .job-title, .job-type{
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
     <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
-    <a href="/login" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log In</a>
-    <a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    {#if $isAuthenticated}
+    <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
+    {:else}
+    <button class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
+	<a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    {/if}
+
+	<button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
+      {#if $userloggedIn == true}
+      <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
+      {:else}
+      <svg class="rounded-full cursor-pointer w-10 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+      {/if}
+    </button>
   </div>
 
   <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
@@ -164,9 +224,136 @@ footer, .job-title, .job-type{
   </div>
 </nav>
 
+  <div class="z-10 absolute right-6 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+    {#if $profileDropDownMenu}
+    <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+      {#if $isAuthenticated}
+      <div>{authData.userName}</div>
+      <div class="font-medium truncate">{authData.userEmail}</div>
+      {:else}
+      <div>user name</div>
+      <div class="font-medium truncate">user email</div>
+      {/if}
+
+      
+    </div>
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+      <li>
+        <a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+      </li>
+      <li>
+        <a href="/job-posted" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
+      </li>
+    </ul>
+    {/if}
+  </div>
+
 <div class="p-4">
+  <div class="flex justify-between">
     <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg capitalize">{data.job.title}</h1>
-    <p class="text-xl">{data.job.employer}</p>
+    <!-- Show edit button for user that has log in and check whether the user is the user that create this job post-->
+    {#if $isAuthenticated == true && data.job.user == getUserId()}
+    <div>
+    <div class="inline-flex h-12 w-28 text-lg text-white bg-emerald-600 rounded-lg">
+        <a href="/job/{data.job.id}/update" class="h-full w-full flex items-center justify-center">
+            Edit
+            <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+              <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
+              <path d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z"/>
+            </svg>
+        </a>
+    </div>
+    <button on:click={popUpModal} class="inline-flex h-12 w-28 items-center justify-center ml-2 px-3 py-2 text-lg text-white bg-red-500 rounded-lg">
+        Delete
+        <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+          <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
+        </svg>
+    </button>
+    </div>
+    {/if}
+  </div>
+
+  {#if $showModal}
+<div class="flex justify-center items-center">
+								<div class="fixed inset-y-36 flex justify-center items-center z-50 max-h-full">
+									<!-- Modal Overlay with background blur -->
+									<div class="fixed inset-0 bg-gray-800 bg-opacity-50 backdrop-blur-md" />
+
+									<!-- Modal info -->
+									<div
+										id="popup-modal"
+										tabindex="-1"
+										class="p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+									>
+										<div class="relative w-full max-w-md max-h-full">
+											<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+												<button
+													on:click={hideModal}
+													type="button"
+													class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+													data-modal-hide="popup-modal"
+												>
+													<svg
+														class="w-3 h-3"
+														aria-hidden="true"
+														xmlns="http://www.w3.org/2000/svg"
+														fill="none"
+														viewBox="0 0 14 14"
+													>
+														<path
+															stroke="currentColor"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+															stroke-width="2"
+															d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+														/>
+													</svg>
+													<span class="sr-only">Close modal</span>
+												</button>
+												<div class="p-6 text-center">
+													<svg
+														class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+														aria-hidden="true"
+														xmlns="http://www.w3.org/2000/svg"
+														fill="none"
+														viewBox="0 0 20 20"
+													>
+														<path
+															stroke="currentColor"
+															stroke-linecap="round"
+															stroke-linejoin="round"
+															stroke-width="2"
+															d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+														/>
+													</svg>
+													<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+														Are you sure you want to delete this record?
+													</h3>
+                          								<p class="mb-3 font-bold">Job id: {data.job.id}</p>
+													<button
+                            							on:click|preventDefault={deleteRecord(data.job.id)}
+														data-modal-hide="popup-modal"
+														type="button"
+														class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+													>
+														Yes, I'm sure
+													</button>
+													<button
+														on:click={hideModal}
+														data-modal-hide="popup-modal"
+														type="button"
+														class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+														>No, cancel</button
+													>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+              </div>
+							{/if}
+
+    <p class="text-xl mt-2">{data.job.employer}</p>
  
     <div class="flex flex-row w-full mt-8">
         <div class="basis-2/3 prose max-w-none w-full">
