@@ -122,7 +122,7 @@
         const userID = await getUserId();
 
 		//Target id = fileInput, catch the first file//
-		if ( isUpload == true){
+		if ( $isUpload == true){
     		 [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
 		} else {
 			 [fileName, fileUrl] = []
@@ -414,7 +414,7 @@
 															class="block text-sm font-medium leading-6 text-gray-900"
 															>Job Location</label
 														>
-														<div class="mt-2">
+														<div class="mt-2 p-1">
 															<input
 																type="text"
 																name="job-location"
