@@ -14,8 +14,6 @@ export async function load({ fetch }) {
         }
     });
 
-    console.log(resp)
-    
     const res = await resp.json();
     if (resp.status == 200) {
       return {
