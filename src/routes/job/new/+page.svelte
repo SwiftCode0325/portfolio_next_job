@@ -14,6 +14,8 @@
 	let formErrors = {};
 	let selectedFile = "No File Chosen";
 	let isUpload = writable(false);
+	let fileName = '';
+	let fileUrl = '';
 
 	onMount(() => {
 		// Initialize the Carousel once the component is mounted
@@ -120,7 +122,11 @@
         const userID = await getUserId();
 
 		//Target id = fileInput, catch the first file//
-    	const [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		if ( isUpload == true){
+    		 [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		} else {
+			 [fileName, fileUrl] = []
+		}
 
         const JobsData = {
             user: userID,
@@ -150,7 +156,6 @@
         const res = await resp.json()
 
         if (resp.status == 200) {
-            // goto(`/jobs/${res.id}`);
             goto (`/Home`);
         }else{
             formErrors = res.data;
@@ -381,10 +386,8 @@
           <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">Upload Company Logo Image</label>
           <div class="mt-2 flex items-center gap-x-3">
             
-			{#if $isUpload}
-              <div class="rounded-full w-8 h-8">
-				<img src="/{selectedFile}" class="w-8 h-8 object-cover rounded-full" alt=""/>
-			  </div>
+			{#if $isUpload == true}
+              <img src="/{selectedFile}" class="w-8 h-8 object-cover rounded-full" alt=""/>
 			{:else}
 			<div class="border p-3 rounded-full bg-gray-200">
 				<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
