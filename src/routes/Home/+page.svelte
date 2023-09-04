@@ -29,7 +29,6 @@
   
   function openProfileDropDownMenu () {
     profileDropDownMenu.update( value => !value );
-    console.log(profileDropDownMenu)
   }
 
   function handleRangeChange(event) {
@@ -212,8 +211,9 @@ input[type=range]::-webkit-slider-thumb {
     <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
     {:else}
     <button class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
-    {/if}
     <a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    {/if}
+    
     <button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
       {#if $userloggedIn == true}
       <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
