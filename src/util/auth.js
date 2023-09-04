@@ -11,6 +11,7 @@ export let isAuthenticated = writable(false);
 export function logOut() {
     localStorage.setItem("auth", JSON.stringify(emptyAuth));
     isAuthenticated.set(false);
+    location.reload()
     return true;
 }
 

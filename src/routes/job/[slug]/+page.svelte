@@ -5,7 +5,10 @@
  import humanize from "humanize-plus";
  export let data;
 
- let animationTrigger = false
+ let showModal = writable(false)
+ let profileDropDownMenu = writable(false);
+let userloggedIn = writable(false);
+let authData = '';
 
  // get scroll Y position and show up the division when meet the position//
  window.addEventListener('scroll', function(){
