@@ -6,7 +6,7 @@ export async function load({ fetch }) {
 
     const userId = await getUserId();
 
-    const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?filter=(user.id='${userId}')`, {
+    const resp = await fetch(PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?filter=(user.id='${userId}')&page=1&perPage=4`, {
         method: 'GET',
         mode: 'cors',
         headers: {
@@ -17,7 +17,7 @@ export async function load({ fetch }) {
     const res = await resp.json();
     if (resp.status == 200) {
       return {
-        jobs: res.items
+        jobs: res
       }
     } else {
       return {
