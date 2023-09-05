@@ -2,9 +2,11 @@
   import { writable } from "svelte/store";
   import humanize from 'humanize-plus';
   import {isLoggedIn, logOut, isAuthenticated} from "../../util/auth.js"
+  import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
+  import { onMount } from "svelte";
 
   export let data;
-  let joblist = data.jobs;
+  let joblist = data.jobs.items;
   let filteredJobs = joblist;
   let filter = '';
   let search = '';
@@ -19,6 +21,31 @@
   let profileDropDownMenu = writable(false);
   let authData = '';
   let userloggedIn = writable(false);
+  let currentJobPage = 1;
+  let nav;
+  let totalPages;
+
+  onMount(() => {
+  nav = document.getElementById("totalPage")
+  totalPages = data.jobs.totalPages; // Set the total number of pages
+
+  // Loop through the total number of pages
+  for (let i = 1; i <= totalPages; i++) {
+  // Create a new button element
+  let button = document.createElement("button");
+  
+  // Set the attributes and text content of the button
+  button.setAttribute("id", "currentPage");
+  button.setAttribute("class", "relative items-center text-gray-400 px-5 py-4 text-sm font-semibold hover:text-orange-400 hover:underline hover:border-orange-400 focus:text-pink-600 focus:underline focus:border-pink-600");
+  button.textContent = i;
+  
+  // Attach a click event listener to the button
+  button.addEventListener("click", getCurrentPage);
+
+  // Append the button to the nav element
+  nav.appendChild(button);
+}
+  })
 
   function openDropDownMenu() {
     jobTypeDropDownMenu.update(value => !value);
@@ -107,6 +134,81 @@
     }
 
     loadUserData();
+
+    async function nextPage() {
+      if(data.jobs.page < data.jobs.totalPages){
+       currentJobPage = data.jobs.page + 1
+      }else {
+        currentJobPage = data.jobs.page
+      }
+
+       const response = await fetch( PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?page=${currentJobPage}&perPage=10`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      const res = await response.json()
+
+      if(response.ok){
+
+        filteredJobs = res.items
+      }else{
+        filteredJobs = joblist
+      }
+    }
+    
+    async function prevPage() {
+      if(data.jobs.page < data.jobs.totalPages && data.jobs.page > 1){
+       currentJobPage = data.jobs.page - 1
+      }else {
+        currentJobPage = data.jobs.page
+      }
+
+      const response = await fetch( PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?page=${currentJobPage}&perPage=10`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      const res = await response.json()
+
+      if(response.ok){
+        filteredJobs = res.items
+      }else{
+        filteredJobs = joblist
+      }
+    }
+
+    async function getCurrentPage(event) {
+
+      // Get the clicked button element
+      const element = event.target;
+
+      const currentPageNo = element.textContent
+
+      currentJobPage = currentPageNo
+      
+      const response = await fetch( PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?page=${currentPageNo}&perPage=10`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      const res = await response.json()
+
+      if(response.ok){
+        filteredJobs = res.items
+      }else{
+        filteredJobs = joblist
+      }
+    }
 </script>
 
 <style>
@@ -251,13 +353,17 @@ input[type=range]::-webkit-slider-thumb {
   </div>
 </nav>
 
-<div class="flex p-2 m-2 space-x-5">
+<div class="flex p-2 m-2 space-x-5 flex-row justify-between">
     <button class="items-center justify-center p-0.5 mb-2 h-10 mr-2 text-white text-sm font-medium rounded-lg bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl"
     on:click={clearFilter}>
         <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-transparent dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
         Clear Filter
         </span>
     </button>
+
+    <p class="text-gray-400 items-center justify-center flex mb-1">
+      show record page {currentJobPage} of {totalPages}
+    </p>
 </div>
 
 <div class="flex">
@@ -475,23 +581,23 @@ cursor-pointer dark:bg-gray-700"/>
 <div class="flex justify-center border-gray-200 bg-white px-4 py-3 sm:px-6 mt-5">
   <div class="sm:flex sm:items-center sm:justify-between w-full flex justify-between">
 
-        <a href="#" class="inline-flex items-center rounded-l-md px-2 text-gray-400 focus:z-20 focus:outline-offset-0 hover:text-pink-600">
+        <button on:click={prevPage} class="inline-flex items-center rounded-l-md px-2 text-gray-400 focus:z-20 focus:outline-offset-0 hover:text-pink-600">
           <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
           </svg>
           <span class="mb-0.5 px-2">Previous</span>
-        </a>
+        </button>
 
-      <nav class="inline-flex -space-x-px" aria-label="Pagination">
-        <a href="#" class="relative items-center text-gray-400 px-5 py-4 text-sm font-semibold hover:text-orange-400 hover:underline hover:border-orange-400 focus:text-pink-600 focus:underline focus:border-pink-600">1</a>
+      <nav class="inline-flex -space-x-px" aria-label="Pagination" id="totalPage">
+        
       </nav>
 
-      <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 focus:z-20 focus:outline-offset-0 hover:text-pink-600">
+      <button on:click={nextPage} class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 focus:z-20 focus:outline-offset-0 hover:text-pink-600">
           <span class="mb-0.5 px-2">Next</span>
           <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
           </svg>
-      </a>
+      </button>
     </div>
 </div>
 
