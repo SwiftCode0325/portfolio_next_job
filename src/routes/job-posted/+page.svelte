@@ -1,7 +1,8 @@
 <script>
 import { writable } from 'svelte/store'
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-import { isAuthenticated, logOut, isLoggedIn } from '../../util/auth.js';
+import { isAuthenticated, logOut, isLoggedIn, getUserId } from '../../util/auth.js';
+import { onMount } from 'svelte';
 
 export let data;
 let showModal = writable(false)
@@ -9,6 +10,10 @@ let jobIndex = '';
 let profileDropDownMenu = writable(false);
 let userloggedIn = writable(false);
 let authData = '';
+let joblist = data.jobs.items
+let nav;
+let totalPages;
+let currentJobPage = 1;
 
 async function loadUserData(){
     const userIsLoggedIn = await isLoggedIn();
@@ -50,20 +55,122 @@ async function deleteRecord(id){
       });
 
       if(response.ok){
-        data.jobs = data.jobs.filter((record) => record.id != id);
+        joblist = joblist.filter((record) => record.id != id);
         location.reload()
       }else{
-        data.jobs = '';
+        joblist = '';
       }
     }
 
+    async function nextPage() {
+      if(data.jobs.page < data.jobs.totalPages){
+       currentJobPage = data.jobs.page + 1
+      }else {
+        currentJobPage = data.jobs.page
+      }
+
+      const userId = await getUserId();
+
+      const response = await fetch( PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?filter=(user.id='${userId}')&page=${currentJobPage}&perPage=4`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      const res = await response.json()
+
+      if(response.ok){
+
+        joblist = res.items
+      }else{
+        joblist = joblist
+      }
+    }
+    
+    async function prevPage() {
+      if(data.jobs.page < data.jobs.totalPages && data.jobs.page > 1){
+       currentJobPage = data.jobs.page - 1
+      }else {
+        currentJobPage = data.jobs.page
+      }
+
+      const userId = await getUserId();
+
+      const response = await fetch( PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?filter=(user.id='${userId}')&page=${currentJobPage}&perPage=4`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      const res = await response.json()
+
+      if(response.ok){
+        joblist = res.items
+      }else{
+        joblist = joblist
+      }
+    }
+
+    async function getCurrentPage(event) {
+
+      // Get the clicked button element
+      const element = event.target;
+
+      const currentPageNo = element.textContent
+
+      currentJobPage = currentPageNo
+
+      const userId = await getUserId();
+      
+      const response = await fetch( PUBLIC_BACKEND_BASE_URL + `api/collections/jobs/records?filter=(user.id='${userId}')&page=${currentPageNo}&perPage=4`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Content-Type':'application/json'
+        }
+      });
+
+      const res = await response.json()
+
+      if(response.ok){
+        joblist = res.items
+      }else{
+        joblist = joblist
+      }
+    }
+
+  onMount(() => {
+  nav = document.getElementById("totalPage")
+  totalPages = data.jobs.totalPages; // Set the total number of pages
+
+  // Loop through the total number of pages
+  for (let i = 1; i <= totalPages; i++) {
+  // Create a new button element
+  let button = document.createElement("button");
+  
+  // Set the attributes and text content of the button
+  button.setAttribute("id", "currentPage");
+  button.setAttribute("class", "relative items-center pagination px-5 py-4 text-sm font-semibold focus:underline");
+  button.textContent = i;
+  
+  // Attach a click event listener to the button
+  button.addEventListener("click", getCurrentPage);
+
+  // Append the button to the nav element
+  nav.appendChild(button);
+}
+  })
 </script>
 
 
 <style>
 
 .body{
-	height: 700px;
+	height: 750px;
 }
 
   @keyframes slideDown1 {
@@ -82,6 +189,10 @@ async function deleteRecord(id){
 
 footer, .job-title{
   background-color: #20333a;
+}
+
+.pagination{
+  color: #20333a;
 }
 </style>
 <div class="h-full m-0 p-0">
@@ -192,11 +303,18 @@ footer, .job-title{
 </nav>
 
 <div class="p-4 body">
+
+  <div class="flex justify-between">
   <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg">Job Posted</h1>
+
+  <p class="pagination items-center justify-center flex mb-1 mr-1">
+      show record page {currentJobPage} of {totalPages}
+  </p>
+  </div>
     
 <div class="grid grid-cols-4 gap-2">
 
-{#each data.jobs as job, index}
+{#each joblist as job, index}
 <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mt-5">
     <div class="h-64 flex items-center justify-center">
     <a href="/job/{job.id}" class="h-full w-full">
@@ -212,7 +330,7 @@ footer, .job-title{
         <a href="/job/{job.id}">
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{job.title}</h5>
         </a>
-        <p class="mb-3 font-normal text-lg text-gray-700">{job.description.slice(0, 240)}... </p>
+        <p class="mb-3 font-normal text-lg text-gray-700">{job.description.slice(0, 30)}... </p>
         <p class="mb-3 font-bold text-xs">Job id: {job.id}</p>
         <p class="mb-3 font-bold text-xs">Created At: {new Date(job.created).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
         <p class="mb-3 font-bold text-xs">Updated At: {new Date(job.updated).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
@@ -235,10 +353,34 @@ footer, .job-title{
     </div>
 </div>
 {/each}
-</div>         
+</div>   
+
+<div class="flex justify-center border-gray-200 bg-transparent px-4 py-3 sm:px-6 mt-5">
+  <div class="sm:flex sm:items-center sm:justify-between w-full flex justify-between">
+
+        <button on:click={prevPage} class="inline-flex items-center rounded-l-md px-2 pagination focus:z-20 focus:outline-offset-0">
+          <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+          </svg>
+          <span class="mb-0.5 px-2">Previous</span>
+        </button>
+
+      <nav class="inline-flex -space-x-px" aria-label="Pagination" id="totalPage">
+        
+      </nav>
+
+      <button on:click={nextPage} class="relative inline-flex items-center rounded-r-md px-2 py-2 pagination focus:z-20 focus:outline-offset-0">
+          <span class="mb-0.5 px-2">Next</span>
+          <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+          </svg>
+      </button>
+    </div>
 </div>
 
-{#each data.jobs as job, index}
+</div>
+
+{#each joblist as job, index}
 {#if $showModal && jobIndex == index}
 <div class="flex justify-center items-center">
 								<div class="fixed inset-y-36 flex justify-center items-center z-50 max-h-full">

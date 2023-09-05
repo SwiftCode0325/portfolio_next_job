@@ -353,7 +353,7 @@ footer, .job-title, .job-type{
               </div>
 							{/if}
 
-    <p class="text-xl mt-2">{data.job.employer}</p>
+    <p class="text-xl mt-2 capitalize">{data.job.employer}</p>
  
     <div class="flex flex-row w-full mt-8">
         <div class="basis-2/3 prose max-w-none w-full">
