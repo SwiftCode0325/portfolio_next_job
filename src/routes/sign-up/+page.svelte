@@ -1,7 +1,7 @@
 <script>
 
 import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-import { authenticateUser } from '../../util/auth.js'
+import { authenticateUser, isAuthenticated } from '../../util/auth.js'
 import { goto } from '$app/navigation';
 import { writable } from 'svelte/store';
 import { uploadMedia } from '../../util/s3-uploader.js';
@@ -12,6 +12,10 @@ let isLoading = writable(false)
 let formErrors = {};
 let selectedFile = "No File Chosen";
 let isUpload = writable(false);
+let getError = writable(false);
+let getSuccess = writable(false);
+let fileName = '';
+let fileUrl = '';
 
   async function postSignUp() {
       goto('/job/new');
@@ -22,7 +26,12 @@ let isUpload = writable(false);
     evt.preventDefault();
     isLoading.set(true);
 
-    const [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+    //Target id = fileInput, catch the first file//
+		if ( $isUpload == true){
+    		 [fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		} else {
+			 [fileName, fileUrl] = []
+		}
 
     const userData = {
       username: evt.target['username'].value,
@@ -45,12 +54,15 @@ let isUpload = writable(false);
       const res = await authenticateUser(userData.username, userData.password);
       if (res.success) {
         postSignUp();
+        getError.set(false)
+        getSuccess.set(true)
       } else {
         throw 'Sign up succeeded but authentication failed';
       }
     } else {
       const res = await resp.json();
       formErrors = res.data
+      getError.set(true)
     }
       // Check for password confirmation error after API call is completed
     if (evt.target['password'].value != evt.target['password-confirmation'].value) {
@@ -65,22 +77,6 @@ let isUpload = writable(false);
   }
   function togglePasswordConfirmationVisibility(){
     showPasswordConfirmation = !showPasswordConfirmation;
-  }
-  function clearUsernameError(){
-    if(formErrors.username){
-      formErrors.username.message = '';
-    }
-  }
-
-   function clearEmailError() {
-    if(formErrors.email){
-    formErrors.email.message = '';
-    }
-}
-  function clearPasswordError() {
-    if(formErrors.password){
-    formErrors.password.message = '';
-    }
   }
 
   //change the default message to selected image file name in choose file button//
@@ -97,6 +93,16 @@ let isUpload = writable(false);
 			isUpload.set(false);
 		}
   }
+
+  function closeWindow() {
+        getError.set(false)
+        getSuccess.set(false)
+      }
+  
+  setTimeout(function() {
+    document.querySelector('.warningMessageSlideRight').remove();
+}, 5000);
+
 </script>
 
 <style>
@@ -114,6 +120,11 @@ let isUpload = writable(false);
 .slideRight {
   animation: slide-to-right 2s
 }
+
+.warningMessageSlideRight{
+  animation: slide-to-right 1.0s
+}
+
 	@keyframes slideDown {
   0% {
     opacity: 0;
@@ -158,6 +169,62 @@ let isUpload = writable(false);
         <!-- Form div -->
         <!-- Outer div -->
         <div class="flex items-center justify-center w-7/12">
+
+          	<!-- If isAuthenticated is false, show this warning message -->
+	          {#if $isAuthenticated == false}
+	          <div class="flex absolute top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50">
+  		          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+  		          <span>Please sign up first before proceed to post new job page</span>
+	          </div>
+	          {/if}
+
+
+          <!-- If getError, show the warning message -->
+            {#if $getError}
+            <div class="border border-black flex absolute top-2 left-1 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50" role="alert">
+                <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div class="ml-3 text-sm font-medium pr-2">
+                  {#if 'username' in formErrors}
+                    Warning: {formErrors['username'].message}
+                  {:else if 'email' in formErrors}
+                    Warning: {formErrors['email'].message}
+                  {:else if 'password' in formErrors}
+                    Warning: {formErrors['password'].message}
+                  {:else}
+                    Warning: ''
+                  {/if}
+                </div>
+                <button on:click={closeWindow} type="button" class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-2" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            </div>
+            {/if}
+
+            <!-- If success sign up show success notification -->
+            {#if $getSuccess}
+            <div class="border border-black flex absolute top-2 left-1 items-center p-4 text-green-800 rounded-lg bg-green-50" role="alert">
+                <svg class="w-4 h-4 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div class="ml-3 text-sm font-medium pr-2">
+                  User successfully sign up !
+                </div>
+                <button on:click={closeWindow} type="button" class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8" data-dismiss-target="#alert-2" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>
+            </div>
+            {/if}
+
             <!-- Inner div -->
             <div class="flex w-9/12 h-full items-center justify-center ml-10 slide-down">
                   <!-- Form section -->
@@ -218,15 +285,8 @@ let isUpload = writable(false);
                             <div>
                                 <label for="username" class="block pb-1 text-sm font-medium text-gray-900 dark:text-white">Your username</label>
                                 <input type="text" name="username" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John Doe" required
-                                on:focus={clearUsernameError}>
-                                {#if 'username' in formErrors}
-                                <label class="label h-5" for="Username Error">
-                                    <span class="label-text-alt text-red-500">{formErrors['username'].message}</span>
-                                </label>
-                                {/if}
-                                
+                                >
           <div class="mt-2 flex items-center gap-x-3">
-      
       
 			{#if $isUpload}
 				<img src="/{selectedFile}" class="w-10 h-10 object-cover rounded-full" alt=""/>
@@ -251,12 +311,7 @@ let isUpload = writable(false);
                             <div>
                                 <label for="email" class="block pb-1 text-sm font-medium text-gray-900 dark:text-white">Your Email</label>
                                 <input type="email" name="email" placeholder="johndoe@example.com" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
-                                on:focus={clearEmailError}>
-                                {#if 'email' in formErrors}
-                                <label class="label h-5" for="Email Error">
-                                    <span class="label-text-alt text-red-500">{formErrors['email'].message}</span>
-                                </label>
-                                {/if}
+                                >
                             </div>
 
                             <!-- password section -->
@@ -267,7 +322,7 @@ let isUpload = writable(false);
                                         name="password" 
                                         placeholder="••••••••" 
                                         class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
-                                        on:focus={clearPasswordError}>
+                                        >
                                         <!-- svelte-ignore a11y-interactive-supports-focus -->
                                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                                         <div class="absolute inset-y-0 top-1.5 right-2.5">
@@ -280,11 +335,6 @@ let isUpload = writable(false);
                                             </svg>
                                         </div>
                                     </div>
-                                    {#if 'password' in formErrors}
-                                    <label class="label h-5" for="password">
-                                        <span class="label-text-alt text-red-500">{formErrors['password'].message}</span>
-                                    </label>
-                                    {/if}
                             </div>
 
                             <!-- password-confirmation section -->
@@ -295,7 +345,7 @@ let isUpload = writable(false);
                                     name="password-confirmation"
                                     placeholder="••••••••" 
                                     class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required
-                                    on:focus={clearPasswordError}>
+                                    >
                                     <!-- svelte-ignore a11y-interactive-supports-focus -->
                                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                                     <div class="absolute inset-y-0 top-1.5 right-2.5">
@@ -308,11 +358,6 @@ let isUpload = writable(false);
                                         </svg>
                                     </div>
                                 </div>
-                                {#if 'password' in formErrors}
-                                <label class="label h-5" for="password">
-                                    <span class="label-text-alt text-red-500">{formErrors['password'].message}</span>
-                                </label>
-                                {/if}
                             </div>
 
                             <button type="submit" class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
