@@ -10,9 +10,8 @@
   let isLoading = writable(false);
   let username = '';
   let password = '';
-  let loginStatus = writable(false);
+  let getError = writable(false);
     
-
     async function signIn(evt) {
         //prevent page go to the top when the button is clicked//
         evt.preventDefault();
@@ -22,17 +21,16 @@
         const login = await authenticateUser(username, password);
         if(login.success == true){
             goto('/Home');
-            loginStatus.set(false);
+            getError.set(false);
         }else{
-            loginStatus.set(true);
+            getError.set(true);
         }
         isLoading.set(false);
     }
 
-    function slideUp() {
-        loginStatus.set(false)
+    function closeWindow() {
+        getError.set(false)
       }
-
 </script>
 
 <style>
@@ -49,6 +47,10 @@
 }
 .slideRight {
   animation: slide-to-right 2s
+}
+
+.warningMessageSlideRight{
+  animation: slide-to-right 0.3s
 }
 
 	@keyframes slideDown {
@@ -87,8 +89,8 @@
     <!-- Form div -->
     <div class="flex items-center flex-col justify-center w-7/12">
             <!-- If loginStatus is true, show the warning message -->
-            {#if $loginStatus}
-            <div class="flex absolute top-2 ml-10 slide-down items-center p-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+            {#if $getError}
+            <div class="flex absolute top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-red-400" role="alert">
                 <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                 </svg>
@@ -96,7 +98,7 @@
                 <div class="ml-3 text-sm font-medium pr-2">
                     Warning: Invalid password/username!
                 </div>
-                <button on:click={slideUp} type="button" class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-2" aria-label="Close">
+                <button on:click={closeWindow} type="button" class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-2" aria-label="Close">
                     <span class="sr-only">Close</span>
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
