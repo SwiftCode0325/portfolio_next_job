@@ -4,6 +4,7 @@
   import {isLoggedIn, logOut, isAuthenticated} from "../../util/auth.js"
   import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
   import { onMount } from "svelte";
+  import { goto } from '$app/navigation';
 
   export let data;
   let joblist = data.jobs.items;
@@ -24,6 +25,19 @@
   let currentJobPage = 1;
   let nav;
   let totalPages;
+
+   async function loadUserData(){
+    const userIsLoggedIn = await isLoggedIn();
+    if (userIsLoggedIn) {
+       authData = JSON.parse(localStorage.getItem("auth"));
+       userloggedIn.set(true)
+    } else {
+      authData = '';
+      userloggedIn.set(false)
+    }
+    }
+
+    loadUserData();
 
   onMount(() => {
   nav = document.getElementById("totalPage")
@@ -122,19 +136,6 @@
     filterJobs()
   }
 
-    async function loadUserData(){
-    const userIsLoggedIn = await isLoggedIn();
-    if (userIsLoggedIn) {
-       authData = JSON.parse(localStorage.getItem("auth"));
-       userloggedIn.set(true)
-    } else {
-      authData = '';
-      userloggedIn.set(false)
-    }
-    }
-
-    loadUserData();
-
     async function nextPage() {
       if(data.jobs.page < data.jobs.totalPages){
        currentJobPage = data.jobs.page + 1
@@ -209,6 +210,14 @@
         filteredJobs = joblist
       }
     }
+
+ function loginStatus() {
+  if($isAuthenticated == false){
+    goto("/sign-up")
+  }else{
+    goto("/job/new")
+  }
+ }
 </script>
 
 <style>
@@ -308,7 +317,7 @@ input[type=range]::-webkit-slider-thumb {
 
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
-    <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
+    <button on:click={loginStatus} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</button>
     {#if $isAuthenticated}
     <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
     {:else}
@@ -317,10 +326,10 @@ input[type=range]::-webkit-slider-thumb {
     {/if}
     
     <button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
-      {#if $userloggedIn == true}
-      <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
-      {:else}
+      {#if $userloggedIn == false || authData.userProfilePicture == ''}
       <svg class="rounded-full cursor-pointer w-10 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+      {:else}
+      <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
       {/if}
     </button>
   </div>
