@@ -42,7 +42,11 @@ let animationTrigger = false;
 
   // get scroll Y position and show up the division when meet the position//
  window.addEventListener('scroll', function(){
+  // Check if screen width is at least 768px
+  if (window.innerWidth >= 768){
     const currentposition = window.scrollY
+
+    console.log(currentposition)
 
     // target requirement division //
     const slideUpDivision = document.getElementById('slideUpDiv');
@@ -65,6 +69,7 @@ let animationTrigger = false;
       animationTrigger = true;
   } else {
     slideUpDivision1.style.display = "none";
+  }
   }
  })
 
@@ -102,7 +107,9 @@ async function deleteRecord(id){
     transform: translateY(0);
   }
 }
-.slide-up {
+
+@media (min-width: 768px) {
+  .slide-up {
   animation: slideUp 2s ease forwards;
 }
 
@@ -117,10 +124,15 @@ async function deleteRecord(id){
 .slide-up4 {
   animation: slideUp 9s ease forwards;
 }
-
-.body{
-  height: 1800px;
 }
+
+@media (min-width: 768px) and (max-width: 912px){
+  .body{
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
 
 footer, .job-title, .job-type{
   background-color: #20333a;
@@ -140,15 +152,22 @@ footer, .job-title, .job-type{
   animation: slideDown1 2s ease forwards;
 }
 
+@media (max-width: 280px) {
+.display {
+  display: border flex;
+  flex-direction: column;
+}
+
+}
 </style>
 
-<div class="bg-gradient-to-bl from-pink-500 to-orange-400 body flex flex-col">
+<div class="bg-gradient-to-bl from-pink-500 to-orange-400">
 
-<nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover content-center" style="background-image: url('/background-img5.png');">
+<nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover bg-top" style="background-image: url('/background-img5.png');">
   <div class="flex items-center p-4 h-24">
     <!-- Left-hand side content -->
-  <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full p-2 group">
-      <span class="self-center text-3xl whitespace-nowrap text-gray-200 dark:text-white font-extrabold group-hover:text-black">NEXT JOB</span>
+  <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full group p-2">
+      <span class="self-center text-lg md:text-3xl whitespace-nowrap text-gray-200 dark:text-white font-extrabold group-hover:text-black">NEXT JOB</span>
 
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="40px" height="40px" viewBox="0 0 511.626 511.627" style="enable-background:new 0 0 511.626 511.627;"
@@ -202,12 +221,12 @@ footer, .job-title, .job-type{
 
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
-    <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
+    <a href="/job/new" class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
     {#if $isAuthenticated}
-    <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
+    <button on:click={logOut} class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
     {:else}
-    <button class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
-	<a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    <button class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
+	  <a href="/sign-up" class="mr-2 hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
     {/if}
 
 	<button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
@@ -219,7 +238,7 @@ footer, .job-title, .job-type{
     </button>
   </div>
 
-  <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
+  <div class="absolute text-gray-200 m-2 top-48 left-30 md:top-40 md:left-44 md:text-2xl text-xl font-semibold slide-down1">
 	<h1>Find Your Dream Job Here</h1>
   </div>
 </nav>
@@ -234,27 +253,40 @@ footer, .job-title, .job-type{
       <div>user name</div>
       <div class="font-medium truncate">user email</div>
       {/if}
-
-      
     </div>
     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
       <li>
-        <a href="/profile" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+        <a href="/profile" class="block px-4 py-2">Dashboard</a>
       </li>
       <li>
-        <a href="/job-posted" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
+        <a href="/job-posted" class="block px-4 py-2">Job Posted</a>
       </li>
+      <li>
+      <a href="/job/new" class="block md:hidden px-4 py-2">Post Job</a>
+      </li>
+      {#if $isAuthenticated}
+      <li>
+      <button on:click={logOut} class="block md:hidden px-4 py-2">Log Out</button>
+      </li>
+      {:else}
+      <li>
+      <button class="block md:hidden px-4 py-2"><a href="/login">Log In</a></button>
+	    </li>
+      <li>
+      <button class="block md:hidden px-4 py-2"><a href="/sign-up">Sign Up</a></button>
+      </li>
+      {/if}
     </ul>
     {/if}
   </div>
 
-<div class="p-4">
-  <div class="flex justify-between">
-    <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg capitalize">{data.job.title}</h1>
+<div class="p-4 body">
+  <div class="flex justify-between display">
+    <h1 class="text-3xl font-extrabold job-title p-4 text-white w-64 sm:w-96 rounded-lg capitalize">{data.job.title}</h1>
     <!-- Show edit button for user that has log in and check whether the user is the user that create this job post-->
     {#if $isAuthenticated == true && data.job.user == getUserId()}
-    <div>
-    <div class="inline-flex h-12 w-28 text-lg text-white bg-emerald-600 rounded-lg">
+    <div class="w-32 sm:ml-2 md:w-auto md:justify-center md:items-center md:flex">
+    <div class="inline-flex h-12 w-28 text-lg text-white bg-emerald-600 rounded-lg ml-2 mt-1">
         <a href="/job/{data.job.id}/update" class="h-full w-full flex items-center justify-center">
             Edit
             <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -263,7 +295,7 @@ footer, .job-title, .job-type{
             </svg>
         </a>
     </div>
-    <button on:click={popUpModal} class="inline-flex h-12 w-28 items-center justify-center ml-2 px-3 py-2 text-lg text-white bg-red-500 rounded-lg">
+    <button on:click={popUpModal} class="inline-flex h-12 w-28 items-center justify-center ml-2 px-3 py-2 text-lg text-white bg-red-500 rounded-lg mt-1">
         Delete
         <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
           <path d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z"/>
@@ -275,7 +307,7 @@ footer, .job-title, .job-type{
 
   {#if $showModal}
 <div class="flex justify-center items-center">
-								<div class="fixed inset-y-36 flex justify-center items-center z-50 max-h-full">
+								<div class="fixed inset-y-56 flex justify-center items-center z-50 max-h-full">
 									<!-- Modal Overlay with background blur -->
 									<div class="fixed inset-0 bg-gray-800 bg-opacity-50 backdrop-blur-md" />
 
@@ -283,10 +315,10 @@ footer, .job-title, .job-type{
 									<div
 										id="popup-modal"
 										tabindex="-1"
-										class="p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+										class="p-4 md:inset-0"
 									>
-										<div class="relative w-full max-w-md max-h-full">
-											<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+										<div class="relative w-full">
+											<div class="relative bg-white rounded-lg shadow">
 												<button
 													on:click={hideModal}
 													type="button"
@@ -355,13 +387,13 @@ footer, .job-title, .job-type{
 
     <p class="text-xl mt-2 capitalize">{data.job.employer}</p>
  
-    <div class="flex flex-row w-full mt-8">
+    <div class="flex flex-col sm:flex-row w-full mt-8">
         <div class="basis-2/3 prose max-w-none w-full">
           <div class="slide-up">
             <h2 class="text-xl font-semibold mb-2 text-black">Description</h2>
             <p class="border border-pink-600 mb-4"></p>
             <div class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl"> 
-              <SvelteMarkdown source={data.job.description} />
+              <span class="text-xl md:text-lg"><SvelteMarkdown source={data.job.description}/></span>
             </div>
           </div>
 
@@ -370,7 +402,7 @@ footer, .job-title, .job-type{
             <h2 class="text-xl font-semibold text-black mb-2">Requirements</h2>
             <p class="border border-pink-600 mb-4"></p>
             <div class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl">
-              <SvelteMarkdown source={data.job.requirements} />
+              <span class="text-xl md:text-lg"><SvelteMarkdown source={data.job.requirements} /></span>
             </div>
           </div>
 
@@ -379,24 +411,24 @@ footer, .job-title, .job-type{
             <h2 class="text-xl font-semibold text-black mb-2">How to Apply?</h2>
             <p class="border border-pink-600 mb-4"></p>
             <div class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl">
-              <p>{data.job.applicationInstructions}</p>
+              <p class="text-xl md:text-lg break-all">{data.job.applicationInstructions}</p>
             </div>
           </div>
         </div>
 
-        <div class="basis-1/3 ml-4">
+        <div class="basis-1/3 md:ml-4 md:mt-0 mt-6">
           <div class="slide-up2">
             <h2 class="text-xl font-semibold mb-2">Location</h2>
-            <p class="border border-orange-400 mb-4"></p>
-            <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl">{data.job.location}</p>
+            <p class="border md:border-orange-400 border-pink-600 mb-4"></p>
+            <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl text-xl md:text-lg">{data.job.location}</p>
           </div>
 
             <div class="mt-6" />
 
           <div class="slide-up3">
             <h2 class="text-xl font-semibold mb-2">Salary Range</h2>
-            <p class="border border-orange-400 mb-4"></p>
-            <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl">
+            <p class="border md:border-orange-400 border-pink-600 mb-4"></p>
+            <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl text-xl md:text-lg">
                 USD {humanize.formatNumber(data.job.minAnnualCompensation)} - USD {humanize.formatNumber(
                     data.job.maxAnnualCompensation
                 )}
@@ -405,7 +437,10 @@ footer, .job-title, .job-type{
 
           <div class="mt-6 "/>
 
-          <div class="flex flex-row text-white text-lg slide-up4">
+          <div class="slide-up4">
+          <h2 class="text-xl font-semibold mb-2">Job Type</h2>
+          <p class="border md:border-orange-400 border-pink-600 mb-4"></p>
+          <div class="flex flex-row text-white text-lg">
             {#if data.job.job_type.includes('Full Time')}
             <h2 class="rounded-lg p-2 job-type ml-2">Full Time</h2>
             {/if}
@@ -413,17 +448,18 @@ footer, .job-title, .job-type{
             <h2 class="rounded-lg p-2 job-type ml-2">Part Time</h2>
             {/if}
             {#if data.job.job_type.includes('Remote')}
-            <h2 class="rounded-lg p-2 job-type ml-2">Remote</h2>
+            <h2 class="rounded-lg p-2 job-type ml-2 flex items-center">Remote</h2>
             {/if}
+          </div>
           </div>
         </div>
     </div>
 </div>
-</div>
 
- <footer class="w-full h-16 flex items-center text-gray-300 fill-gray-300">
+<footer class="w-full h-16 flex items-center text-gray-300 fill-gray-300 border border-black">
     <svg xmlns="http://www.w3.org/2000/svg" class="p-2 w-12 h-12" stroke="current" viewBox="0 0 24 24" id="copyright"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91c.48.22 1.05.34 1.7.34.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
     <span class="font-bold uppercase">next job</span>  
- </footer>
+</footer>
 
+</div>
 
