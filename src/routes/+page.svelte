@@ -22,7 +22,7 @@
   onMount(() => {
     // Simulate loading progress increment
     const interval = setInterval(() => {
-      progress += 5; // Increment by 5 for smoother transitions
+      progress += 10; // Increment by 10 for smoother transitions
       if (progress === 100) {
         clearInterval(interval);
         // Navigate to the main homepage after loading
@@ -48,12 +48,12 @@
 
 <div>
   <div
-  class="h-screen bg-cover bg-no-repeat bg-top ease-in-out duration-1000 delay-500"
+  class="h-screen bg-cover bg-no-repeat bg-top ease-in-out duration-1000 delay-500 md:bg-cover"
   style="background-image: url('{[currentBgIndex]}')"
 ></div>
   <div class="absolute inset-0 flex flex-col items-center justify-center mt-12">
     <div class="flex items-center">
-      <h1 class="text-6xl text-gray-200 dark:text-white font-extrabold ">NEXT JOB</h1>
+      <h1 class="text-5xl text-gray-200 dark:text-white font-extrabold md:text-6xl">NEXT JOB</h1>
       <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="60px" height="60px" viewBox="0 0 511.626 511.627" style="enable-background:new 0 0 511.626 511.627;"
 	 xml:space="preserve" class="fill-gray-200 dark:text-white ml-2">
@@ -102,13 +102,13 @@
 </g>
 </svg>
     </div>
-    <div class="w-96 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-      <div class="w-96 bg-blue-600 h-2.5 rounded-full" style="width: {progress}%"></div>
+    <div class="w-80 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 md:w-96 mt-2">
+      <div class="w-80 bg-blue-600 h-2.5 rounded-full md:w-96" style="width: {progress}%"></div>
     </div>
     <!-- Use the fadeIn variable to control the fade-in/fade-out effect -->
     {#if currentQuote}
       <h2
-        class="mt-2 text-gray-200 {fadeIn ? 'opacity-100 transition-opacity delay-3500 duration-2500 ease-in' : 'opacity-0 transition-opacity delay-1000 duration-2000 ease-out'} text-xl text-center mb-8"
+        class="mt-2 text-gray-200 {fadeIn ? 'opacity-100 transition-opacity delay-3500 duration-2500 ease-in' : 'opacity-0 transition-opacity delay-1000 duration-2000 ease-out'} text-base text-center mb-8 md:text-xl"
       >{currentQuote}</h2>
     {/if}
   </div>
