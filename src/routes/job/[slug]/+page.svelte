@@ -50,11 +50,11 @@ let animationTrigger = false;
 
     // target requirement division //
     const slideUpDivision = document.getElementById('slideUpDiv');
-    const triggerPosition = 200
+    const triggerPosition = 100
 
     // target how to apply division //
     const slideUpDivision1 = document.getElementById('slideUpDiv1');
-    const triggerPosition1 = 300
+    const triggerPosition1 = 190
     
 
     if (currentposition >= triggerPosition) {
@@ -133,7 +133,6 @@ async function deleteRecord(id){
   }
 }
 
-
 footer, .job-title, .job-type{
   background-color: #20333a;
 }
@@ -163,7 +162,7 @@ footer, .job-title, .job-type{
 
 <div class="bg-gradient-to-bl from-pink-500 to-orange-400">
 
-<nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover bg-top" style="background-image: url('/background-img5.png');">
+<nav class="bg-amber-500 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover bg-top" style="background-image: url('/background-img5.png');">
   <div class="flex items-center p-4 h-24">
     <!-- Left-hand side content -->
   <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full group p-2">
@@ -238,7 +237,7 @@ footer, .job-title, .job-type{
     </button>
   </div>
 
-  <div class="absolute text-gray-200 m-2 top-48 left-30 md:top-40 md:left-44 md:text-2xl text-xl font-semibold slide-down1">
+  <div class="absolute text-gray-200 m-2 top-40 left-30 md:left-44 md:text-2xl text-xl font-semibold slide-down1 w-48">
 	<h1>Find Your Dream Job Here</h1>
   </div>
 </nav>

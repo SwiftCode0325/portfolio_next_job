@@ -31,8 +31,6 @@ async function loadUserData(){
 function popUpModal(job, index){
   showModal.set(true)
   jobIndex = index;
-  console.log(index)
-  
 }
 
 function hideModal(){
@@ -82,8 +80,15 @@ async function deleteRecord(id){
       const res = await response.json()
 
       if(response.ok){
-
         joblist = res.items
+        
+        // Add the following lines to remove the underline from the first page button
+        let firstPageButton = document.querySelector("#currentPage[value='1']");
+        firstPageButton.classList.remove("underline");
+        
+        // Add the following lines to focus the current page number
+         let currentPageButton = document.querySelector(`#currentPage[value="${currentJobPage}"]`);
+        currentPageButton.focus();
       }else{
         joblist = joblist
       }
@@ -110,6 +115,14 @@ async function deleteRecord(id){
 
       if(response.ok){
         joblist = res.items
+
+        // Add the following lines to remove the underline from the first page button
+        let firstPageButton = document.querySelector("#currentPage[value='1']");
+        firstPageButton.classList.remove("underline");
+
+        // Add the following lines to focus the current page number
+         let currentPageButton = document.querySelector(`#currentPage[value="${currentJobPage}"]`);
+        currentPageButton.focus();
       }else{
         joblist = joblist
       }
@@ -154,25 +167,36 @@ async function deleteRecord(id){
   
   // Set the attributes and text content of the button
   button.setAttribute("id", "currentPage");
-  button.setAttribute("class", "relative items-center pagination px-5 py-4 text-sm font-semibold focus:underline");
+  button.setAttribute("value", i); // Set the value attribute to the page number
   button.textContent = i;
   
+  if (i === 1) {
+  // If this is the first page button, add the underline class
+  button.setAttribute(
+    "class",
+    "md:text-xl lg:text-base relative items-center pagination px-5 py-4 text-sm font-semibold focus:underline underline"
+  );
+} else {
+  // Otherwise, set the class without the underline class
+  button.setAttribute(
+    "class",
+    "md:text-xl lg:text-base relative items-center pagination px-5 py-4 text-sm font-semibold focus:underline"
+  );
+}
+
   // Attach a click event listener to the button
   button.addEventListener("click", getCurrentPage);
 
   // Append the button to the nav element
   nav.appendChild(button);
 }
+
+
   })
 </script>
 
 
 <style>
-
-.body{
-	height: 750px;
-}
-
   @keyframes slideDown1 {
   0% {
     opacity: 0;
@@ -194,15 +218,44 @@ footer, .job-title{
 .pagination{
   color: #20333a;
 }
-</style>
-<div class="h-full m-0 p-0">
-<div class="bg-gradient-to-bl from-pink-500 to-orange-400 flex flex-col">
 
-<nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover content-center" style="background-image: url('/background-img5.png');">
+@media (min-width: 280px) and (max-width: 912px){
+  .body{
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+@media (width: 912px) {
+  .screenSize912{
+    margin-left: 35px;
+  }
+}
+
+@media (width: 540px) {
+  .screenSize540{
+    margin-left: 70px;
+  }
+}
+
+@media (width: 280px){
+  .screenSize280{
+    margin-top: 50px;
+  }
+
+  .logoScreenSize280 {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+<div class="bg-gradient-to-bl from-pink-500 to-orange-400">
+
+<nav class="bg-amber-500 border-gray-200 dark:bg-gray-900 flex justify-between h-96 bg-no-repeat bg-cover bg-top" style="background-image: url('/background-img5.png');">
   <div class="flex items-center p-4 h-24">
     <!-- Left-hand side content -->
-  <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full p-2 group">
-      <span class="self-center text-3xl whitespace-nowrap text-gray-200 dark:text-white font-extrabold group-hover:text-black">NEXT JOB</span>
+  <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full p-2 group logoScreenSize280">
+      <span class="self-center text-lg md:text-3xl whitespace-nowrap text-gray-200 dark:text-white font-extrabold group-hover:text-black">NEXT JOB</span>
 
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="40px" height="40px" viewBox="0 0 511.626 511.627" style="enable-background:new 0 0 511.626 511.627;"
@@ -256,15 +309,15 @@ footer, .job-title{
 
   <!-- Right-hand side content -->
   <div class="p-4 flex items-center h-24">
-    <a href="/job/new" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Post Job</a>
+    <a href="/job/new" class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 md:text-2xl lg:text-base">Post Job</a>
     {#if $isAuthenticated}
-    <button on:click={logOut} class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Log Out</button>
+    <button on:click={logOut} class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 md:text-2xl lg:text-base">Log Out</button>
     {:else}
-    <button class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
-	<a href="/sign-up" class="block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    <button class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 md:text-2xl lg:text-base"><a href="/login">Log In</a></button>
+	  <a href="/sign-up" class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 md:text-xl lg:text-base">Sign Up</a>
     {/if}
 
-	<button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
+	<button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full logoScreenSize280">
       {#if $userloggedIn == true}
       <img class="w-10 h-10 p-1 rounded-full ring-1 ring-gray-300" src="{authData.userProfilePicture}" alt="Bordered avatar">
       {:else}
@@ -275,7 +328,7 @@ footer, .job-title{
 
   <div class="z-10 absolute right-6 top-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
     {#if $profileDropDownMenu}
-    <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+    <div class="px-4 py-3 text-sm text-gray-900">
       {#if $isAuthenticated}
       <div>{authData.userName}</div>
       <div class="font-medium truncate">{authData.userEmail}</div>
@@ -293,29 +346,44 @@ footer, .job-title{
       <li>
         <a href="/job-posted" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Job Posted</a>
       </li>
+      <li>
+      <a href="/job/new" class="block md:hidden px-4 py-2">Post Job</a>
+      </li>
+      {#if $isAuthenticated}
+      <li>
+      <button on:click={logOut} class="block md:hidden px-4 py-2">Log Out</button>
+      </li>
+      {:else}
+      <li>
+      <button class="block md:hidden px-4 py-2"><a href="/login">Log In</a></button>
+	    </li>
+      <li>
+      <button class="block md:hidden px-4 py-2"><a href="/sign-up">Sign Up</a></button>
+      </li>
+      {/if}
     </ul>
     {/if}
   </div>
 
-  <div class="absolute text-gray-200 m-2 top-40 left-44 text-2xl font-semibold slide-down1">
+  <div class="absolute text-gray-200 m-2 top-40 left-30 md:left-32 md:text-2xl text-xl font-semibold slide-down1 w-48 md:w-auto">
 	<h1>Find Your Dream Job Here</h1>
   </div>
 </nav>
 
-<div class="p-4 body">
+<div class="p-4">
 
   <div class="flex justify-between">
   <h1 class="text-3xl font-extrabold job-title p-4 text-white w-96 rounded-lg">Job Posted</h1>
 
-  <p class="pagination items-center justify-center flex mb-1 mr-1">
+  <p class="pagination items-center justify-center flex mb-1 md:mr-1 ml-4 md:ml-0 md:text-2xl lg:text-lg">
       show record page {currentJobPage} of {totalPages}
   </p>
   </div>
     
-<div class="grid grid-cols-4 gap-2">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 body screenSize912 screenSize540 mt-2">
 
 {#each joblist as job, index}
-<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mt-5">
+<div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow mt-5 h-fit">
     <div class="h-64 flex items-center justify-center">
     <a href="/job/{job.id}" class="h-full w-full">
 		{#if job.image_url == ''}
@@ -328,14 +396,14 @@ footer, .job-title{
     <div class="p-5 bg-green-200 rounded-b-lg">
         <div class="h-52">
         <a href="/job/{job.id}">
-            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{job.title}</h5>
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white capitalize">{job.title.length > 15 ? job.title.slice(0, 15) + '...' : job.title}</h5>
         </a>
-        <p class="mb-3 font-normal text-lg text-gray-700">{job.description.slice(0, 30)}... </p>
-        <p class="mb-3 font-bold text-xs">Job id: {job.id}</p>
-        <p class="mb-3 font-bold text-xs">Created At: {new Date(job.created).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
-        <p class="mb-3 font-bold text-xs">Updated At: {new Date(job.updated).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
+        <p class="mb-3 font-normal lg:text-sm md:text-2xl text-xl text-gray-700">{job.description.slice(0, 30)}... </p>
+        <p class="mb-3 font-bold lg:text-sm md:text-lg text-base">Job id: {job.id}</p>
+        <p class="mb-3 font-bold lg:text-sm md:text-lg text-base">Created: {new Date(job.created).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
+        <p class="mb-3 font-bold lg:text-sm md:text-lg text-base">Updated: {new Date(job.updated).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})}</p>
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end screenSize280">
         <a href="/job/{job.id}/update" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-emerald-600 rounded-lg">
             Edit
             <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -355,14 +423,15 @@ footer, .job-title{
 {/each}
 </div>   
 
-<div class="flex justify-center border-gray-200 bg-transparent px-4 py-3 sm:px-6 mt-5">
-  <div class="sm:flex sm:items-center sm:justify-between w-full flex justify-between">
+<div class="flex items-center justify-center">
+<div class="flex justify-center bg-transparent px-4 py-3 sm:px-2 mt-5 w-60">
+  <div class="sm:flex sm:items-center sm:justify-between w-fit flex justify-between">
 
         <button on:click={prevPage} class="inline-flex items-center rounded-l-md px-2 pagination focus:z-20 focus:outline-offset-0">
-          <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+          <svg class="md:mt-1 lg:mt-0 w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
           </svg>
-          <span class="mb-0.5 px-2">Previous</span>
+          <span class="mb-0.5 px-2 md:text-2xl lg:text-lg">Previous</span>
         </button>
 
       <nav class="inline-flex -space-x-px" aria-label="Pagination" id="totalPage">
@@ -370,14 +439,14 @@ footer, .job-title{
       </nav>
 
       <button on:click={nextPage} class="relative inline-flex items-center rounded-r-md px-2 py-2 pagination focus:z-20 focus:outline-offset-0">
-          <span class="mb-0.5 px-2">Next</span>
-          <svg class="w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+          <span class="mb-0.5 px-2 md:text-2xl lg:text-lg">Next</span>
+          <svg class="md:mt-1 lg:mt-0 w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
           </svg>
       </button>
     </div>
 </div>
-
+</div>
 </div>
 
 {#each joblist as job, index}
@@ -466,9 +535,8 @@ footer, .job-title{
 <footer class="w-full h-16 flex items-center text-gray-300 fill-gray-300">
     <svg xmlns="http://www.w3.org/2000/svg" class="p-2 w-12 h-12" stroke="current" viewBox="0 0 24 24" id="copyright"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M10.08 10.86c.05-.33.16-.62.3-.87s.34-.46.59-.62c.24-.15.54-.22.91-.23.23.01.44.05.63.13.2.09.38.21.52.36s.25.33.34.53.13.42.14.64h1.79c-.02-.47-.11-.9-.28-1.29s-.4-.73-.7-1.01-.66-.5-1.08-.66-.88-.23-1.39-.23c-.65 0-1.22.11-1.7.34s-.88.53-1.2.92-.56.84-.71 1.36S8 11.29 8 11.87v.27c0 .58.08 1.12.23 1.64s.39.97.71 1.35.72.69 1.2.91c.48.22 1.05.34 1.7.34.47 0 .91-.08 1.32-.23s.77-.36 1.08-.63.56-.58.74-.94.29-.74.3-1.15h-1.79c-.01.21-.06.4-.15.58s-.21.33-.36.46-.32.23-.52.3c-.19.07-.39.09-.6.1-.36-.01-.66-.08-.89-.23-.25-.16-.45-.37-.59-.62s-.25-.55-.3-.88-.08-.67-.08-1v-.27c0-.35.03-.68.08-1.01zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
     <span class="font-bold uppercase">next job</span>  
- </footer>
+</footer>
 
-</div>
 
 
 
