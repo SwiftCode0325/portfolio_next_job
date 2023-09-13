@@ -186,10 +186,6 @@
   transform: rotateY(180deg);
 }
 
-.flip-card-back input:focus{
-   filter: none;
-}
-
 @media (min-width: 280px) and (max-width: 768px){
   .formDivision{
     display: none;
@@ -228,7 +224,7 @@
           </button>
           <div class="absolute text-gray-200 m-2 top-72 sm:top-40 left-10 text-5xl font-bold slideRight">
             <div class="flex">
-			        <a href="/Home" class="text-3xl sm:text-lg mb-3 hover:underline">Home</a>
+			        <a href="/Home" class="text-3xl sm:text-xl mb-3 hover:underline">Home</a>
 			          <svg class="w-4 h-4 text-gray-200 ml-2 mt-3.5 sm:mt-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
     			        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
   			        </svg>
@@ -270,7 +266,7 @@
             </div>
           </button>
 
-          <div class="mt-36 sm:mt-20 w-10/12 flex justify-center">
+          <div class="mt-32 sm:mt-20 w-10/12 flex justify-center">
             <div class="w-full flex flex-col items-center">
 
           {#if $showImage}
