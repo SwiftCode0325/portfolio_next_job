@@ -8,6 +8,7 @@
 	import { uploadMedia } from '../../../util/s3-uploader.js'
 
 	let carousel1 = 0;
+	let carousel2 = 0;
 	let currentPosition = writable(0);
 	let showModal = writable(false);
     let isLoading = writable(false);
@@ -146,16 +147,15 @@
 				currentPosition.set(items._activeItem.position);
 			}
 		};
-		carousel1 = new Carousel(items, options);
+		carousel2 = new Carousel(items, options);
 	});
 	function prevSlideCarousel2() {
-		carousel1.prev();
+		carousel2.prev();
 	}
 	function nextSlideCarousel2() {
-		carousel1.next();
+		carousel2.next();
 	}
 
-	
 	// show up modal function //
 	function popUpModal() {
 		showModal.set(true);
@@ -261,12 +261,7 @@ function flip() {
 	<div id="flip-card" class="sm:w-6/12 w-full h-full">
       <div id="flip-card-inner" class="flip-card-inner">
         <div class="flip-card-front w-full h-full">
-			<button on:click={flipBack} class="flex block sm:hidden absolute bottom-0 right-0 m-5 text-3xl font-bold text-gray-200">
-            Next
-          	<svg class="w-6 h-6 mt-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
-            	<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
-          	</svg>
-          	</button>
+			
 			<div class="absolute text-gray-200 m-2 top-72 sm:top-40 left-10 sm:left-14 text-5xl font-bold slideRight">
 				<div class="flex">
 					<a href="/Home" class="text-3xl sm:text-xl mb-3 hover:underline">Home</a>
@@ -277,10 +272,19 @@ function flip() {
 				<h1>Post Job</h1>
 				<h1 class="indent-7 absolute text-gray-200 left-16 text-5xl font-bold mt-5">Section</h1>
 			</div>
+
+			<button on:click={flipBack} class="flex block sm:hidden absolute bottom-0 right-0 m-5 text-3xl font-bold text-gray-200">
+            Next
+          	<svg class="w-6 h-6 mt-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+            	<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+          	</svg>
+          	</button>
+
+			<!-- Image div -->
 			<img src="/background-img2.png" alt="" class="w-full h-full object-cover" />
 		</div>
 
-		<div class="flip-card-back flex flex-col h-full p-2">
+		<div class="flip-card-back flex flex-col h-full p-2 md:hidden block">
 
 			<button on:click={flip} class="text-gray-300 text-2xl sm:text-lg sm:block md:hidden h-12 w-24 mt-2 absolute left-2 top-0">
             <div class="flex flex-row">
@@ -291,7 +295,7 @@ function flip() {
             </div>
           </button>
 
-			<form on:submit={createJob} class="w-full h-5/6 flex items-center mt-16 carousel-form-division">
+			<form on:submit={createJob} class="w-full h-5/6 mt-16 flex items-center carousel-form-division">
 							<div class="pb-2 w-full h-full">
 								<div class="flex flex-col">
 									<section class="flex flex-row carousel-division">
@@ -354,7 +358,7 @@ function flip() {
 								</div>
 
 								
-								<div id="indicators-carousel" class="relative w-full h-full mt-2" data-carousel="static">
+								<div id="indicators-carousel" class="flip-back-card-division relative w-full h-5/6" data-carousel="static">
 										<!-- Carousel wrapper -->
 										<div class="relative h-5/6 overflow-hidden rounded-lg">
 											<!-- Item 1 -->
@@ -613,7 +617,7 @@ function flip() {
 										</div>
 
 										<!-- Slider indicators -->
-									<div class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 bottom-24 left-1/2">
+									<div class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 bottom-12 left-1/2">
 										<button id="flip-card-carousel-indicator-1" type="button" class="carousel-indicator w-3 h-3 rounded-full" />
 										<button id="flip-card-carousel-indicator-2" type="button" class="w-3 h-3 rounded-full" />
 										<button id="flip-card-carousel-indicator-3" type="button" class="w-3 h-3 rounded-full" />
@@ -824,7 +828,7 @@ function flip() {
 </div>
 
 	<!-- Carousel div -->
-	<div class="flex items-center justify-center w-7/12 formDivision">
+	<div class="flex items-center justify-center w-6/12 formDivision">
 		<div class="flex flex-col w-9/12 h-full items-center justify-center">
 			<div class="slide-down transition">
 				<form on:submit={createJob}>
@@ -1427,7 +1431,7 @@ function flip() {
 		animation: slideDown 2s ease forwards;
 	}
 
-	.flip-card-inner {
+.flip-card-inner {
   position: relative;
   width: 100%;
   height: 100%;
@@ -1452,8 +1456,7 @@ function flip() {
 
 @media (max-width:360px){
 	.carousel-indicator{
-		bottom: 30px;
-		
+		bottom: 10px;
 	}
 }
 
@@ -1470,11 +1473,17 @@ function flip() {
   .carousel-form-division{
 	margin-top: 0px;
   }
+
+  
+	.flip-back-card-division{
+		margin-top: 20px;
+		height: 500px;
+	}
 }
 
 @media (min-width:390px) and (max-width: 400px){ 
   .carousel-indicator{		
-		bottom: 70px;
+		bottom: 30px;
 	}
 }
 
