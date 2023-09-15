@@ -115,7 +115,7 @@
 
   <div id="flip-card" class="sm:w-6/12 w-full h-full">
       <div id="flip-card-inner" class="flip-card-inner">
-        <div class="flip-card-front w-full h-full border border-black">
+        <div class="flip-card-front w-full h-full">
           <button on:click={flipBack} class="flex block sm:hidden absolute bottom-0 right-0 m-5 text-3xl font-bold text-gray-200">
             Next
           <svg class="w-6 h-6 mt-2.5 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
