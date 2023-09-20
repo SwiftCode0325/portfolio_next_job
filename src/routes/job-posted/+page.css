@@ -1,0 +1,53 @@
+ @keyframes slideDown1 {
+     0% {
+         opacity: 0;
+         transform: translateY(-100%);
+     }
+
+     100% {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }
+
+ .slide-down1 {
+     animation: slideDown1 2s ease forwards;
+ }
+
+ footer,
+ .job-title {
+     background-color: #20333a;
+ }
+
+ .pagination {
+     color: #20333a;
+ }
+
+ @media (min-width: 280px) and (max-width: 912px) {
+     .body {
+         height: 100vh;
+         overflow-y: auto;
+     }
+ }
+
+ @media (width: 912px) {
+     .screenSize912 {
+         margin-left: 35px;
+     }
+ }
+
+ @media (width: 540px) {
+     .screenSize540 {
+         margin-left: 70px;
+     }
+ }
+
+ @media (width: 280px) {
+     .screenSize280 {
+         margin-top: 50px;
+     }
+
+     .logoScreenSize280 {
+         margin-bottom: 20px;
+     }
+ }
