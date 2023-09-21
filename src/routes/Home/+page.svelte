@@ -1,9 +1,8 @@
 <script>
   import { writable } from "svelte/store";
   import humanize from 'humanize-plus';
-  import {isLoggedIn, logOut, isAuthenticated} from "../../util/auth.js"
+  import {isLoggedIn} from "../../util/auth.js"
   import { onMount } from "svelte";
-  import { salaryDropDownMenu, openSalaryDropDownMenu } from "../component/dropDownMenu/SalaryDropDownMenu/+page.js"
   import { selectedJobType, updateSelectedJobTypes, openJobTypeDropDownMenu, jobTypeDropDownMenu } from "../component/dropDownMenu/jobTypeDropDownMenu/+page.js"
   import { fetchJobs } from "../component/pagination/+page.js"
   import NavBar from "../component/navBar/NavBar.svelte";
@@ -24,6 +23,7 @@
   let maxSalary = 20000;
   let maxValue = 19000;
   let currentMax = 1000;
+  let salaryDropDownMenu = writable(false);
   
   onMount(async () => {
   authData = JSON.parse(await isLoggedIn());
@@ -64,6 +64,12 @@
   nav.appendChild(button);
 }
   })
+
+ 
+
+  function openSalaryDropDownMenu () {
+    salaryDropDownMenu.update(value => !value);
+  }
 
   function filterJobs() {
   
