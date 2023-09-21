@@ -3,8 +3,7 @@
   import humanize from 'humanize-plus';
   import {isLoggedIn} from "../../util/auth.js"
   import { onMount } from "svelte";
-  import { selectedJobType, updateSelectedJobTypes, openJobTypeDropDownMenu, jobTypeDropDownMenu } from "../component/dropDownMenu/jobTypeDropDownMenu/+page.js"
-  import { fetchJobs } from "../component/pagination/+page.js"
+  import { fetchJobs } from "../component/pagination/pagination.js"
   import NavBar from "../component/navBar/NavBar.svelte";
   import Footer from "../component/Footer/Footer.svelte";
 
@@ -12,29 +11,41 @@
   export let joblist = data.jobs.items;
   let currentMin = 0
   let authData = '';
-  let filter;
+  let filter = '';
   let filteredJobs = joblist;
   let search;
   let currentJobPage = 1;
   let nav;
-  let totalPages;
   let sideBarOpen = writable(false)
   let minSalary = 0;
   let maxSalary = 20000;
   let maxValue = 19000;
   let currentMax = 1000;
   let salaryDropDownMenu = writable(false);
+  let jobTypeDropDownMenu = writable(false);
+  let checkboxRemoteChecked = writable(false);
+  let checkboxFullTimeChecked = writable(false);
+  let checkboxPartTimeChecked = writable(false);
+  let sliderValue = writable(currentMin);
+  let selectedJobType = [];
+  let numberOfPages = writable(data.jobs.totalPages);
   
   onMount(async () => {
   authData = JSON.parse(await isLoggedIn());
   })
 
   onMount(() => {
-  nav = document.getElementById("totalPage")
-  totalPages = data.jobs.totalPages; // Set the total number of pages
+    nav = document.getElementById("totalPage");
 
+    numberOfPages.subscribe( value => {
+
+  // Remove all existing pagination buttons
+    while (nav && nav.firstChild) {
+      nav.removeChild(nav.firstChild);
+    }
+  
   // Loop through the total number of pages
-  for (let i = 1; i <= totalPages; i++) {
+  for (let i = 1; i <= value; i++) {
   // Create a new button element
   let button = document.createElement("button");
   
@@ -64,18 +75,49 @@
   nav.appendChild(button);
 }
   })
+  })
 
+function openJobTypeDropDownMenu() {
+    jobTypeDropDownMenu.update(value => !value);
+}
  
-
   function openSalaryDropDownMenu () {
     salaryDropDownMenu.update(value => !value);
   }
 
+  function handleRangeChange(event) {
+    currentMin = parseInt(event.target.value);
+    currentMax = currentMin + 1000;
+  // If currentMin exceeds maxSalary, set both currentMin and currentMax to their maximum values
+    if (currentMin >= maxValue) {
+      currentMin = maxValue;
+      currentMax = maxSalary;
+    }
+  }
+
+  //this function is used to get the desired job type and set into selectedJobType array//
+  function updateSelectedJobTypes (jobType) {
+    if(selectedJobType.includes(jobType)) {
+      selectedJobType = selectedJobType.filter(item => item !== jobType);
+    }else{
+      selectedJobType = [...selectedJobType, jobType]
+    }
+
+    if(selectedJobType.includes('Full Time')){
+      checkboxFullTimeChecked.set(true);
+    }else if(selectedJobType.includes('Part Time')){
+      checkboxPartTimeChecked.set(true);
+    }else if(selectedJobType.includes('Remote')){
+      checkboxRemoteChecked.set(true);
+    }else{
+      checkboxFullTimeChecked.set(false);
+      checkboxPartTimeChecked.set(false);
+      checkboxRemoteChecked.set(false);
+    }
+  }
+
   function filterJobs() {
-  
-  if (selectedJobType === 0 && search === '' && currentMin === 0){
-    filteredJobs = joblist;
-  }else {
+
   // Convert selectedJobType to lowercase
   const lowercaseSelectedJobTypes = selectedJobType.map(type => type.toLowerCase());
 
@@ -99,8 +141,13 @@
     (minJobSalary === 0 || job.minAnnualCompensation == minJobSalary)
   );
 });
+
+   if (filteredJobs.length < 10){
+     numberOfPages.set(1);
+   }else {
+     numberOfPages.set(data.jobs.totalPages);
+   }
 }
-  }
 
   function clearFilter() {
     filter = '';
@@ -197,16 +244,6 @@
     sideBarOpen.set(false);
     }, 1000)
 }
-
-function handleRangeChange(event) {
-    currentMin = parseInt(event.target.value);
-    currentMax = currentMin + 1000;
-  // If currentMin exceeds maxSalary, set both currentMin and currentMax to their maximum values
-    if (currentMin >= maxValue) {
-      currentMin = maxValue;
-      currentMax = maxSalary;
-    }
-  }
 </script>
 
 <div class="flex flex-col">
@@ -222,7 +259,7 @@ function handleRangeChange(event) {
     </button>
 
     <p class="text-gray-400 items-center justify-center flex mb-1 showRecord">
-      show record page {currentJobPage} of {totalPages}
+      show record page {currentJobPage} of {$numberOfPages}
     </p>
 </div>
 
@@ -311,6 +348,7 @@ Employment
           <input
             id="checkbox-item-1"
             type="checkbox"
+            bind:checked={$checkboxFullTimeChecked}
             value=""
             class="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-600 focus:ring-2"
             on:change={() => { updateSelectedJobTypes('Full Time'), filterJobs()} }/>
@@ -328,6 +366,7 @@ Employment
           <input
             id="checkbox-item-2"
             type="checkbox"
+            bind:checked={$checkboxPartTimeChecked}
             value=""
             class="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-600 focus:ring-2"
             on:change={() => { updateSelectedJobTypes('Part Time'), filterJobs()}}/>
@@ -345,6 +384,7 @@ Employment
           <input
             id="checkbox-item-3"
             type="checkbox"
+            bind:checked={$checkboxRemoteChecked}
             value=""
             class="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-600 focus:ring-2"
             on:change={() => {updateSelectedJobTypes('Remote'), filterJobs()}} />
@@ -404,6 +444,7 @@ Employment
 type="range"
 min={minSalary}
 max={maxSalary}
+bind:value={currentMin}
 on:change={(event) => {handleRangeChange(event); filterJobs(); }}
 step="1000"
 class="w-full h-2 bg-gray-200 rounded-lg appearance-none 
@@ -573,6 +614,7 @@ cursor-pointer dark:bg-gray-700"/>
 type="range"
 min={minSalary}
 max={maxSalary}
+bind:value={currentMin}
 on:change={(event) => {handleRangeChange(event); filterJobs(); }}
 step="1000"
 class="w-full h-2 bg-gray-200 rounded-lg appearance-none 
@@ -586,7 +628,7 @@ cursor-pointer dark:bg-gray-700"/>
 <ul class="shrink w-full divide-y divide-gray-200 dark:divide-gray-700 ml-10">
   {#each filteredJobs as job (job.id)}
   <a href="/job/{job.id}">
-  <li class="p-3 hover:bg-gray-100 flex justify-between flex-col md:flex-row border border-black m-2 rounded-xl md:border-none">
+  <li id="job-listing" class="p-3 hover:bg-gray-100 flex justify-between flex-col md:flex-row border border-black m-2 rounded-xl md:border-none">
     <div class="flex gap-x-4 flex-col md:flex-row">
       {#if job.image_url}
       <img class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="">
@@ -634,7 +676,7 @@ cursor-pointer dark:bg-gray-700"/>
 <div class="flex justify-center bg-transparent px-4 py-3 sm:px-2 mt-5 w-60">
   <div class="sm:flex sm:items-center sm:justify-between w-fit flex justify-between">
 
-        <button on:click={prevPage} class="inline-flex items-center rounded-l-md px-2 pagination focus:z-20 focus:outline-offset-0">
+        <button on:click={$numberOfPages > 1 ? prevPage : undefined} class="inline-flex items-center rounded-l-md px-2 pagination focus:z-20 focus:outline-offset-0">
           <svg class="md:mt-1 lg:mt-0 w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
           </svg>
@@ -645,7 +687,7 @@ cursor-pointer dark:bg-gray-700"/>
         
       </nav>
 
-      <button on:click={nextPage} class="relative inline-flex items-center rounded-r-md px-2 py-2 pagination focus:z-20 focus:outline-offset-0">
+      <button on:click={$numberOfPages > 1 ? nextPage : undefined} class="relative inline-flex items-center rounded-r-md px-2 py-2 pagination focus:z-20 focus:outline-offset-0">
           <span class="mb-0.5 px-2 md:text-2xl lg:text-lg">Next</span>
           <svg class="md:mt-1 lg:mt-0 w-4 h-4 stroke-current" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
