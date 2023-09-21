@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { authenticateUser } from '../../util/auth.js';
 	import { writable } from 'svelte/store';
-  	import { showPassword, togglePasswordVisibility } from "../component/passwordVisibility/+page.js";
+  	import { showPassword, togglePasswordVisibility } from "../component/passwordVisibility/password.js";
 
 	let isLoading = writable(false);
 	let username = '';
