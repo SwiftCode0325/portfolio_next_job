@@ -3,7 +3,7 @@
 	import { Carousel } from 'flowbite';
 	import { writable } from 'svelte/store';
 	import { goto } from '$app/navigation';
-	import { getUserId, isAuthenticated } from '../../../util/auth.js';
+	import { getUserId } from '../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 	import { uploadMedia } from '../../../util/s3-uploader.js';
 
@@ -15,6 +15,7 @@
 	let selectedFile = 'No File Chosen';
 	let isUpload = writable(false);
 	let fileUrl = '';
+	let fileName = '';
 	let flipCardInner;
 
 	//Carousel 1 (bigger screen size)//
