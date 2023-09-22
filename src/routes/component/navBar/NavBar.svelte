@@ -1,7 +1,7 @@
 <script>
 
 import { get } from 'svelte/store';
-import { isAuthenticated, logOut, isLoggedIn } from "../../../util/auth.js"
+import { isAuthenticated, logOut, isLoggedIn, userIsLoggedIn } from "../../../util/auth.js"
 import { goto } from '$app/navigation';
 import { writable } from "svelte/store";
 import { onMount } from 'svelte';
@@ -15,11 +15,19 @@ onMount(async () => {
 
 export function loginStatus() {
     if(get(isAuthenticated) == false) {
+      userIsLoggedIn.set(false);
       goto("/sign-up")
     }else{
       goto("/job/new")
     }
 }
+
+
+function signUp() {
+    goto("/sign-up")
+    userIsLoggedIn.set(true)
+}
+
 
 export function openProfileDropDownMenu () {
     profileDropDownMenu.update( value => !value );
@@ -90,7 +98,7 @@ export function openProfileDropDownMenu () {
     <button on:click={logOut} class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white mr-1">Log Out</button>
     {:else}
     <button class="hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><a href="/login">Log In</a></button>
-    <a href="/sign-up" class="mr-2 hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</a>
+    <button on:click={signUp} class="mr-2 hidden md:block rounded-full px-4 py-2 text-base text-gray-200 hover:text-black hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign Up</button>
     {/if}
     
     <button on:click={openProfileDropDownMenu} class=" border relative w-10 h-10 overflow-hidden bg-gray-100 rounded-full m-2">
