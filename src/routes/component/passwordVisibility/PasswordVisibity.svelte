@@ -6,27 +6,27 @@ let showPassword = writable(true);
 
 // function to toggle the state of the showPassword store //
 function togglePasswordVisibility() {
-    showPassword != showPassword;
+    showPassword = !showPassword;
 }
 </script>
 
 
 <!-- password section -->
 							<div>
-								<label for="password" class="block pb-1 text-lg font-medium text-gray-900 text-left"
-									>Your password</label
+								<label for="password" class="block text-lg sm:text-sm font-medium text-gray-900 text-left"
+									>Your Password</label
 								>
 								<div class="relative">
 									<input
 										type={showPassword ? 'password' : 'text'}
 										name="password"
 										placeholder="••••••••"
-										class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+										class="bg-white border border-gray-300 text-gray-900 text-lg sm:text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 										required
 									/>
 									<!-- svelte-ignore a11y-interactive-supports-focus -->
 									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<div class="absolute inset-y-0 top-2.5 right-2.5">
+									<div class="absolute inset-y-0 top-2.5 sm:top-1.5 right-2.5">
 										<svg
 											on:click={togglePasswordVisibility}
 											role="button"
