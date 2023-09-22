@@ -477,7 +477,7 @@
 					<div>
 						<label
 							for="password"
-							class="block pb-1 text-lg sm:text-base font-medium text-gray-900 dark:text-white text-left"
+							class="block pb-1 text-lg sm:text-sm font-medium text-gray-900 dark:text-white text-left"
 							>Your password</label
 						>
 						<div class="relative">
