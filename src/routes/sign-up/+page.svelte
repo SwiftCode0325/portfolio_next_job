@@ -1,6 +1,6 @@
 <script>
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-	import { authenticateUser, isAuthenticated } from '../../util/auth.js';
+	import { authenticateUser, userIsLoggedIn } from '../../util/auth.js';
 	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import { uploadMedia } from '../../util/s3-uploader.js';
@@ -123,8 +123,7 @@
 		<div id="flip-card-inner" class="flip-card-inner">
 			<div class="flip-card-front w-full h-full">
 				<!-- If isAuthenticated is false, show this warning message -->
-				<div class="md:hidden block">
-					{#if $isAuthenticated == false}
+					{#if $userIsLoggedIn == false}
 						<div
 							class="text-lg flex absolute top-2 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
 						>
@@ -143,7 +142,6 @@
 							<span>Please sign up first before proceed to post new job page</span>
 						</div>
 					{/if}
-				</div>
 
 				<button
 					on:click={flipBack}
@@ -481,26 +479,6 @@
 	<div
 		class="border border-black flex items-center justify-center w-7/12 formDivision bg-gradient-to-br from-pink-500 to-orange-400"
 	>
-		<!-- If isAuthenticated is false, show this warning message -->
-		{#if $isAuthenticated == false}
-			<div
-				class="flex absolute top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="stroke-current shrink-0 h-6 w-6"
-					fill="none"
-					viewBox="0 0 24 24"
-					><path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-					/></svg
-				>
-				<span>Please sign up first before proceed to post new job page</span>
-			</div>
-		{/if}
 
 		<!-- If getError, show the warning message -->
 		{#if $getError}
