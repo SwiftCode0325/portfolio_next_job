@@ -26,7 +26,6 @@
   let checkboxRemoteChecked = writable(false);
   let checkboxFullTimeChecked = writable(false);
   let checkboxPartTimeChecked = writable(false);
-  let sliderValue = writable(currentMin);
   let selectedJobType = [];
   let numberOfPages = writable(data.jobs.totalPages);
   
