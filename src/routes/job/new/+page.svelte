@@ -6,17 +6,17 @@
 	import { getUserId } from '../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 	import { uploadMedia } from '../../../util/s3-uploader.js';
+	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../component/Carousel/Carousel.js"
 
 	let carousel1 = 0;
 	let carousel2 = 0;
 	let currentPosition = writable(0);
 	let showModal = writable(false);
 	let isLoading = writable(false);
-	let selectedFile = 'No File Chosen';
-	let isUpload = writable(false);
 	let fileUrl = '';
 	let fileName = '';
 	let flipCardInner;
+	let formErrors = '';
 
 	//Carousel 1 (bigger screen size)//
 	onMount(() => {
@@ -166,22 +166,6 @@
 		goto('/Home');
 	}
 
-	//change the default message to selected image file name in choose file button//
-	function handleFileInputChange(event) {
-		/*assigns the selected file to the file variable. 
-    If no file is selected, it will be undefined / show no file chosen message.*/
-		const file = event.target.files[0];
-
-		if ((selectedFile = file)) {
-			selectedFile = file.name;
-			isUpload.set(true);
-		} else {
-			selectedFile = 'No File Chosen';
-			isUpload.set(false);
-		}
-	}
-	isUpload.set(false);
-
 	// post job into database //
 	async function createJob(evt) {
 		//prevent page go to the top when the button is clicked//
@@ -194,6 +178,8 @@
 		//Target id = fileInput, catch the first file//
 		if ($isUpload == true) {
 			[fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		} else if($isUploadFlipCardFile == true){
+			[fileName, fileUrl] = await uploadMedia(evt.target['flipCard-file-upload'].files[0])
 		} else {
 			[fileName, fileUrl] = [];
 		}
@@ -566,9 +552,9 @@
 													>Upload Company Logo Image</label
 												>
 												<div class="mt-2 flex items-center gap-x-3">
-													{#if $isUpload == true}
+													{#if $isUploadFlipCardFile == true}
 														<img
-															src="/{selectedFile}"
+															src="/{$selectedFile}"
 															class="w-8 h-8 object-cover rounded-full"
 															alt=""
 														/>
@@ -589,21 +575,21 @@
 													{/if}
 
 													<label
-														for="file-upload"
+														for="flipCard-file-upload"
 														class="rounded-md bg-white px-2.5 py-1.5 text-xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 													>
 														<input
 															type="file"
-															name="file-upload"
+															name="flipCard-file-upload"
 															class="sr-only"
-															id="file-upload"
-															on:change={handleFileInputChange}
+															id="flipCard-file-upload"
+															on:change={handleFileInputChangeOnFlipCard}
 															accept=".jpg, .jpeg, .png"
 														/>
 														<span>Change Image</span>
 													</label>
 													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{selectedFile}</label
+														>{$selectedFile}</label
 													>
 												</div>
 											</div>
@@ -1188,7 +1174,7 @@
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}
 																<img
-																	src="/{selectedFile}"
+																	src="/{$selectedFile}"
 																	class="w-8 h-8 object-cover rounded-full"
 																	alt=""
 																/>
@@ -1217,13 +1203,13 @@
 																	name="file-upload"
 																	class="sr-only"
 																	id="file-upload"
-																	on:change={handleFileInputChange}
+																	on:change={handleFileInputChangeOnCarousel}
 																	accept=".jpg, .jpeg, .png"
 																/>
 																<span>Change Image</span>
 															</label>
 															<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-																>{selectedFile}</label
+																>{$selectedFile}</label
 															>
 														</div>
 													</div>

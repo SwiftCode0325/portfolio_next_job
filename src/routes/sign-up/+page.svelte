@@ -7,11 +7,10 @@
 	import PasswordVisibility from "../component/passwordVisibility/PasswordVisibity.svelte"
 	import PasswordConfirmationVisibility from '../component/passwordVisibility/PasswordConfirmationVisibility.svelte';
 	import PasswordVisibity from '../component/passwordVisibility/PasswordVisibity.svelte';
+	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../component/Carousel/Carousel.js"
 
 	let isLoading = writable(false);
 	let formErrors = {};
-	let selectedFile = 'No File Chosen';
-	let isUpload = writable(false);
 	let getError = writable(false);
 	let getSuccess = writable(false);
 	let fileName = '';
@@ -30,6 +29,8 @@
 		//Target id = fileInput, catch the first file//
 		if ($isUpload == true) {
 			[fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		} else if($isUploadFlipCardFile == true){
+			[fileName, fileUrl] = await uploadMedia(evt.target['flipCard-file-upload'].files[0])
 		} else {
 			[fileName, fileUrl] = [];
 		}
@@ -70,21 +71,6 @@
 			formErrors['password'] = { message: 'Password confirmation does not match' };
 		}
 		isLoading.set(false);
-	}
-
-	//change the default message to selected image file name in choose file button//
-	function handleFileInputChange(event) {
-		/*assigns the selected file to the file variable. 
-    If no file is selected, it will be undefined / show no file chosen message.*/
-		const file = event.target.files[0];
-
-		if ((selectedFile = file)) {
-			selectedFile = file.name;
-			isUpload.set(true);
-		} else {
-			selectedFile = 'No File Chosen';
-			isUpload.set(false);
-		}
 	}
 
 	function closeWindow() {
@@ -397,8 +383,8 @@
 									required
 								/>
 								<div class="mt-2 flex items-center gap-x-3">
-									{#if $isUpload}
-										<img src="/{selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
+									{#if $isUploadFlipCardFile == true}
+										<img src="/{$selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
 									{:else}
 										<div class="border p-3 rounded-full bg-gray-200 my-1">
 											<svg
@@ -416,21 +402,21 @@
 									{/if}
 
 									<label
-										for="file-upload"
+										for="flipCard-file-upload"
 										class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 									>
 										<input
 											type="file"
-											name="file-upload"
+											name="flipCard-file-upload"
 											class="sr-only"
-											id="file-upload"
-											on:change={handleFileInputChange}
+											id="flipCard-file-upload"
+											on:change={handleFileInputChangeOnFlipCard}
 											accept=".jpg, .jpeg, .png"
 										/>
 										<span>Add Profile Picture</span>
 									</label>
 									<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-										>{selectedFile}</label
+										>{$selectedFile}</label
 									>
 								</div>
 							</div>
@@ -661,8 +647,8 @@
 							required
 						/>
 						<div class="mt-2 flex items-center gap-x-3">
-							{#if $isUpload}
-								<img src="/{selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
+							{#if $isUpload == true}
+								<img src="/{$selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
 							{:else}
 								<div class="border p-3 rounded-full bg-gray-200 my-1">
 									<svg
@@ -688,13 +674,13 @@
 									name="file-upload"
 									class="sr-only"
 									id="file-upload"
-									on:change={handleFileInputChange}
+									on:change={handleFileInputChangeOnCarousel}
 									accept=".jpg, .jpeg, .png"
 								/>
 								<span>Add Profile Picture</span>
 							</label>
 							<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-								>{selectedFile}</label
+								>{$selectedFile}</label
 							>
 						</div>
 					</div>

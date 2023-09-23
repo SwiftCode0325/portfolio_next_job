@@ -6,18 +6,18 @@
 	import { getTokenFromLocalStorage, getUserId } from '../../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 	import { uploadMedia } from '../../../../util/s3-uploader.js';
+	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../../component/Carousel/Carousel.js"
 
 	let currentPosition = writable(0);
 	let showModal = writable(false);
 	let isLoading = writable(false);
-	let selectedFile = 'No File Chosen';
-	let isUpload = writable(false);
 	let isRemote = writable(false);
 	let isFullTime = writable(false);
 	let isPartTime = writable(false);
 	export let data;
 	let jobType = data.job.job_type;
 	let fileUrl = '';
+	let fileName = '';
 	let carousel1 = 0;
 	let carousel2 = 0;
 	let flipCardInner;
@@ -170,22 +170,6 @@
 		goto('/Home');
 	}
 
-	//change the default message to selected image file name in choose file button//
-	function handleFileInputChange(event) {
-		/*assigns the selected file to the file variable. 
-    If no file is selected, it will be undefined / show no file chosen message.*/
-		const file = event.target.files[0];
-
-		if ((selectedFile = file)) {
-			selectedFile = file.name;
-			isUpload.set(true);
-		} else {
-			selectedFile = 'No File Chosen';
-			isUpload.set(false);
-		}
-	}
-	isUpload.set(false);
-
 	// post job into database //
 	async function updateJob(evt) {
 		//prevent page go to the top when the button is clicked//
@@ -198,8 +182,10 @@
 		//Target id = fileInput, catch the first file//
 		if ($isUpload == true) {
 			[fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
+		} else if($isUploadFlipCardFile == true){
+			[fileName, fileUrl] = await uploadMedia(evt.target['flipCard-file-upload'].files[0])
 		} else {
-			[fileName, fileUrl] = [data.job.image_url];
+			[fileName, fileUrl] = [];
 		}
 
 		const JobsData = {
@@ -458,6 +444,7 @@
 														required
 														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 capitalize"
 														placeholder="Software Engineer"
+														value={data.job.title}
 													/>
 												</div>
 
@@ -477,6 +464,7 @@
 																	value=""
 																	name="list-checklist"
 																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	bind:checked={$isFullTime}
 																/>
 																<label
 																	for="list-checklist-full"
@@ -491,6 +479,7 @@
 																	value=""
 																	name="list-checklist"
 																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	bind:checked={$isPartTime}
 																/>
 																<label
 																	for="list-checklist-part"
@@ -505,6 +494,7 @@
 																	value=""
 																	name="list-checklist"
 																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	bind:checked={$isRemote}
 																/>
 																<label
 																	for="list-checklist-remote"
@@ -532,6 +522,7 @@
 																required
 																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 																placeholder="40000"
+																value={data.job.minAnnualCompensation}
 															/>
 														</div>
 													</div>
@@ -551,6 +542,7 @@
 																required
 																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 																placeholder="250000"
+																value={data.job.maxAnnualCompensation}
 															/>
 														</div>
 													</div>
@@ -582,6 +574,7 @@
 														required
 														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 														placeholder="e.g. Facebook"
+														value={data.job.employer}
 													/>
 												</div>
 											</div>
@@ -592,44 +585,36 @@
 													>Upload Company Logo Image</label
 												>
 												<div class="mt-2 flex items-center gap-x-3">
-													{#if $isUpload == true}
+													{#if $isUploadFlipCardFile == true}
 														<img
-															src="/{selectedFile}"
-															class="w-8 h-8 object-cover rounded-full"
+															src="/{$selectedFile}"
+															class="w-10 h-8 object-cover rounded-full"
 															alt=""
 														/>
 													{:else}
-														<div class="border p-3 rounded-full bg-gray-200">
-															<svg
-																class="w-6 h-6 text-gray-800 dark:text-white"
-																aria-hidden="true"
-																xmlns="http://www.w3.org/2000/svg"
-																fill="currentColor"
-																viewBox="0 0 18 18"
-															>
-																<path
-																	d="M17 16h-1V2a1 1 0 1 0 0-2H2a1 1 0 0 0 0 2v14H1a1 1 0 0 0 0 2h16a1 1 0 0 0 0-2ZM5 4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4Zm0 5V8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1Zm6 7H7v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3Zm2-7a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1Zm0-4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1Z"
-																/>
-															</svg>
-														</div>
+														<img
+															src={data.job.image_url}
+															class="w-10 h-8 object-cover rounded-full"
+															alt=""
+															/>
 													{/if}
 
 													<label
-														for="file-upload"
+														for="flipCard-file-upload"
 														class="rounded-md bg-white px-2.5 py-1.5 text-xl font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
 													>
 														<input
 															type="file"
-															name="file-upload"
+															name="flipCard-file-upload"
 															class="sr-only"
-															id="file-upload"
-															on:change={handleFileInputChange}
+															id="flipCard-file-upload"
+															on:change={handleFileInputChangeOnFlipCard}
 															accept=".jpg, .jpeg, .png"
 														/>
 														<span>Change Image</span>
 													</label>
 													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{selectedFile}</label
+														>{$selectedFile}</label
 													>
 												</div>
 											</div>
@@ -649,6 +634,7 @@
 														required
 														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 														placeholder="e.g. Singapore"
+														value={data.job.location}
 													/>
 												</div>
 											</div>
@@ -679,6 +665,7 @@
 														required
 														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 														placeholder="Job Description"
+														value={data.job.description}
 													/>
 												</div>
 											</div>
@@ -709,6 +696,7 @@
 														required
 														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 														placeholder="Job Requirement"
+														value={data.job.requirements}
 													/>
 												</div>
 											</div>
@@ -739,6 +727,7 @@
 														required
 														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 														placeholder="Instruction to Apply This Job"
+														value={data.job.applicationInstructions}
 													/>
 												</div>
 											</div>
@@ -1217,21 +1206,17 @@
 														>
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload}
-																<div class="rounded-full w-8 h-8">
 																	<img
-																		src="/{selectedFile}"
-																		class="w-8 h-8 object-contain rounded-full"
+																		src="/{$selectedFile}"
+																		class="w-10 h-8 object-cover rounded-full"
 																		alt=""
 																	/>
-																</div>
 															{:else}
-																<div class="border rounded-full bg-gray-200 p-1">
 																	<img
 																		src={data.job.image_url}
-																		class="w-8 h-8 object-contain rounded-full"
+																		class="w-10 h-8 object-cover rounded-full"
 																		alt=""
 																	/>
-																</div>
 															{/if}
 
 															<label
@@ -1243,14 +1228,14 @@
 																	name="file-upload"
 																	class="sr-only"
 																	id="file-upload"
-																	on:change={handleFileInputChange}
+																	on:change={handleFileInputChangeOnCarousel}
 																	accept=".jpg, .jpeg, .png"
 																/>
 																<span>Change Image</span>
 															</label>
 															{#if $isUpload}
 																<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-																	>{selectedFile.slice(0, 10)}...</label
+																	>{$selectedFile.slice(0, 10)}...</label
 																>
 															{:else}
 																<label for="fileInput" class="text-gray-500 h-4 flex items-center"
