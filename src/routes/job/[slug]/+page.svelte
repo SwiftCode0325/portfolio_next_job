@@ -28,36 +28,43 @@ onMount(async () => {
   showModal.set(false)
  }
 
-// get scroll Y position and show up the division when meet the position//
- window.addEventListener('scroll', function(){
-  // Check if screen width is at least 768px
-  if (window.innerWidth >= 768){
-    const currentposition = window.scrollY
+onMount(() => {
+    const handleScroll = () => {
+      // Check if screen width is at least 768px
+      if (window.innerWidth >= 768){
+        const currentposition = window.scrollY
 
-    // target requirement division //
-    const slideUpDivision = document.getElementById('slideUpDiv');
-    const triggerPosition = 100
+        // target requirement division //
+        const slideUpDivision = document.getElementById('slideUpDiv');
+        const triggerPosition = 100
 
-    // target how to apply division //
-    const slideUpDivision1 = document.getElementById('slideUpDiv1');
-    const triggerPosition1 = 190
-    
+        // target how to apply division //
+        const slideUpDivision1 = document.getElementById('slideUpDiv1');
+        const triggerPosition1 = 190
 
-    if (currentposition >= triggerPosition) {
-      slideUpDivision.style.display = "block"
-      animationTrigger = true
-    }else{
-      slideUpDivision.style.display = "none"
-    }
+        if (currentposition >= triggerPosition) {
+          slideUpDivision.style.display = "block"
+          animationTrigger = true
+        }else{
+          slideUpDivision.style.display = "none"
+        }
 
-    if (currentposition >= triggerPosition1) {
-      slideUpDivision1.style.display = "block";
-      animationTrigger = true;
-  } else {
-    slideUpDivision1.style.display = "none";
-  }
-  }
- })
+        if (currentposition >= triggerPosition1) {
+          slideUpDivision1.style.display = "block";
+          animationTrigger = true;
+        } else {
+          slideUpDivision1.style.display = "none";
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      // Cleanup when component is unmounted
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
 
  //function to delete specific record//
 async function deleteRecord(id){
