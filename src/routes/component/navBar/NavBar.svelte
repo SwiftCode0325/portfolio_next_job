@@ -13,21 +13,19 @@ onMount(async () => {
   authData = JSON.parse(await isLoggedIn());
   })
 
-export function loginStatus() {
+function loginStatus() {
     if(get(isAuthenticated) == false) {
-      userIsLoggedIn.set(false);
-      goto("/sign-up")
+      userIsLoggedIn.set(true);
+      goto("/sign-up");
     }else{
       goto("/job/new")
     }
 }
 
-
 function signUp() {
-    goto("/sign-up")
-    userIsLoggedIn.set(true)
+  userIsLoggedIn.set(false);
+  goto('/sign-up');
 }
-
 
 export function openProfileDropDownMenu () {
     profileDropDownMenu.update( value => !value );
@@ -147,7 +145,7 @@ export function openProfileDropDownMenu () {
         <button class="block md:hidden px-4 py-2"><a href="/login">Log In</a></button>
       </li>
       <li>
-        <button class="block md:hidden px-4 py-2"><a href="/sign-up">Sign Up</a></button>
+        <button on:click={signUp} class="block md:hidden px-4 py-2">Sign Up</button>
       </li>
       {/if}
     </ul>
