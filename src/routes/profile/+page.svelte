@@ -63,6 +63,8 @@
 	async function updateUsername(evt) {
 		evt.preventDefault();
 
+		editForUsername.set(false);
+
 		const userData = {
 			username: evt.target['user-name'].value
 		};
@@ -90,7 +92,6 @@
 
 	function usernameEdit() {
 		editForUsername.set(true);
-		console.log('function triggered');
 
 		document.getElementById('user-name').removeAttribute('disabled');
 		document.getElementById('flip-card-user-name').removeAttribute('disabled');
