@@ -7,7 +7,7 @@ const emptyAuth = {
 }
 
 export let isAuthenticated = writable(false);
-export let userIsLoggedIn = writable(true);
+export let userIsLoggedIn = writable(false);
 
 export function logOut() {
     localStorage.setItem("auth", JSON.stringify(emptyAuth));
