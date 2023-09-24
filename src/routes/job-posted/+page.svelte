@@ -158,7 +158,12 @@
 
 	onMount(() => {
 		nav = document.getElementById('totalPage');
-		totalPages = data.jobs.totalPages; // Set the total number of pages
+
+		if( currentJobPage == 1){
+			totalPages = 1;
+		}else{
+		totalPages = data.jobs.totalPages;// Set the total number of pages
+		}
 
 		// Loop through the total number of pages
 		for (let i = 1; i <= totalPages; i++) {
