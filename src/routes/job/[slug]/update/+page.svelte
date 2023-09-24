@@ -1205,7 +1205,7 @@
 															>Upload Company Logo Image</label
 														>
 														<div class="mt-2 flex items-center gap-x-3">
-															{#if $isUpload}
+															{#if $isUpload == true}
 																	<img
 																		src="/{$selectedFile}"
 																		class="w-10 h-8 object-cover rounded-full"
