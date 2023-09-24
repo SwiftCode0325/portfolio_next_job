@@ -94,8 +94,6 @@
 
 		flipCardInner.style.transform = 'rotateY(180deg)';
 	}
-
-
 </script>
 
 <svelte:head>
@@ -109,7 +107,7 @@
 		<div id="flip-card-inner" class="flip-card-inner">
 			<div class="flip-card-front w-full h-full">
 				<!-- If isAuthenticated is false, show this warning message -->
-					{#if $userIsLoggedIn == false}
+					{#if $userIsLoggedIn == true}
 						<div
 							class="text-lg flex absolute top-2 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
 						>
