@@ -1,7 +1,7 @@
 <script>
 	import { writable } from 'svelte/store';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-	import { isLoggedIn, getUserId } from '../../util/auth.js';
+	import { isLoggedIn, getUserId, isAuthenticated } from '../../util/auth.js';
 	import { onMount } from 'svelte';
   	import NavBar from '../component/navBar/NavBar.svelte';
 	import Footer from '../component/Footer/Footer.svelte';
@@ -159,10 +159,12 @@
 	onMount(() => {
 		nav = document.getElementById('totalPage');
 
-		if( currentJobPage == 1){
+		if( $isAuthenticated == false){
 			totalPages = 1;
+		}else if($isAuthenticated == true && data.jobs.totalPages == 0){
+			totalPages = 1;// Set the total number of pages
 		}else{
-		totalPages = data.jobs.totalPages;// Set the total number of pages
+			totalPages = data.jobs.totalPages;
 		}
 
 		// Loop through the total number of pages
