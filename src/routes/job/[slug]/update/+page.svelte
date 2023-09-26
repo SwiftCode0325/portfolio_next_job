@@ -6,7 +6,7 @@
 	import { getTokenFromLocalStorage, getUserId } from '../../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 	import { uploadMedia } from '../../../../util/s3-uploader.js';
-	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../../component/Carousel/Carousel.js"
+	import { fileUrl, fileName, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../../component/Carousel/Carousel.js"
 
 	let currentPosition = writable(0);
 	let showModal = writable(false);
@@ -16,8 +16,6 @@
 	let isPartTime = writable(false);
 	export let data;
 	let jobType = data.job.job_type;
-	let fileUrl = '';
-	let fileName = '';
 	let carousel1 = 0;
 	let carousel2 = 0;
 	let flipCardInner;
@@ -178,15 +176,6 @@
 		isLoading.set(true);
 
 		const userID = await getUserId();
-
-		//Target id = fileInput, catch the first file//
-		if ($isUpload == true) {
-			[fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
-		} else if($isUploadFlipCardFile == true){
-			[fileName, fileUrl] = await uploadMedia(evt.target['flipCard-file-upload'].files[0])
-		} else {
-			[fileName, fileUrl] = [];
-		}
 
 		const JobsData = {
 			user: userID,
@@ -587,14 +576,14 @@
 												<div class="mt-2 flex items-center gap-x-3">
 													{#if $isUploadFlipCardFile == true}
 														<img
-															src="/{$selectedFile}"
-															class="w-10 h-8 object-cover rounded-full"
+															src="{$selectedFile}"
+															class="w-8 h-8 object-cover rounded-full"
 															alt=""
 														/>
 													{:else}
 														<img
 															src={data.job.image_url}
-															class="w-10 h-8 object-cover rounded-full"
+															class="w-8 h-8 object-cover rounded-full"
 															alt=""
 															/>
 													{/if}
@@ -614,7 +603,7 @@
 														<span>Change Image</span>
 													</label>
 													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{$selectedFile}</label
+														>{$selectedFile.slice(0,20)}</label
 													>
 												</div>
 											</div>
@@ -1207,14 +1196,14 @@
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}
 																	<img
-																		src="/{$selectedFile}"
-																		class="w-10 h-8 object-cover rounded-full"
+																		src="{$selectedFile}"
+																		class="w-8 h-8 object-cover rounded-full"
 																		alt=""
 																	/>
 															{:else}
 																	<img
 																		src={data.job.image_url}
-																		class="w-10 h-8 object-cover rounded-full"
+																		class="w-8 h-8 object-cover rounded-full"
 																		alt=""
 																	/>
 															{/if}
@@ -1235,7 +1224,7 @@
 															</label>
 															{#if $isUpload}
 																<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-																	>{$selectedFile.slice(0, 10)}...</label
+																	>{$selectedFile.slice(0, 20)}...</label
 																>
 															{:else}
 																<label for="fileInput" class="text-gray-500 h-4 flex items-center"

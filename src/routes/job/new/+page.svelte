@@ -6,15 +6,13 @@
 	import { getUserId } from '../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
 	import { uploadMedia } from '../../../util/s3-uploader.js';
-	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../component/Carousel/Carousel.js"
+	import { fileUrl, fileName, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../component/Carousel/Carousel.js"
 
 	let carousel1 = 0;
 	let carousel2 = 0;
 	let currentPosition = writable(0);
 	let showModal = writable(false);
 	let isLoading = writable(false);
-	let fileUrl = '';
-	let fileName = '';
 	let flipCardInner;
 	let formErrors = '';
 
@@ -174,15 +172,6 @@
 		isLoading.set(true);
 
 		const userID = await getUserId();
-
-		//Target id = fileInput, catch the first file//
-		if ($isUpload == true) {
-			[fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
-		} else if($isUploadFlipCardFile == true){
-			[fileName, fileUrl] = await uploadMedia(evt.target['flipCard-file-upload'].files[0])
-		} else {
-			[fileName, fileUrl] = [];
-		}
 
 		const JobsData = {
 			user: userID,
@@ -554,7 +543,7 @@
 												<div class="mt-2 flex items-center gap-x-3">
 													{#if $isUploadFlipCardFile == true}
 														<img
-															src="/{$selectedFile}"
+															src="{$selectedFile}"
 															class="w-8 h-8 object-cover rounded-full"
 															alt=""
 														/>
@@ -589,7 +578,7 @@
 														<span>Change Image</span>
 													</label>
 													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{$selectedFile}</label
+														>{$selectedFile.slice(0,20)}</label
 													>
 												</div>
 											</div>
@@ -1174,7 +1163,7 @@
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}
 																<img
-																	src="/{$selectedFile}"
+																	src="{$selectedFile}"
 																	class="w-8 h-8 object-cover rounded-full"
 																	alt=""
 																/>

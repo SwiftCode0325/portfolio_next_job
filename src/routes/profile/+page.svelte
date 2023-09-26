@@ -4,6 +4,7 @@
 	import { getTokenFromLocalStorage } from '../../util/auth.js';
 	import { uploadMedia } from '../../util/s3-uploader.js';
 	import { isLoggedIn, isAuthenticated } from '../../util/auth.js';
+	import { onMount } from 'svelte';
 
 	let editForUsername = writable(false);
 	let formErrors = {};
@@ -13,19 +14,16 @@
 	let getError = writable(false);
   	let flipCardInner;
 
-	async function load() {
-		const userIsLoggedIn = await isLoggedIn();
-		if (userIsLoggedIn) {
-			authData = JSON.parse(localStorage.getItem('auth'));
+	onMount( async () => {	
+		if($isAuthenticated) {
+			authData = JSON.parse(await isLoggedIn());
 			showImage.set(true);
 			userPic = authData.userProfilePicture;
-		} else {
+		}else {
 			authData = '';
 			showImage.set(false);
 		}
-	}
-
-	load();
+	})
 
 	async function updateUserData(evt) {
 		//prevent the page go to the top when button is clicked//
