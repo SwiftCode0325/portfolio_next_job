@@ -578,7 +578,7 @@
 														<span>Change Image</span>
 													</label>
 													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{$selectedFile.slice(0,20)}</label
+														>{$selectedFile.slice(0,10)}</label
 													>
 												</div>
 											</div>
@@ -1198,7 +1198,7 @@
 																<span>Change Image</span>
 															</label>
 															<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-																>{$selectedFile}</label
+																>{$selectedFile.slice(0,20)}</label
 															>
 														</div>
 													</div>
