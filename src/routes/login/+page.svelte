@@ -569,6 +569,3 @@
 	</div>
 </div>
 
-<style>
-	@import '../login/+page.css';
-</style>
