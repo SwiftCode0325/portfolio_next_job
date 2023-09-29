@@ -17,6 +17,11 @@
 
 	//Carousel 1 (bigger screen size)//
 	onMount(() => {
+
+		isUploadFlipCardFile.set(false)
+
+		selectedFile.set('No File Chosen')
+
 		// Initialize the Carousel once the component is mounted
 		const items = [
 			{
@@ -85,6 +90,11 @@
 
 	// Carousel 2 (flip-card-back) //
 	onMount(() => {
+
+		isUpload.set(false)
+
+		selectedFile.set('No File Chosen')
+
 		// Initialize the Carousel once the component is mounted
 		const items = [
 			{
