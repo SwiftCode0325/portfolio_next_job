@@ -1,18 +1,16 @@
 <script>
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-	import { authenticateUser, userIsLoggedIn } from '../../util/auth.js';
+	import { authenticateUser, isAuthenticated, userIsLoggedIn } from '../../util/auth.js';
 	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import PasswordVisibility from "../component/PasswordVisibility/PasswordVisibility.svelte"
 	import PasswordConfirmationVisibility from '../component/PasswordVisibility/PasswordConfirmationVisibility.svelte';
-	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../component/UploadMedia/UploadMedia.js"
+	import { fileUrl, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../component/UploadMedia/UploadMedia.js"
 
 	let isLoading = writable(false);
 	let formErrors = {};
 	let getError = writable(false);
 	let getSuccess = writable(false);
-	let fileName = '';
-	let fileUrl = '';
   	let flipCardInner;
 
 	async function postSignUp() {
@@ -23,15 +21,6 @@
 		//prevent the page go to the top when button is clicked//
 		evt.preventDefault();
 		isLoading.set(true);
-
-		//Target id = fileInput, catch the first file//
-		if ($isUpload == true) {
-			[fileName, fileUrl] = await uploadMedia(evt.target['file-upload'].files[0]);
-		} else if($isUploadFlipCardFile == true){
-			[fileName, fileUrl] = await uploadMedia(evt.target['flipCard-file-upload'].files[0])
-		} else {
-			[fileName, fileUrl] = [];
-		}
 
 		const userData = {
 			username: evt.target['username'].value,
@@ -76,10 +65,11 @@
 		getSuccess.set(false);
 	}
 
-	setTimeout(function () {
-		document.querySelector('.warningMessageSlideRight').remove();
-	}, 5000);
-
+	if(isAuthenticated == false){
+		setTimeout(function () {
+			document.querySelector('.warningMessageSlideRight').remove();
+		}, 5000);
+	}
 
 	function flip() {
 		flipCardInner = document.getElementById('flip-card-inner');
@@ -380,7 +370,7 @@
 								/>
 								<div class="mt-2 flex items-center gap-x-3">
 									{#if $isUploadFlipCardFile == true}
-										<img src="/{$selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
+										<img src="{$selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
 									{:else}
 										<div class="border p-3 rounded-full bg-gray-200 my-1">
 											<svg
@@ -412,7 +402,7 @@
 										<span>Add Profile Picture</span>
 									</label>
 									<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-										>{$selectedFile}</label
+										>{$selectedFile.slice(0, 15)}</label
 									>
 								</div>
 							</div>
@@ -644,7 +634,7 @@
 						/>
 						<div class="mt-2 flex items-center gap-x-3">
 							{#if $isUpload == true}
-								<img src="/{$selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
+								<img src="{$selectedFile}" class="w-10 h-10 object-cover rounded-full" alt="" />
 							{:else}
 								<div class="border p-3 rounded-full bg-gray-200 my-1">
 									<svg
@@ -676,7 +666,7 @@
 								<span>Add Profile Picture</span>
 							</label>
 							<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-								>{$selectedFile}</label
+								>{$selectedFile.slice(0,20)}</label
 							>
 						</div>
 					</div>
