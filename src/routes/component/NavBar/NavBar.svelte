@@ -6,8 +6,8 @@ import { goto } from '$app/navigation';
 import { writable } from "svelte/store";
 import { onMount } from 'svelte';
 
-export let profileDropDownMenu = writable(false);
-export let authData = '';
+let profileDropDownMenu = writable(false);
+let authData = '';
 
 onMount(async () => {
   authData = JSON.parse(await isLoggedIn());
