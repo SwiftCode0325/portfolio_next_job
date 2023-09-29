@@ -1582,5 +1582,4 @@
 
 <style>
 	@import '../update/+page.css';
-	@import '../../../../app.css';
 </style>
