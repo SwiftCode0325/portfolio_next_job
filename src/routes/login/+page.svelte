@@ -274,7 +274,7 @@
 									{/if}
 									
 									<button type="button"
-									on:click={togglePasswordVisibility} class="absolute inset-y-0 top-1.5 sm:top-0.5 right-2.5">
+									on:click={togglePasswordVisibility} class="absolute inset-y-0 top-1.3 right-2.5">
 										<svg
 											class="fill-gray-300"
 											width="30px"
@@ -500,7 +500,7 @@
 							{/if}
 							
 							<button type="button"
-							on:click={togglePasswordVisibility} class="absolute inset-y-0 top-1.5 sm:top-0.5 right-2.5">
+							on:click={togglePasswordVisibility} class="absolute inset-y-0 top-0.5 right-2.5">
 								<svg
 									class="fill-gray-300"
 									width="30px"
