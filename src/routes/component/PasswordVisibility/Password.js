@@ -4,5 +4,5 @@ export let showPassword = writable(true);
 
 // function to toggle the state of the showPassword store //
 export function togglePasswordVisibility() {
-    showPassword != showPassword;
+    showPassword.update(value => !value);
 }

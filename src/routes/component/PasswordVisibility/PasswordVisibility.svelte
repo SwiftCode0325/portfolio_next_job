@@ -25,7 +25,8 @@ function togglePasswordVisibility() {
 										required
 									/>
 									
-									<button on:click={togglePasswordVisibility} class="absolute inset-y-0 top-2.5 sm:top-1.5 right-2.5">
+									<button type="button"
+									on:click={togglePasswordVisibility} class="absolute inset-y-0 top-1.3 sm:top-0.5 right-2.5">
 										<svg
 											class="fill-gray-300"
 											width="30px"
