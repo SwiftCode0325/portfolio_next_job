@@ -4,9 +4,8 @@
 	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import { uploadMedia } from '../../util/s3-uploader.js';
-	import PasswordVisibility from "../component/passwordVisibility/PasswordVisibity.svelte"
-	import PasswordConfirmationVisibility from '../component/passwordVisibility/PasswordConfirmationVisibility.svelte';
-	import PasswordVisibity from '../component/passwordVisibility/PasswordVisibity.svelte';
+	import PasswordVisibility from "../component/PasswordVisibility/PasswordVisibility.svelte"
+	import PasswordConfirmationVisibility from '../component/PasswordVisibility/PasswordConfirmationVisibility.svelte';
 	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../component/Carousel/Carousel.js"
 
 	let isLoading = writable(false);
@@ -433,7 +432,7 @@
 								/>
 							</div>
 
-							<PasswordVisibity />
+							<PasswordVisibility />
 
 							<PasswordConfirmationVisibility />
 
