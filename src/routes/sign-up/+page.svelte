@@ -210,7 +210,7 @@
 						<button
 							on:click={closeWindow}
 							type="button"
-							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
 							data-dismiss-target="#alert-2"
 							aria-label="Close"
 						>
@@ -237,11 +237,11 @@
 				<!-- If success sign up show success notification -->
 				{#if $getSuccess}
 					<div
-						class="z-10 border border-black flex absolute top-2 left-1 items-center p-4 text-green-800 rounded-lg bg-green-50 slideRight"
+						class="z-10 flex absolute top-2 left-1 items-center p-4 text-green-800 rounded-lg bg-green-50 slideRight"
 						role="alert"
 					>
 						<svg
-							class="w-4 h-4 text-gray-800 dark:text-white"
+							class="w-4 h-4 text-gray-800"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -328,7 +328,7 @@
 									viewBox="0 0 511.626 511.627"
 									style="enable-background:new 0 0 511.626 511.627;"
 									xml:space="preserve"
-									class="fill-gray-200 dark:text-white p-2"
+									class="fill-gray-200 p-2"
 								>
 									<g>
 										<g>
@@ -363,7 +363,7 @@
 									<g />
 									<g />
 								</svg>
-								<h5 class="text-xl font-medium text-gray-900 dark:text-white flex items-center">
+								<h5 class="text-xl font-medium text-gray-900 flex items-center">
 									Create Account
 								</h5>
 							</div>
@@ -376,7 +376,7 @@
 								<input
 									type="text"
 									name="username"
-									class="bg-white border border-gray-300 text-gray-900 text-base rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+									class="bg-white border border-gray-300 text-gray-900 text-base rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 									placeholder="John Doe"
 									required
 								/>
@@ -428,7 +428,7 @@
 									type="email"
 									name="email"
 									placeholder="johndoe@example.com"
-									class="bg-white border border-gray-300 text-gray-900 text-base rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+									class="bg-white border border-gray-300 text-gray-900 text-base rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 									required
 								/>
 							</div>
@@ -439,7 +439,7 @@
 
 							<button
 								type="submit"
-								class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-lg px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+								class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-lg px-5 py-2.5 text-center"
 							>
 								{#if $isLoading}
 									<span class="loading loading-dots loading-sm" />
@@ -496,7 +496,7 @@
 				<button
 					on:click={closeWindow}
 					type="button"
-					class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+					class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
 					data-dismiss-target="#alert-2"
 					aria-label="Close"
 				>
@@ -527,7 +527,7 @@
 				role="alert"
 			>
 				<svg
-					class="w-4 h-4 text-gray-800 dark:text-white"
+					class="w-4 h-4 text-gray-800"
 					aria-hidden="true"
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -574,7 +574,7 @@
 		<div class="flex w-9/12 h-full items-center justify-center ml-10 slide-down">
 			<!-- Form section -->
 			<div
-				class="w-full p-5 max-w-sm bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-5 dark:bg-gray-800 dark:border-gray-700 overflow-y-auto createUserWindow"
+				class="w-full p-5 max-w-sm bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-5 overflow-y-auto createUserWindow"
 			>
 				<form class="space-y-3" on:submit={createUser}>
 					<div class="flex">
@@ -590,7 +590,7 @@
 							viewBox="0 0 511.626 511.627"
 							style="enable-background:new 0 0 511.626 511.627;"
 							xml:space="preserve"
-							class="fill-gray-200 dark:text-white p-2"
+							class="fill-gray-200 p-2"
 						>
 							<g>
 								<g>
@@ -625,7 +625,7 @@
 							<g />
 							<g />
 						</svg>
-						<h5 class="text-xl font-medium text-gray-900 dark:text-white flex items-center">
+						<h5 class="text-xl font-medium text-gray-900 flex items-center">
 							Create Account
 						</h5>
 					</div>
@@ -634,13 +634,13 @@
 					<div>
 						<label
 							for="username"
-							class="block pb-1 text-sm font-medium text-gray-900 dark:text-white"
+							class="block pb-1 text-sm font-medium text-gray-900"
 							>Your username</label
 						>
 						<input
 							type="text"
 							name="username"
-							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 							placeholder="John Doe"
 							required
 						/>
@@ -685,14 +685,14 @@
 
 					<!-- email section -->
 					<div>
-						<label for="email" class="block pb-1 text-sm font-medium text-gray-900 dark:text-white"
+						<label for="email" class="block pb-1 text-sm font-medium text-gray-900"
 							>Your Email</label
 						>
 						<input
 							type="email"
 							name="email"
 							placeholder="johndoe@example.com"
-							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 							required
 						/>
 					</div>
@@ -703,7 +703,7 @@
 
 					<button
 						type="submit"
-						class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+						class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 					>
 						{#if $isLoading}
 							<span class="loading loading-dots loading-sm" />
@@ -712,8 +712,8 @@
 						{/if}
 					</button>
 
-					<div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-						Registered? <a href="/login" class="text-pink-600 hover:underline dark:text-blue-500"
+					<div class="text-sm font-medium text-gray-500">
+						Registered? <a href="/login" class="text-pink-600 hover:underline"
 							>Log in HERE</a
 						>
 					</div>

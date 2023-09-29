@@ -1,33 +1,3 @@
-@keyframes slideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(100%);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (min-width: 768px) {
-    .slide-up {
-        animation: slideUp 2s ease forwards;
-    }
-
-    .slide-up2 {
-        animation: slideUp 5s ease forwards;
-    }
-
-    .slide-up3 {
-        animation: slideUp 6s ease forwards;
-    }
-
-    .slide-up4 {
-        animation: slideUp 9s ease forwards;
-    }
-}
-
 @media (min-width: 768px) and (max-width: 912px) {
     .body {
         height: 100vh;
@@ -39,22 +9,6 @@ footer,
 .job-title,
 .job-type {
     background-color: #20333a;
-}
-
-@keyframes slideDown1 {
-    0% {
-        opacity: 0;
-        transform: translateY(-100%);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.slide-down1 {
-    animation: slideDown1 2s ease forwards;
 }
 
 @media (max-width: 280px) {

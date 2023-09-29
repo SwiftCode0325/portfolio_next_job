@@ -53,7 +53,7 @@
 	/>
 	<div class="absolute inset-0 flex flex-col items-center justify-center mt-12">
 		<div class="flex items-center">
-			<h1 class="text-5xl text-gray-200 dark:text-white font-extrabold md:text-6xl">NEXT JOB</h1>
+			<h1 class="text-5xl text-gray-200 font-extrabold md:text-6xl">NEXT JOB</h1>
 			<svg
 				version="1.1"
 				id="Capa_1"
@@ -66,7 +66,7 @@
 				viewBox="0 0 511.626 511.627"
 				style="enable-background:new 0 0 511.626 511.627;"
 				xml:space="preserve"
-				class="fill-gray-200 dark:text-white ml-2"
+				class="fill-gray-200 ml-2"
 			>
 				<g>
 					<g>
@@ -102,7 +102,7 @@
 				<g />
 			</svg>
 		</div>
-		<div class="w-80 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 md:w-96 mt-2">
+		<div class="w-80 bg-gray-200 rounded-full h-2.5 md:w-96 mt-2">
 			<div class="w-80 bg-blue-600 h-2.5 rounded-full md:w-96" style="width: {progress}%" />
 		</div>
 		<!-- Use the fadeIn variable to control the fade-in/fade-out effect -->

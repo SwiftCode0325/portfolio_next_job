@@ -13,6 +13,8 @@
 	let userPic = '';
 	let getError = writable(false);
   	let flipCardInner;
+	let successChangedProfileImage = writable(false)
+	let successChangedUsername = writable(false)
 
 	onMount( async () => {	
 		if($isAuthenticated) {
@@ -38,6 +40,8 @@
 		const [uploadedFileName, fileUrl] = await uploadMedia(file);
 
 		userPic = fileUrl;
+
+		successChangedProfileImage.set(true)
 
 		// Create the userData object
 		const userData = {
@@ -81,6 +85,7 @@
 		);
 		if (resp.status == 200) {
 			getError.set(false);
+			successChangedUsername.set(true);
 		} else {
 			const res = await resp.json();
 			formErrors = res.data;
@@ -123,6 +128,14 @@
 	function closeWindow() {
 		getError.set(false);
 	}
+
+	function closeSuccessMessageForChangedProfileImage () {
+		successChangedProfileImage.set(false);
+	}
+
+	function closeSuccessMessageForChangedUsername () {
+		successChangedUsername.set(false);
+	}
 </script>
 
 <svelte:head>
@@ -131,7 +144,7 @@
 </svelte:head>
 
 <div class="flex h-screen w-screen">
-	<!-- Profile Section -->
+	<!-- Profile Flip Card Division -->
 
 	<!-- Image div -->
 	<div id="flip-card" class="sm:w-6/12 w-full h-full">
@@ -189,7 +202,7 @@
 				<!-- If loginStatus is true, show the warning message -->
 				{#if $getError}
 					<div
-						class="warningMessageSlideRight z-10 flex absolute top-2 right-0 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-red-400"
+						class="warningMessageSlideRight z-10 flex absolute top-2 right-0 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
 						role="alert"
 					>
 						<svg
@@ -212,7 +225,107 @@
 						<button
 							on:click={closeWindow}
 							type="button"
-							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
+							data-dismiss-target="#alert-2"
+							aria-label="Close"
+						>
+							<span class="sr-only">Close</span>
+							<svg
+								class="w-3 h-3"
+								aria-hidden="true"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 14 14"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+								/>
+							</svg>
+						</button>
+					</div>
+				{/if}
+
+				<!-- If success change profile image show success notification -->
+				{#if $successChangedProfileImage}
+					<div
+						class="z-10 flex absolute top-2 items-center p-4 text-green-800 rounded-lg bg-green-50 slideRight"
+						role="alert"
+					>
+						<svg
+							class="w-4 h-4 text-gray-800"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 16 12"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M1 5.917 5.724 10.5 15 1.5"
+							/>
+						</svg>
+						<span class="sr-only">Info</span>
+						<div class="ml-3 text-base pr-2">Profile Image Successfully Changed !</div>
+						<button
+							on:click={closeSuccessMessageForChangedProfileImage}
+							type="button"
+							class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8"
+							data-dismiss-target="#alert-2"
+							aria-label="Close"
+						>
+							<span class="sr-only">Close</span>
+							<svg
+								class="w-3 h-3"
+								aria-hidden="true"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 14 14"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+								/>
+							</svg>
+						</button>
+					</div>
+				{/if}
+
+				<!-- If success change username show success notification -->
+				{#if $successChangedUsername}
+					<div
+						class="z-10 flex absolute top-2 items-center p-4 text-green-800 rounded-lg bg-green-50 slideRight"
+						role="alert"
+					>
+						<svg
+							class="w-4 h-4 text-gray-800"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 16 12"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M1 5.917 5.724 10.5 15 1.5"
+							/>
+						</svg>
+						<span class="sr-only">Info</span>
+						<div class="ml-3 text-base pr-2">Username Successfully Changed !</div>
+						<button
+							on:click={closeSuccessMessageForChangedUsername}
+							type="button"
+							class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8"
 							data-dismiss-target="#alert-2"
 							aria-label="Close"
 						>
@@ -408,7 +521,7 @@
 										>Email</span
 									>
 									<svg
-										class="w-6 h-6 text-gray-800 dark:text-white mt-2 mr-10"
+										class="w-6 h-6 text-gray-800 mt-2 mr-10"
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="currentColor"
@@ -435,11 +548,11 @@
 		</div>
 	</div>
 
-	<!-- Profile Detail Division -->
+	<!-- Profile Detail Carousel Division -->
 	<div class="w-1/2 flex justify-center bg-gradient-to-br from-pink-500 to-orange-400 formDivision">
 		{#if $getError}
 			<div
-				class="warningMessageSlideRight flex absolute top-2 left-2 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-red-400"
+				class="warningMessageSlideRight flex absolute top-2 left-2 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
 				role="alert"
 			>
 				<svg
@@ -462,7 +575,7 @@
 				<button
 					on:click={closeWindow}
 					type="button"
-					class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+					class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
 					data-dismiss-target="#alert-2"
 					aria-label="Close"
 				>
@@ -485,6 +598,106 @@
 				</button>
 			</div>
 		{/if}
+
+		<!-- If success sign up show success notification -->
+				{#if $successChangedProfileImage}
+					<div
+						class="z-10 flex absolute top-2 left-1 items-center p-4 text-green-800 rounded-lg bg-green-50 slideRight"
+						role="alert"
+					>
+						<svg
+							class="w-4 h-4 text-gray-800"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 16 12"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M1 5.917 5.724 10.5 15 1.5"
+							/>
+						</svg>
+						<span class="sr-only">Info</span>
+						<div class="ml-3 text-lg pr-2">Profile Image Successfully Changed !</div>
+						<button
+							on:click={closeSuccessMessageForChangedProfileImage}
+							type="button"
+							class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8"
+							data-dismiss-target="#alert-2"
+							aria-label="Close"
+						>
+							<span class="sr-only">Close</span>
+							<svg
+								class="w-3 h-3"
+								aria-hidden="true"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 14 14"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+								/>
+							</svg>
+						</button>
+					</div>
+				{/if}
+
+				<!-- If success sign up show success notification -->
+				{#if $successChangedUsername}
+					<div
+						class="z-10 flex absolute top-2 left-1 items-center p-4 text-green-800 rounded-lg bg-green-50 slideRight"
+						role="alert"
+					>
+						<svg
+							class="w-4 h-4 text-gray-800"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 16 12"
+						>
+							<path
+								stroke="currentColor"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M1 5.917 5.724 10.5 15 1.5"
+							/>
+						</svg>
+						<span class="sr-only">Info</span>
+						<div class="ml-3 text-lg pr-2">Username Successfully Changed !</div>
+						<button
+							on:click={closeSuccessMessageForChangedUsername}
+							type="button"
+							class="ml-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 inline-flex items-center justify-center h-8 w-8"
+							data-dismiss-target="#alert-2"
+							aria-label="Close"
+						>
+							<span class="sr-only">Close</span>
+							<svg
+								class="w-3 h-3"
+								aria-hidden="true"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 14 14"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+								/>
+							</svg>
+						</button>
+					</div>
+				{/if}
 
 		<div class="mt-20 w-10/12 flex justify-center slide-down">
 			<div class="w-full flex flex-col items-center">
@@ -625,7 +838,7 @@
 					<p class="p-2 m-2 flex flex-row gap-1 mr-11">
 						<span class="userData p-2 text-white rounded-lg text-center w-24">Email</span>
 						<svg
-							class="w-6 h-6 text-gray-800 dark:text-white mt-2 mr-10"
+							class="w-6 h-6 text-gray-800 mt-2 mr-10"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="currentColor"

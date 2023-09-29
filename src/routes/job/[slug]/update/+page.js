@@ -10,11 +10,11 @@ export async function load({ fetch, params }) {
     
     if(resp.status == 200){
         return {
-            job: res 
+            jobs: res 
         }
     } else {
         return {
-            job: []
+            jobs: []
         }
     }
     }

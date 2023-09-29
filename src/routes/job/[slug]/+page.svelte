@@ -8,7 +8,7 @@
  import { goto } from '$app/navigation';
  import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
  import { onMount } from 'svelte';
- import NavBar from '../../component/navBar/NavBar.svelte';
+ import NavBar from '../../component/NavBar/NavBar.svelte';
  import Footer from '../../component/Footer/Footer.svelte';
 
 export let data;
@@ -80,7 +80,7 @@ async function deleteRecord(id){
       if(response.ok){
         goto('/job-posted')
       }else{
-        data.jobs = '';
+        console.log(response.data)
       }
     }
 </script>
@@ -95,12 +95,12 @@ async function deleteRecord(id){
 
 <div class="p-4 body">
   <div class="flex justify-between display">
-    <h1 class="text-3xl font-extrabold job-title p-4 text-white w-64 sm:w-96 rounded-lg capitalize">{data.job.title}</h1>
+    <h1 class="text-3xl font-extrabold job-title p-4 text-white w-64 sm:w-96 rounded-lg capitalize">{data.jobs.title}</h1>
     <!-- Show edit button for user that has log in and check whether the user is the user that create this job post-->
-    {#if $isAuthenticated == true && data.job.user == getUserId()}
+    {#if $isAuthenticated == true && data.jobs.user == getUserId()}
     <div class="w-32 sm:ml-2 md:w-auto md:justify-center md:items-center md:flex">
     <div class="inline-flex h-12 w-28 text-lg text-white bg-emerald-600 rounded-lg ml-2 mt-1">
-        <a href="/job/{data.job.id}/update" class="h-full w-full flex items-center justify-center">
+        <a href="/job/{data.jobs.id}/update" class="h-full w-full flex items-center justify-center">
             Edit
             <svg class="w-6 h-6 text-white ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
               <path d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z"/>
@@ -135,7 +135,7 @@ async function deleteRecord(id){
 												<button
 													on:click={hideModal}
 													type="button"
-													class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+													class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
 													data-modal-hide="popup-modal"
 												>
 													<svg
@@ -157,7 +157,7 @@ async function deleteRecord(id){
 												</button>
 												<div class="p-6 text-center">
 													<svg
-														class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+														class="mx-auto mb-4 text-gray-400 w-12 h-12"
 														aria-hidden="true"
 														xmlns="http://www.w3.org/2000/svg"
 														fill="none"
@@ -171,23 +171,20 @@ async function deleteRecord(id){
 															d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 														/>
 													</svg>
-													<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+													<h3 class="mb-5 text-lg font-normal text-gray-500">
 														Are you sure you want to delete this record?
 													</h3>
-                          								<p class="mb-3 font-bold">Job id: {data.job.id}</p>
-													<button
-                            							on:click|preventDefault={deleteRecord(data.job.id)}
-														data-modal-hide="popup-modal"
+                          								<p class="mb-3 font-bold">Job id: {data.jobs.id}</p>
+													<button on:click|preventDefault={deleteRecord(data.jobs.id)}
 														type="button"
-														class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+														class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
 													>
 														Yes, I'm sure
 													</button>
 													<button
 														on:click={hideModal}
-														data-modal-hide="popup-modal"
 														type="button"
-														class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+														class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
 														>No, cancel</button
 													>
 												</div>
@@ -198,15 +195,15 @@ async function deleteRecord(id){
               </div>
 							{/if}
 
-    <p class="text-xl mt-2 capitalize">{data.job.employer}</p>
+    <p class="text-xl mt-2 capitalize">{data.jobs.employer}</p>
  
     <div class="flex flex-col sm:flex-row w-full mt-8">
-        <div class="basis-2/3 prose max-w-none w-full">
+        <div class="basis-2/3 max-w-none w-full">
           <div class="slide-up">
             <h2 class="text-xl font-semibold mb-2 text-black">Description</h2>
             <p class="border border-pink-600 mb-4"></p>
             <div class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl"> 
-              <span class="text-xl md:text-lg"><SvelteMarkdown source={data.job.description}/></span>
+              <span class="text-xl md:text-lg"><SvelteMarkdown source={data.jobs.description}/></span>
             </div>
           </div>
 
@@ -215,7 +212,7 @@ async function deleteRecord(id){
             <h2 class="text-xl font-semibold text-black mb-2">Requirements</h2>
             <p class="border border-pink-600 mb-4"></p>
             <div class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl">
-              <span class="text-xl md:text-lg"><SvelteMarkdown source={data.job.requirements} /></span>
+              <span class="text-xl md:text-lg"><SvelteMarkdown source={data.jobs.requirements} /></span>
             </div>
           </div>
 
@@ -224,7 +221,7 @@ async function deleteRecord(id){
             <h2 class="text-xl font-semibold text-black mb-2">How to Apply?</h2>
             <p class="border border-pink-600 mb-4"></p>
             <div class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl">
-              <p class="text-xl md:text-lg break-all">{data.job.applicationInstructions}</p>
+              <p class="text-xl md:text-lg break-all">{data.jobs.applicationInstructions}</p>
             </div>
           </div>
         </div>
@@ -233,7 +230,7 @@ async function deleteRecord(id){
           <div class="slide-up2">
             <h2 class="text-xl font-semibold mb-2">Location</h2>
             <p class="border md:border-orange-400 border-pink-600 mb-4"></p>
-            <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl text-xl md:text-lg">{data.job.location}</p>
+            <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl text-xl md:text-lg">{data.jobs.location}</p>
           </div>
 
             <div class="mt-6" />
@@ -242,8 +239,8 @@ async function deleteRecord(id){
             <h2 class="text-xl font-semibold mb-2">Salary Range</h2>
             <p class="border md:border-orange-400 border-pink-600 mb-4"></p>
             <p class="border rounded-lg p-4 bg-white border-slate-400 shadow-xl text-xl md:text-lg">
-                USD {humanize.formatNumber(data.job.minAnnualCompensation)} - USD {humanize.formatNumber(
-                    data.job.maxAnnualCompensation
+                USD {humanize.formatNumber(data.jobs.minAnnualCompensation)} - USD {humanize.formatNumber(
+                    data.jobs.maxAnnualCompensation
                 )}
             </p>
           </div>
@@ -254,13 +251,13 @@ async function deleteRecord(id){
           <h2 class="text-xl font-semibold mb-2">Job Type</h2>
           <p class="border md:border-orange-400 border-pink-600 mb-4"></p>
           <div class="flex flex-row text-white text-lg">
-            {#if data.job.job_type.includes('Full Time')}
+            {#if data.jobs.job_type.includes('Full Time')}
             <h2 class="rounded-lg p-2 job-type ml-2">Full Time</h2>
             {/if}
-            {#if data.job.job_type.includes('Part Time') }
+            {#if data.jobs.job_type.includes('Part Time') }
             <h2 class="rounded-lg p-2 job-type ml-2">Part Time</h2>
             {/if}
-            {#if data.job.job_type.includes('Remote')}
+            {#if data.jobs.job_type.includes('Remote')}
             <h2 class="rounded-lg p-2 job-type ml-2 flex items-center">Remote</h2>
             {/if}
           </div>

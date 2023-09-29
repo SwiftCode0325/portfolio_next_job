@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { authenticateUser } from '../../util/auth.js';
 	import { writable } from 'svelte/store';
-  	import { showPassword, togglePasswordVisibility } from "../component/passwordVisibility/password.js";
+  	import { showPassword, togglePasswordVisibility } from "../component/PasswordVisibility/Password.js";
 
 	let isLoading = writable(false);
 	let username = '';
@@ -103,7 +103,7 @@
 				<!-- If loginStatus is true, show the warning message -->
 				{#if $getError}
 					<div
-						class="flex absolute z-10 top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-red-400"
+						class="flex absolute z-10 top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
 						role="alert"
 					>
 						<svg
@@ -122,7 +122,7 @@
 						<button
 							on:click={closeWindow}
 							type="button"
-							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
 							data-dismiss-target="#alert-2"
 							aria-label="Close"
 						>
@@ -188,7 +188,7 @@
 									viewBox="0 0 511.626 511.627"
 									style="enable-background:new 0 0 511.626 511.627;"
 									xml:space="preserve"
-									class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
+									class="fill-gray-200 p-2"
 								>
 									<g>
 										<g>
@@ -223,7 +223,7 @@
 									<g />
 									<g />
 								</svg>
-								<h5 class="text-xl font-medium text-gray-900 dark:text-white flex items-center">
+								<h5 class="text-xl font-medium text-gray-900 flex items-center">
 									Sign in to our platform
 								</h5>
 							</div>
@@ -249,7 +249,7 @@
 							<div>
 								<label
 									for="password"
-									class="block pb-1 text-lg sm:text-base font-medium text-gray-900 dark:text-white text-left"
+									class="block pb-1 text-lg sm:text-base font-medium text-gray-900 text-left"
 									>Your password</label
 								>
 								<div class="relative">
@@ -272,13 +272,10 @@
 											bind:value={password}
 										/>
 									{/if}
-									<!-- svelte-ignore a11y-interactive-supports-focus -->
-									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<div class="absolute inset-y-0 top-1.5 right-2.5">
+									
+									<button on:click={togglePasswordVisibility} class="absolute inset-y-0 top-1.5 right-2.5">
 										<svg
-											on:click={togglePasswordVisibility}
-											role="button"
-											class="cursor-pointer fill-gray-300"
+											class="fill-gray-300"
 											width="30px"
 											height="30px"
 											viewBox="0 0 24 24"
@@ -321,7 +318,7 @@
 												stroke-linejoin="round"
 											/>
 										</svg>
-									</div>
+									</button>
 								</div>
 							</div>
 
@@ -355,7 +352,7 @@
 		<!-- If loginStatus is true, show the warning message -->
 		{#if $getError}
 			<div
-				class="flex absolute z-10 top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-red-400"
+				class="flex absolute z-10 top-2 left-1 warningMessageSlideRight items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
 				role="alert"
 			>
 				<svg
@@ -374,7 +371,7 @@
 				<button
 					on:click={closeWindow}
 					type="button"
-					class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-gray-700"
+					class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
 					data-dismiss-target="#alert-2"
 					aria-label="Close"
 				>
@@ -400,7 +397,7 @@
 
 		<div class="flex justify-center w-9/12 ml-10 mb-5 slide-down">
 			<div
-				class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700"
+				class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8"
 			>
 				<form class="space-y-6" on:submit={signIn}>
 					<div class="flex">
@@ -416,7 +413,7 @@
 							viewBox="0 0 511.626 511.627"
 							style="enable-background:new 0 0 511.626 511.627;"
 							xml:space="preserve"
-							class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
+							class="fill-gray-200 p-2"
 						>
 							<g>
 								<g>
@@ -451,7 +448,7 @@
 							<g />
 							<g />
 						</svg>
-						<h5 class="text-xl font-medium text-gray-900 dark:text-white flex items-center">
+						<h5 class="text-xl font-medium text-gray-900 flex items-center">
 							Sign in to our platform
 						</h5>
 					</div>
@@ -460,13 +457,13 @@
 					<div>
 						<label
 							for="username"
-							class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+							class="block mb-2 text-sm font-medium text-gray-900"
 							>Your username</label
 						>
 						<input
 							type="text"
 							name="username"
-							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 							placeholder="John Doe"
 							required
 							bind:value={username}
@@ -477,7 +474,7 @@
 					<div>
 						<label
 							for="password"
-							class="block pb-1 text-lg sm:text-sm font-medium text-gray-900 dark:text-white text-left"
+							class="block pb-1 text-lg sm:text-sm font-medium text-gray-900 text-left"
 							>Your password</label
 						>
 						<div class="relative">
@@ -500,13 +497,10 @@
 									bind:value={password}
 								/>
 							{/if}
-							<!-- svelte-ignore a11y-interactive-supports-focus -->
-							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<div class="absolute inset-y-0 top-1.5 right-2.5">
+							
+							<button on:click={togglePasswordVisibility} class="absolute inset-y-0 top-1.5 right-2.5">
 								<svg
-									on:click={togglePasswordVisibility}
-									role="button"
-									class="cursor-pointer fill-gray-300"
+									class="fill-gray-300"
 									width="30px"
 									height="30px"
 									viewBox="0 0 24 24"
@@ -549,13 +543,13 @@
 										stroke-linejoin="round"
 									/>
 								</svg>
-							</div>
+							</button>
 						</div>
 					</div>
 
 					<button
 						type="submit"
-						class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+						class="w-full text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 					>
 						{#if $isLoading}
 							<span class="loading loading-dots loading-sm" />
@@ -563,10 +557,10 @@
 							<span>Login</span>
 						{/if}
 					</button>
-					<div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+					<div class="text-sm font-medium text-gray-500">
 						Not registered? <a
 							href="/sign-up"
-							class="text-pink-600 hover:underline dark:text-blue-500">Create Account</a
+							class="text-pink-600 hover:underline">Create Account</a
 						>
 					</div>
 				</form>

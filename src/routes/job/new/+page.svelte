@@ -5,8 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { getUserId } from '../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-	import { uploadMedia } from '../../../util/s3-uploader.js';
-	import { fileUrl, fileName, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../component/Carousel/Carousel.js"
+	import { fileUrl, fileName, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../component/UploadMedia/UploadMedia.js"
 
 	let carousel1 = 0;
 	let carousel2 = 0;
@@ -46,8 +45,8 @@
 			interval: null,
 
 			indicators: {
-				activeClasses: 'bg-white dark:bg-gray-800',
-				inactiveClasses: 'bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800',
+				activeClasses: 'bg-white',
+				inactiveClasses: 'bg-white/50',
 				items: [
 					{
 						position: 0,
@@ -114,8 +113,8 @@
 			interval: null,
 
 			indicators: {
-				activeClasses: 'bg-white dark:bg-gray-800',
-				inactiveClasses: 'bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800',
+				activeClasses: 'bg-white',
+				inactiveClasses: 'bg-white/50',
 				items: [
 					{
 						position: 0,
@@ -160,7 +159,7 @@
 	function hideModal() {
 		showModal.set(false);
 	}
-	function refreshPage() {
+	function goToHome() {
 		goto('/Home');
 	}
 
@@ -312,11 +311,11 @@
 
 				<form
 					on:submit={createJob}
-					class="w-full h-5/6 mt-16 flex items-center carousel-form-division"
+					class="w-full h-5/6 mt-16 flex items-center flip-card-carousel-form-division"
 				>
 					<div class="pb-2 w-full h-full">
 						<div class="flex flex-col">
-							<section class="flex flex-row carousel-division">
+							<section class="flex flex-row flip-card-carousel-division">
 								<svg
 									version="1.1"
 									id="Capa_1"
@@ -329,7 +328,7 @@
 									viewBox="0 0 511.626 511.627"
 									style="enable-background:new 0 0 511.626 511.627;"
 									xml:space="preserve"
-									class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
+									class="fill-gray-200 group-hover:fill-black p-2"
 								>
 									<g>
 										<g>
@@ -396,7 +395,7 @@
 											<div class="sm:col-span-6">
 												<label
 													for="job-title"
-													class="block text-xl font-medium leading-6 text-gray-900 p-1 text-left"
+													class="block text-xl font-medium text-gray-900 p-1 text-left"
 													>Job Title</label
 												>
 												<div class="mt-1 p-1">
@@ -405,7 +404,7 @@
 														name="job-title"
 														id="job-title"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 capitalize"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 capitalize"
 														placeholder="Software Engineer"
 													/>
 												</div>
@@ -415,9 +414,9 @@
 												<div class="mt-2 py-4">
 													<h3 class="font-semibold text-gray-900 text-xl text-left">Job Type :</h3>
 													<ul
-														class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+														class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg"
 													>
-														<li class="rounded-t-lg dark:border-gray-600">
+														<li class="rounded-t-lg">
 															<div class="flex items-center mt-1 py-3">
 																<!-- full time selection -->
 																<input
@@ -425,11 +424,11 @@
 																	type="checkbox"
 																	value=""
 																	name="list-checklist"
-																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600"
 																/>
 																<label
 																	for="list-checklist-full"
-																	class="w-full ml-2 text-xl font-medium text-gray-900 dark:text-gray-300"
+																	class="w-full ml-2 text-xl font-medium text-gray-900"
 																	>Full Time</label
 																>
 
@@ -439,11 +438,11 @@
 																	type="checkbox"
 																	value=""
 																	name="list-checklist"
-																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																/>
 																<label
 																	for="list-checklist-part"
-																	class="w-full ml-2 text-xl font-medium text-gray-900 dark:text-gray-300"
+																	class="w-full ml-2 text-xl font-medium text-gray-900"
 																	>Part Time</label
 																>
 
@@ -453,11 +452,11 @@
 																	type="checkbox"
 																	value=""
 																	name="list-checklist"
-																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																/>
 																<label
 																	for="list-checklist-remote"
-																	class="w-full ml-2 text-xl font-medium text-gray-900 dark:text-gray-300"
+																	class="w-full ml-2 text-xl font-medium text-gray-900"
 																	>Remote</label
 																>
 															</div>
@@ -479,7 +478,7 @@
 																name="min-annual"
 																id="min-annual"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5  "
 																placeholder="40000"
 															/>
 														</div>
@@ -498,7 +497,7 @@
 																name="max-annual"
 																id="max-annual"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																placeholder="250000"
 															/>
 														</div>
@@ -529,7 +528,7 @@
 														name="company-name"
 														id="company-name"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 														placeholder="e.g. Facebook"
 													/>
 												</div>
@@ -550,7 +549,7 @@
 													{:else}
 														<div class="border p-3 rounded-full bg-gray-200">
 															<svg
-																class="w-6 h-6 text-gray-800 dark:text-white"
+																class="w-6 h-6 text-gray-800 "
 																aria-hidden="true"
 																xmlns="http://www.w3.org/2000/svg"
 																fill="currentColor"
@@ -577,9 +576,15 @@
 														/>
 														<span>Change Image</span>
 													</label>
-													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{$selectedFile.slice(0,10)}</label
+													{#if $isUploadFlipCardFile == true}
+													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+														>{$selectedFile.slice(0,15)}</label
 													>
+													{:else}
+													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+														>{$selectedFile}</label
+													>
+													{/if}
 												</div>
 											</div>
 
@@ -596,7 +601,7 @@
 														name="job-location"
 														id="job-location"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 														placeholder="e.g. Singapore"
 													/>
 												</div>
@@ -626,7 +631,7 @@
 														name="description"
 														id="description"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 														placeholder="Job Description"
 													/>
 												</div>
@@ -656,7 +661,7 @@
 														name="requirements"
 														id="requirements"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 														placeholder="Job Requirement"
 													/>
 												</div>
@@ -686,7 +691,7 @@
 														name="application-instructions"
 														id="application-instructions"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 														placeholder="Instruction to Apply This Job"
 													/>
 												</div>
@@ -734,11 +739,11 @@
 										<button
 											on:click={prevSlideCarousel2}
 											type="button"
-											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 										>
 											<svg
-												class="w-4 h-4 text-white dark:text-gray-800"
+												class="w-4 h-4 text-white "
 												aria-hidden="true"
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -760,11 +765,11 @@
 										<button
 											on:click={nextSlideCarousel2}
 											type="button"
-											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200  font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 										>
 											<svg
-												class="w-4 h-4 text-white dark:text-gray-800"
+												class="w-4 h-4 text-white "
 												aria-hidden="true"
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -788,11 +793,11 @@
 											data-modal-target="popup-modal"
 											data-modal-toggle="popup-modal"
 											type="button"
-											class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+											class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200  font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 										>
 											<svg
-												class="w-6 h-6 text-gray-800 dark:text-white"
+												class="w-6 h-6 text-gray-800 "
 												aria-hidden="true"
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -820,12 +825,11 @@
 													class="p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full mr-3"
 												>
 													<div class="relative w-full max-w-md max-h-full">
-														<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+														<div class="relative bg-white rounded-lg shadow">
 															<button
 																on:click={hideModal}
 																type="button"
-																class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-																data-modal-hide="popup-modal"
+																class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
 															>
 																<svg
 																	class="w-3 h-3"
@@ -846,7 +850,7 @@
 															</button>
 															<div class="p-6 text-center">
 																<svg
-																	class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+																	class="mx-auto mb-4 text-gray-400 w-12 h-12"
 																	aria-hidden="true"
 																	xmlns="http://www.w3.org/2000/svg"
 																	fill="none"
@@ -861,23 +865,21 @@
 																	/>
 																</svg>
 																<h3
-																	class="mb-5 text-xl font-normal text-gray-500 dark:text-gray-400"
+																	class="mb-5 text-xl font-normal text-gray-500"
 																>
 																	Are you sure you want to delete this record?
 																</h3>
 																<button
-																	on:click={refreshPage}
-																	data-modal-hide="popup-modal"
+																	on:click={goToHome}
 																	type="button"
-																	class="w-36 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg inline-flex items-center px-5 py-2.5 text-center mr-2"
+																	class="w-36 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-lg inline-flex items-center px-5 py-2.5 text-center mr-2"
 																>
 																	Yes, I'm sure
 																</button>
 																<button
 																	on:click={hideModal}
-																	data-modal-hide="popup-modal"
 																	type="button"
-																	class="w-36 mr-2 mt-2 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-lg font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+																	class="w-36 mr-2 mt-2 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-lg font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
 																	>No, cancel</button
 																>
 															</div>
@@ -947,7 +949,7 @@
 									viewBox="0 0 511.626 511.627"
 									style="enable-background:new 0 0 511.626 511.627;"
 									xml:space="preserve"
-									class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
+									class="fill-gray-200  group-hover:fill-black p-2"
 								>
 									<g>
 										<g>
@@ -1020,7 +1022,7 @@
 																name="job-title"
 																id="job-title"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 capitalize"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5  capitalize"
 																placeholder="Software Engineer"
 															/>
 														</div>
@@ -1028,13 +1030,13 @@
 														<!-- job type -->
 
 														<div class="mt-2 py-4">
-															<h3 class="font-semibold text-gray-900 dark:text-white">
+															<h3 class="font-semibold text-gray-900 ">
 																Job Type :
 															</h3>
 															<ul
-																class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+																class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg  "
 															>
-																<li class="rounded-t-lg dark:border-gray-600">
+																<li class="rounded-t-lg">
 																	<div class="flex items-center mt-1 py-3">
 																		<!-- full time selection -->
 																		<input
@@ -1042,11 +1044,11 @@
 																			type="checkbox"
 																			value=""
 																			name="list-checklist"
-																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600"
 																		/>
 																		<label
 																			for="list-checklist-full"
-																			class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																			class="w-full ml-2 text-sm font-medium text-gray-900"
 																			>Full Time</label
 																		>
 
@@ -1056,11 +1058,11 @@
 																			type="checkbox"
 																			value=""
 																			name="list-checklist"
-																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																		/>
 																		<label
 																			for="list-checklist-part"
-																			class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																			class="w-full ml-2 text-sm font-medium text-gray-900"
 																			>Part Time</label
 																		>
 
@@ -1070,11 +1072,11 @@
 																			type="checkbox"
 																			value=""
 																			name="list-checklist"
-																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																		/>
 																		<label
 																			for="list-checklist-remote"
-																			class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																			class="w-full ml-2 text-sm font-medium text-gray-900"
 																			>Remote</label
 																		>
 																	</div>
@@ -1096,7 +1098,7 @@
 																		name="min-annual"
 																		id="min-annual"
 																		required
-																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																		placeholder="40000"
 																	/>
 																</div>
@@ -1115,7 +1117,7 @@
 																		name="max-annual"
 																		id="max-annual"
 																		required
-																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																		placeholder="250000"
 																	/>
 																</div>
@@ -1147,7 +1149,7 @@
 																name="company-name"
 																id="company-name"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																placeholder="e.g. Facebook"
 															/>
 														</div>
@@ -1170,7 +1172,7 @@
 															{:else}
 																<div class="border p-3 rounded-full bg-gray-200">
 																	<svg
-																		class="w-6 h-6 text-gray-800 dark:text-white"
+																		class="w-6 h-6 text-gray-800 "
 																		aria-hidden="true"
 																		xmlns="http://www.w3.org/2000/svg"
 																		fill="currentColor"
@@ -1197,9 +1199,16 @@
 																/>
 																<span>Change Image</span>
 															</label>
-															<label for="fileInput" class="text-gray-500 h-4 flex items-center"
+
+															{#if $isUpload == true}
+															<label for="fileInput" class="text-gray-900 h-4 flex items-center"
 																>{$selectedFile.slice(0,20)}</label
 															>
+															{:else}
+															<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+																>{$selectedFile}</label
+															>
+															{/if}
 														</div>
 													</div>
 
@@ -1216,7 +1225,7 @@
 																name="job-location"
 																id="job-location"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																placeholder="e.g. Singapore"
 															/>
 														</div>
@@ -1246,7 +1255,7 @@
 																name="description"
 																id="description"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																placeholder="Job Description"
 															/>
 														</div>
@@ -1276,7 +1285,7 @@
 																name="requirements"
 																id="requirements"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																placeholder="Job Requirement"
 															/>
 														</div>
@@ -1306,7 +1315,7 @@
 																name="application-instructions"
 																id="application-instructions"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 "
 																placeholder="Instruction to Apply This Job"
 															/>
 														</div>
@@ -1336,11 +1345,11 @@
 								<button
 									on:click={prevSlideCarousel1}
 									type="button"
-									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200  font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 								>
 									<svg
-										class="w-4 h-4 text-white dark:text-gray-800"
+										class="w-4 h-4 text-white "
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -1362,11 +1371,11 @@
 								<button
 									on:click={nextSlideCarousel1}
 									type="button"
-									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200  font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 								>
 									<svg
-										class="w-4 h-4 text-white dark:text-gray-800"
+										class="w-4 h-4 text-white "
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -1387,14 +1396,12 @@
 								<!-- cancel -->
 								<button
 									on:click={popUpModal}
-									data-modal-target="popup-modal"
-									data-modal-toggle="popup-modal"
 									type="button"
-									class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+									class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200  font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 								>
 									<svg
-										class="w-6 h-6 text-gray-800 dark:text-white"
+										class="w-6 h-6 text-gray-800 "
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -1418,16 +1425,14 @@
 										<!-- Modal info -->
 										<div
 											id="popup-modal"
-											tabindex="-1"
-											class="p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+											class="p-4 overflow-x-hidden overflow-y-auto max-h-full"
 										>
 											<div class="relative w-full max-w-md max-h-full">
-												<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+												<div class="relative bg-white rounded-lg shadow ">
 													<button
 														on:click={hideModal}
 														type="button"
-														class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-														data-modal-hide="popup-modal"
+														class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
 													>
 														<svg
 															class="w-3 h-3"
@@ -1448,7 +1453,7 @@
 													</button>
 													<div class="p-6 text-center">
 														<svg
-															class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+															class="mx-auto mb-4 text-gray-400 w-12 h-12"
 															aria-hidden="true"
 															xmlns="http://www.w3.org/2000/svg"
 															fill="none"
@@ -1462,22 +1467,20 @@
 																d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 															/>
 														</svg>
-														<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+														<h3 class="mb-5 text-lg font-normal text-gray-500">
 															Are you sure you want to delete this record?
 														</h3>
 														<button
-															on:click={refreshPage}
-															data-modal-hide="popup-modal"
+															on:click={goToHome}
 															type="button"
-															class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+															class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
 														>
 															Yes, I'm sure
 														</button>
 														<button
 															on:click={hideModal}
-															data-modal-hide="popup-modal"
 															type="button"
-															class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+															class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
 															>No, cancel</button
 														>
 													</div>

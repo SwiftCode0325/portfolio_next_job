@@ -5,8 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { getTokenFromLocalStorage, getUserId } from '../../../../util/auth.js';
 	import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
-	import { uploadMedia } from '../../../../util/s3-uploader.js';
-	import { fileUrl, fileName, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../../component/Carousel/Carousel.js"
+	import { fileUrl, selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../../../component/UploadMedia/UploadMedia.js"
 
 	let currentPosition = writable(0);
 	let showModal = writable(false);
@@ -15,10 +14,11 @@
 	let isFullTime = writable(false);
 	let isPartTime = writable(false);
 	export let data;
-	let jobType = data.job.job_type;
+	let jobType = data.jobs.job_type;
 	let carousel1 = 0;
 	let carousel2 = 0;
 	let flipCardInner;
+	let formErrors = '';
 
 	//Carousel 1 (bigger screen size)//
 	onMount(() => {
@@ -50,8 +50,8 @@
 			interval: null,
 
 			indicators: {
-				activeClasses: 'bg-white dark:bg-gray-800',
-				inactiveClasses: 'bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800',
+				activeClasses: 'bg-white',
+				inactiveClasses: 'bg-white/50',
 				items: [
 					{
 						position: 0,
@@ -118,8 +118,8 @@
 			interval: null,
 
 			indicators: {
-				activeClasses: 'bg-white dark:bg-gray-800',
-				inactiveClasses: 'bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800',
+				activeClasses: 'bg-white',
+				inactiveClasses: 'bg-white/50',
 				items: [
 					{
 						position: 0,
@@ -156,16 +156,33 @@
 		carousel2.next();
 	}
 
-	// show up modal function //
+	// function to show up delete modal //
 	function popUpModal() {
 		showModal.set(true);
 	}
-	// hide modal function //
+
+	// function to hide delete modal //
 	function hideModal() {
 		showModal.set(false);
 	}
-	function refreshPage() {
-		goto('/Home');
+
+	async function deleteRecord(id) {
+		const response = await fetch(
+			PUBLIC_BACKEND_BASE_URL + 'api/collections/jobs/records/' + `${id}`,
+			{
+				method: 'DELETE',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}
+		)
+
+		if (response.ok) {
+			goto('/Home')
+		}else{
+			console.log(response.data)
+		}
 	}
 
 	// post job into database //
@@ -196,7 +213,7 @@
 		};
 
 		const resp = await fetch(
-			PUBLIC_BACKEND_BASE_URL + 'api/collections/jobs/records/' + `${data.job.id}`,
+			PUBLIC_BACKEND_BASE_URL + 'api/collections/jobs/records/' + `${data.jobs.id}`,
 			{
 				method: 'PATCH',
 				mode: 'cors',
@@ -256,7 +273,7 @@
 </svelte:head>
 
 <div class="flex h-screen w-screen">
-	<!-- Post Job Section -->
+	<!-- Flip Card Division -->
 	<div id="flip-card" class="sm:w-6/12 w-full h-full">
 		<div id="flip-card-inner" class="flip-card-inner">
 			<div class="flip-card-front w-full h-full">
@@ -338,11 +355,11 @@
 
 				<form
 					on:submit={updateJob}
-					class="w-full h-5/6 mt-16 flex items-center carousel-form-division"
+					class="w-full h-5/6 mt-16 flex items-center flip-card-carousel-form-division"
 				>
 					<div class="pb-2 w-full h-full">
 						<div class="flex flex-col">
-							<section class="flex flex-row carousel-division">
+							<section class="flex flex-row flip-card-carousel-division">
 								<svg
 									version="1.1"
 									id="Capa_1"
@@ -355,7 +372,7 @@
 									viewBox="0 0 511.626 511.627"
 									style="enable-background:new 0 0 511.626 511.627;"
 									xml:space="preserve"
-									class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
+									class="fill-gray-200 p-2"
 								>
 									<g>
 										<g>
@@ -391,12 +408,12 @@
 									<g />
 								</svg>
 
-								<h2 class="text-2xl font-semibold leading-7 text-gray-900 flex items-center">
+								<h2 class="text-2xl font-semibold text-gray-900 flex items-center">
 									Job Details
 								</h2>
 							</section>
 
-							<p class="mt-5 text-xl leading-6 text-gray-600">
+							<p class="mt-5 text-xl text-gray-600">
 								This information will be displayed publicly so be careful what you share.
 							</p>
 						</div>
@@ -422,7 +439,7 @@
 											<div class="sm:col-span-6">
 												<label
 													for="job-title"
-													class="block text-xl font-medium leading-6 text-gray-900 p-1 text-left"
+													class="block text-xl font-medium text-gray-900 p-1 text-left"
 													>Job Title</label
 												>
 												<div class="mt-1 p-1">
@@ -431,9 +448,9 @@
 														name="job-title"
 														id="job-title"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 capitalize"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 capitalize"
 														placeholder="Software Engineer"
-														value={data.job.title}
+														value={data.jobs.title}
 													/>
 												</div>
 
@@ -442,9 +459,9 @@
 												<div class="mt-2 py-4">
 													<h3 class="font-semibold text-gray-900 text-xl text-left">Job Type :</h3>
 													<ul
-														class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+														class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg"
 													>
-														<li class="rounded-t-lg dark:border-gray-600">
+														<li class="rounded-t-lg">
 															<div class="flex items-center mt-1 py-3">
 																<!-- full time selection -->
 																<input
@@ -452,12 +469,12 @@
 																	type="checkbox"
 																	value=""
 																	name="list-checklist"
-																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600"
 																	bind:checked={$isFullTime}
 																/>
 																<label
 																	for="list-checklist-full"
-																	class="w-full ml-2 text-xl font-medium text-gray-900 dark:text-gray-300"
+																	class="w-full ml-2 text-xl font-medium text-gray-900"
 																	>Full Time</label
 																>
 
@@ -467,12 +484,12 @@
 																	type="checkbox"
 																	value=""
 																	name="list-checklist"
-																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																	bind:checked={$isPartTime}
 																/>
 																<label
 																	for="list-checklist-part"
-																	class="w-full ml-2 text-xl font-medium text-gray-900 dark:text-gray-300"
+																	class="w-full ml-2 text-xl font-medium text-gray-900"
 																	>Part Time</label
 																>
 
@@ -482,12 +499,12 @@
 																	type="checkbox"
 																	value=""
 																	name="list-checklist"
-																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																	class="w-6 h-6 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																	bind:checked={$isRemote}
 																/>
 																<label
 																	for="list-checklist-remote"
-																	class="w-full ml-2 text-xl font-medium text-gray-900 dark:text-gray-300"
+																	class="w-full ml-2 text-xl font-medium text-gray-900"
 																	>Remote</label
 																>
 															</div>
@@ -500,7 +517,7 @@
 													<div class="sm:col-span-3">
 														<label
 															for="min-annual"
-															class="block text-xl font-medium leading-6 text-gray-900 p-1 text-left"
+															class="block text-xl font-medium text-gray-900 p-1 text-left"
 															>Min Annual Compensation</label
 														>
 														<div class="mt-1 p-1">
@@ -509,9 +526,9 @@
 																name="min-annual"
 																id="min-annual"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																placeholder="40000"
-																value={data.job.minAnnualCompensation}
+																value={data.jobs.minAnnualCompensation}
 															/>
 														</div>
 													</div>
@@ -520,7 +537,7 @@
 													<div class="sm:col-span-3">
 														<label
 															for="max-annual"
-															class="block text-xl font-medium leading-6 text-gray-900 p-1 text-left"
+															class="block text-xl font-medium text-gray-900 p-1 text-left"
 															>Max Annual Compensation</label
 														>
 														<div class="mt-1 p-1">
@@ -529,9 +546,9 @@
 																name="max-annual"
 																id="max-annual"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																placeholder="250000"
-																value={data.job.maxAnnualCompensation}
+																value={data.jobs.maxAnnualCompensation}
 															/>
 														</div>
 													</div>
@@ -552,7 +569,7 @@
 											<div class="sm:col-span-6">
 												<label
 													for="company-name"
-													class="block text-xl font-medium leading-6 text-gray-900 text-left"
+													class="block text-xl font-medium text-gray-900 text-left"
 													>Company Name</label
 												>
 												<div class="mt-1 p-1">
@@ -561,16 +578,16 @@
 														name="company-name"
 														id="company-name"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 														placeholder="e.g. Facebook"
-														value={data.job.employer}
+														value={data.jobs.employer}
 													/>
 												</div>
 											</div>
 
 											<!-- Company Logo Image -->
 											<div class="sm:col-span-6 col-span-full p-2">
-												<label for="photo" class="block text-xl font-medium leading-6 text-gray-900"
+												<label for="photo" class="block text-xl font-medium text-gray-900"
 													>Upload Company Logo Image</label
 												>
 												<div class="mt-2 flex items-center gap-x-3">
@@ -582,7 +599,7 @@
 														/>
 													{:else}
 														<img
-															src={data.job.image_url}
+															src={data.jobs.image_url}
 															class="w-8 h-8 object-cover rounded-full"
 															alt=""
 															/>
@@ -602,9 +619,15 @@
 														/>
 														<span>Change Image</span>
 													</label>
-													<label for="fileInput" class="text-gray-500 h-4 flex items-center text-xl"
-														>{$selectedFile.slice(0,20)}</label
+													{#if $isUploadFlipCardFile == true}
+													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+														>{$selectedFile.slice(0, 20)}...</label
 													>
+													{:else}
+													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+														>{data.jobs.image_url.slice(0, 20)}...</label
+													>
+													{/if}
 												</div>
 											</div>
 
@@ -612,7 +635,7 @@
 											<div class="sm:col-span-6 mb-2">
 												<label
 													for="job-location"
-													class="block text-xl text-left font-medium leading-6 text-gray-900"
+													class="block text-xl text-left font-medium text-gray-900"
 													>Job Location</label
 												>
 												<div class="mt-2 p-1">
@@ -621,9 +644,9 @@
 														name="job-location"
 														id="job-location"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 														placeholder="e.g. Singapore"
-														value={data.job.location}
+														value={data.jobs.location}
 													/>
 												</div>
 											</div>
@@ -643,7 +666,7 @@
 											<div class="sm:col-span-6 p-1">
 												<label
 													for="company-name"
-													class="block text-xl text-left font-medium leading-6 text-gray-900 mt-4"
+													class="block text-xl text-left font-medium text-gray-900 mt-4"
 													>Description</label
 												>
 												<div class="mt-1 p-1">
@@ -652,9 +675,9 @@
 														name="description"
 														id="description"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 														placeholder="Job Description"
-														value={data.job.description}
+														value={data.jobs.description}
 													/>
 												</div>
 											</div>
@@ -674,7 +697,7 @@
 											<div class="sm:col-span-6 p-1">
 												<label
 													for="requirements"
-													class="block text-xl text-left font-medium leading-6 text-gray-900 mt-4"
+													class="block text-xl text-left font-medium text-gray-900 mt-4"
 													>Requirements</label
 												>
 												<div class="mt-1 p-1">
@@ -683,9 +706,9 @@
 														name="requirements"
 														id="requirements"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 														placeholder="Job Requirement"
-														value={data.job.requirements}
+														value={data.jobs.requirements}
 													/>
 												</div>
 											</div>
@@ -705,7 +728,7 @@
 											<div class="sm:col-span-6 p-1">
 												<label
 													for="application-instructions"
-													class="block text-xl text-left font-medium leading-6 text-gray-900 mt-4"
+													class="block text-xl text-left font-medium text-gray-900 mt-4"
 													>How to Apply ?</label
 												>
 												<div class="mt-2">
@@ -714,9 +737,9 @@
 														name="application-instructions"
 														id="application-instructions"
 														required
-														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+														class="bg-white border border-gray-300 text-gray-900 text-lg rounded-xl w-full h-80 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 														placeholder="Instruction to Apply This Job"
-														value={data.job.applicationInstructions}
+														value={data.jobs.applicationInstructions}
 													/>
 												</div>
 											</div>
@@ -763,11 +786,11 @@
 										<button
 											on:click={prevSlideCarousel2}
 											type="button"
-											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 										>
 											<svg
-												class="w-4 h-4 text-white dark:text-gray-800"
+												class="w-4 h-4 text-white"
 												aria-hidden="true"
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -789,11 +812,11 @@
 										<button
 											on:click={nextSlideCarousel2}
 											type="button"
-											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+											class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 										>
 											<svg
-												class="w-4 h-4 text-white dark:text-gray-800"
+												class="w-4 h-4 text-white"
 												aria-hidden="true"
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -817,11 +840,11 @@
 											data-modal-target="popup-modal"
 											data-modal-toggle="popup-modal"
 											type="button"
-											class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+											class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 										>
 											<svg
-												class="w-6 h-6 text-gray-800 dark:text-white"
+												class="w-6 h-6 text-gray-800"
 												aria-hidden="true"
 												xmlns="http://www.w3.org/2000/svg"
 												fill="none"
@@ -849,12 +872,11 @@
 													class="p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full mr-3"
 												>
 													<div class="relative w-full max-w-md max-h-full">
-														<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+														<div class="relative bg-white rounded-lg shadow">
 															<button
 																on:click={hideModal}
 																type="button"
-																class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-																data-modal-hide="popup-modal"
+																class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
 															>
 																<svg
 																	class="w-3 h-3"
@@ -875,7 +897,7 @@
 															</button>
 															<div class="p-6 text-center">
 																<svg
-																	class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+																	class="mx-auto mb-4 text-gray-400 w-12 h-12"
 																	aria-hidden="true"
 																	xmlns="http://www.w3.org/2000/svg"
 																	fill="none"
@@ -890,23 +912,21 @@
 																	/>
 																</svg>
 																<h3
-																	class="mb-5 text-xl font-normal text-gray-500 dark:text-gray-400"
+																	class="mb-5 text-xl font-normal text-gray-500"
 																>
 																	Are you sure you want to delete this record?
 																</h3>
 																<button
-																	on:click={refreshPage}
-																	data-modal-hide="popup-modal"
+																	on:click={deleteRecord(data.jobs.id)}
 																	type="button"
-																	class="w-36 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-lg inline-flex items-center px-5 py-2.5 text-center mr-2"
+																	class="w-36 text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-lg inline-flex items-center px-5 py-2.5 text-center mr-2"
 																>
 																	Yes, I'm sure
 																</button>
 																<button
 																	on:click={hideModal}
-																	data-modal-hide="popup-modal"
 																	type="button"
-																	class="w-36 mr-2 mt-2 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-lg font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+																	class="w-36 mr-2 mt-2 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-lg font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
 																	>No, cancel</button
 																>
 															</div>
@@ -959,7 +979,7 @@
 	<!-- Carousel div -->
 	<div class="flex items-center justify-center w-6/12 formDivision">
 		<div class="flex flex-col w-9/12 h-full items-center justify-center">
-			<div class="slide-down transition">
+			<div class="slide-down">
 				<form on:submit={updateJob}>
 					<div class="space-y-10">
 						<div class="pb-2">
@@ -976,7 +996,7 @@
 									viewBox="0 0 511.626 511.627"
 									style="enable-background:new 0 0 511.626 511.627;"
 									xml:space="preserve"
-									class="fill-gray-200 dark:text-white group-hover:fill-black p-2"
+									class="fill-gray-200 p-2"
 								>
 									<g>
 										<g>
@@ -1012,11 +1032,11 @@
 									<g />
 								</svg>
 
-								<h2 class="text-base font-semibold leading-7 text-gray-900 flex items-center">
+								<h2 class="text-base font-semibold text-gray-900 flex items-center">
 									Job Details
 								</h2>
 							</div>
-							<p class="mt-1 text-sm leading-6 text-gray-600">
+							<p class="mt-1 text-sm text-gray-600">
 								This information will be displayed publicly so be careful what you share.
 							</p>
 
@@ -1028,10 +1048,9 @@
 										<div
 											id="carousel-item-1"
 											class="carousel-item hidden"
-											data-carousel-item="active"
 										>
 											<div
-												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+												class="absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
 											>
 												<div
 													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80"
@@ -1040,7 +1059,7 @@
 													<div class="sm:col-span-6">
 														<label
 															for="job-title"
-															class="block text-sm font-medium leading-6 text-gray-900 p-1"
+															class="block text-sm font-medium text-gray-900 p-1"
 															>Job Title</label
 														>
 														<div class="mt-1 p-1">
@@ -1049,22 +1068,22 @@
 																name="job-title"
 																id="job-title"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 capitalize"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 capitalize"
 																placeholder="Software Engineer"
-																value={data.job.title}
+																value={data.jobs.title}
 															/>
 														</div>
 
 														<!-- job type -->
 
 														<div class="mt-2 py-4">
-															<h3 class="font-semibold text-gray-900 dark:text-white">
+															<h3 class="font-semibold text-gray-900">
 																Job Type :
 															</h3>
 															<ul
-																class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+																class="w-72 ml-1 text-sm font-medium text-gray-900 bg-transparent rounded-lg"
 															>
-																<li class="rounded-t-lg dark:border-gray-600">
+																<li class="rounded-t-lg">
 																	<div class="flex items-center mt-1 py-3">
 																		<!-- full time selection -->
 																		<input
@@ -1072,11 +1091,11 @@
 																			type="checkbox"
 																			bind:checked={$isFullTime}
 																			name="list-checklist"
-																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-3 focus:ring-pink-600 checked:bg-pink-600"
 																		/>
 																		<label
 																			for="list-checklist-full"
-																			class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																			class="w-full ml-2 text-sm font-medium text-gray-900"
 																			>Full Time</label
 																		>
 
@@ -1086,11 +1105,11 @@
 																			type="checkbox"
 																			bind:checked={$isPartTime}
 																			name="list-checklist"
-																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																		/>
 																		<label
 																			for="list-checklist-part"
-																			class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																			class="w-full ml-2 text-sm font-medium text-gray-900"
 																			>Part Time</label
 																		>
 
@@ -1100,11 +1119,11 @@
 																			type="checkbox"
 																			bind:checked={$isRemote}
 																			name="list-checklist"
-																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 dark:bg-gray-600 dark:border-gray-500"
+																			class="w-4 h-4 rounded-full text-pink-600 bg-gray-100 border-gray-300 focus:ring-pink-600"
 																		/>
 																		<label
 																			for="list-checklist-remote"
-																			class="w-full ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+																			class="w-full ml-2 text-sm font-medium text-gray-900"
 																			>Remote</label
 																		>
 																	</div>
@@ -1117,7 +1136,7 @@
 															<div class="sm:col-span-3">
 																<label
 																	for="min-annual"
-																	class="block text-sm font-medium leading-6 text-gray-900 p-1"
+																	class="block text-sm font-medium text-gray-900 p-1"
 																	>Min Annual Compensation</label
 																>
 																<div class="mt-1 p-1">
@@ -1126,9 +1145,9 @@
 																		name="min-annual"
 																		id="min-annual"
 																		required
-																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																		placeholder="40000"
-																		value={data.job.minAnnualCompensation}
+																		value={data.jobs.minAnnualCompensation}
 																	/>
 																</div>
 															</div>
@@ -1137,7 +1156,7 @@
 															<div class="sm:col-span-3">
 																<label
 																	for="max-annual"
-																	class="block text-sm font-medium leading-6 text-gray-900 p-1"
+																	class="block text-sm font-medium text-gray-900 p-1"
 																	>Max Annual Compensation</label
 																>
 																<div class="mt-1 p-1">
@@ -1146,9 +1165,9 @@
 																		name="max-annual"
 																		id="max-annual"
 																		required
-																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																		class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																		placeholder="250000"
-																		value={data.job.maxAnnualCompensation}
+																		value={data.jobs.maxAnnualCompensation}
 																	/>
 																</div>
 															</div>
@@ -1161,7 +1180,7 @@
 										<!-- Item 2 -->
 										<div id="carousel-item-2" class="carousel-item hidden" data-carousel-item>
 											<div
-												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+												class="absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
 											>
 												<div
 													class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6 overflow-y-auto h-80 mb-4"
@@ -1170,7 +1189,7 @@
 													<div class="sm:col-span-6">
 														<label
 															for="company-name"
-															class="block text-sm font-medium leading-6 text-gray-900"
+															class="block text-sm font-medium text-gray-900"
 															>Company Name</label
 														>
 														<div class="mt-1 p-1">
@@ -1179,9 +1198,9 @@
 																name="company-name"
 																id="company-name"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																placeholder="e.g. Facebook"
-																value={data.job.employer}
+																value={data.jobs.employer}
 															/>
 														</div>
 													</div>
@@ -1190,7 +1209,7 @@
 													<div class="sm:col-span-6 col-span-full p-2">
 														<label
 															for="photo"
-															class="block text-sm font-medium leading-6 text-gray-900"
+															class="block text-sm font-medium text-gray-900"
 															>Upload Company Logo Image</label
 														>
 														<div class="mt-2 flex items-center gap-x-3">
@@ -1202,7 +1221,7 @@
 																	/>
 															{:else}
 																	<img
-																		src={data.job.image_url}
+																		src={data.jobs.image_url}
 																		class="w-8 h-8 object-cover rounded-full"
 																		alt=""
 																	/>
@@ -1223,12 +1242,12 @@
 																<span>Change Image</span>
 															</label>
 															{#if $isUpload}
-																<label for="fileInput" class="text-gray-500 h-4 flex items-center"
+																<label for="fileInput" class="text-gray-900 h-4 flex items-center"
 																	>{$selectedFile.slice(0, 20)}...</label
 																>
 															{:else}
-																<label for="fileInput" class="text-gray-500 h-4 flex items-center"
-																	>{data.job.image_url.slice(0, 20)}...</label
+																<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+																	>{data.jobs.image_url.slice(0, 20)}...</label
 																>
 															{/if}
 														</div>
@@ -1238,7 +1257,7 @@
 													<div class="sm:col-span-6 mb-2">
 														<label
 															for="job-location"
-															class="block text-sm font-medium leading-6 text-gray-900"
+															class="block text-sm font-medium text-gray-900"
 															>Job Location</label
 														>
 														<div class="mt-2 p-1">
@@ -1247,9 +1266,9 @@
 																name="job-location"
 																id="job-location"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 w-full p-2.5"
 																placeholder="e.g. Singapore"
-																value={data.job.location}
+																value={data.jobs.location}
 															/>
 														</div>
 													</div>
@@ -1260,7 +1279,7 @@
 										<!-- Item 3 -->
 										<div id="carousel-item-3" class="carousel-item hidden" data-carousel-item>
 											<div
-												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+												class="absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
 											>
 												<div
 													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80"
@@ -1269,7 +1288,7 @@
 													<div class="sm:col-span-6 p-1">
 														<label
 															for="company-name"
-															class="block text-sm font-medium leading-6 text-gray-900 mt-4"
+															class="block text-sm font-medium text-gray-900 mt-4"
 															>Description</label
 														>
 														<div class="mt-1 p-1">
@@ -1278,9 +1297,9 @@
 																name="description"
 																id="description"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																placeholder="Job Description"
-																value={data.job.description}
+																value={data.jobs.description}
 															/>
 														</div>
 													</div>
@@ -1291,7 +1310,7 @@
 										<!-- Item 4 -->
 										<div id="carousel-item-4" class="carousel-item hidden" data-carousel-item>
 											<div
-												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+												class="absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
 											>
 												<div
 													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80"
@@ -1300,7 +1319,7 @@
 													<div class="sm:col-span-6 p-1">
 														<label
 															for="requirements"
-															class="block text-sm font-medium leading-6 text-gray-900 mt-4"
+															class="block text-sm font-medium text-gray-900 mt-4"
 															>Requirements</label
 														>
 														<div class="mt-1 p-1">
@@ -1309,9 +1328,9 @@
 																name="requirements"
 																id="requirements"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																placeholder="Job Requirement"
-																value={data.job.requirements}
+																value={data.jobs.requirements}
 															/>
 														</div>
 													</div>
@@ -1322,7 +1341,7 @@
 										<!-- Item 5 -->
 										<div id="carousel-item-5" class="carousel-item hidden" data-carousel-item>
 											<div
-												class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+												class="absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 bg-slate-50 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
 											>
 												<div
 													class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 overflow-y-auto h-80"
@@ -1331,7 +1350,7 @@
 													<div class="sm:col-span-6 p-1">
 														<label
 															for="application-instructions"
-															class="block text-sm font-medium leading-6 text-gray-900 mt-4"
+															class="block text-sm font-medium text-gray-900 mt-4"
 															>How to Apply ?</label
 														>
 														<div class="mt-2">
@@ -1340,9 +1359,9 @@
 																name="application-instructions"
 																id="application-instructions"
 																required
-																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+																class="bg-white border border-gray-300 text-gray-900 text-sm rounded-xl w-full h-56 focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 																placeholder="Instruction to Apply This Job"
-																value={data.job.applicationInstructions}
+																value={data.jobs.applicationInstructions}
 															/>
 														</div>
 													</div>
@@ -1371,11 +1390,11 @@
 								<button
 									on:click={prevSlideCarousel1}
 									type="button"
-									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 								>
 									<svg
-										class="w-4 h-4 text-white dark:text-gray-800"
+										class="w-4 h-4 text-white"
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -1397,11 +1416,11 @@
 								<button
 									on:click={nextSlideCarousel1}
 									type="button"
-									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+									class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 								>
 									<svg
-										class="w-4 h-4 text-white dark:text-gray-800"
+										class="w-4 h-4 text-white"
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -1425,11 +1444,11 @@
 									data-modal-target="popup-modal"
 									data-modal-toggle="popup-modal"
 									type="button"
-									class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
+									class="slide-up bounce text-white bg-rose-400 focus:ring-4 focus:outline-none focus:ring-pink-200 font-medium rounded-full text-sm h-10 w-10 text-center mr-2 mb-2
                                 flex items-center justify-center shadow-md"
 								>
 									<svg
-										class="w-6 h-6 text-gray-800 dark:text-white"
+										class="w-6 h-6 text-gray-800"
 										aria-hidden="true"
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -1457,11 +1476,11 @@
 											class="p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
 										>
 											<div class="relative w-full max-w-md max-h-full">
-												<div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+												<div class="relative bg-white rounded-lg shadow">
 													<button
 														on:click={hideModal}
 														type="button"
-														class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+														class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
 														data-modal-hide="popup-modal"
 													>
 														<svg
@@ -1483,7 +1502,7 @@
 													</button>
 													<div class="p-6 text-center">
 														<svg
-															class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+															class="mx-auto mb-4 text-gray-400 w-12 h-12"
 															aria-hidden="true"
 															xmlns="http://www.w3.org/2000/svg"
 															fill="none"
@@ -1497,14 +1516,14 @@
 																d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
 															/>
 														</svg>
-														<h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+														<h3 class="mb-5 text-lg font-normal text-gray-500">
 															Are you sure you want to delete this record?
 														</h3>
 														<button
-															on:click={refreshPage}
+															on:click={deleteRecord(data.jobs.id)}
 															data-modal-hide="popup-modal"
 															type="button"
-															class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+															class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
 														>
 															Yes, I'm sure
 														</button>
@@ -1512,7 +1531,7 @@
 															on:click={hideModal}
 															data-modal-hide="popup-modal"
 															type="button"
-															class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+															class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10"
 															>No, cancel</button
 														>
 													</div>
@@ -1563,4 +1582,5 @@
 
 <style>
 	@import '../update/+page.css';
+	@import '../../../../app.css';
 </style>
