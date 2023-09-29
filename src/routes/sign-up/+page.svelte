@@ -3,10 +3,9 @@
 	import { authenticateUser, userIsLoggedIn } from '../../util/auth.js';
 	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
-	import { uploadMedia } from '../../util/s3-uploader.js';
 	import PasswordVisibility from "../component/PasswordVisibility/PasswordVisibility.svelte"
 	import PasswordConfirmationVisibility from '../component/PasswordVisibility/PasswordConfirmationVisibility.svelte';
-	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../component/Carousel/Carousel.js"
+	import { selectedFile, handleFileInputChangeOnCarousel, isUpload, handleFileInputChangeOnFlipCard, isUploadFlipCardFile} from "../component/UploadMedia/UploadMedia.js"
 
 	let isLoading = writable(false);
 	let formErrors = {};
