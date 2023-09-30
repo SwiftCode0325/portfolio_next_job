@@ -128,3 +128,7 @@
         display: none;
     }
 }
+
+.carousel-item {
+	    transition: 1s ease-in-out;
+	}

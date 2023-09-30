@@ -1,7 +1,3 @@
-	.carousel-item {
-	    transition: 1s ease-in-out;
-	}
-
 	@media (max-width:360px) {
 	    .carousel-indicator {
 	        bottom: 10px;
