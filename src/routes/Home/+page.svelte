@@ -231,6 +231,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Home | Next Jobs</title>
+</svelte:head>
+
 <div class="flex flex-col">
 	<NavBar />
 

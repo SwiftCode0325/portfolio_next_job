@@ -201,6 +201,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Job Posted | Next Jobs</title>
+</svelte:head>
+
 <div class="bg-gradient-to-bl from-pink-500 to-orange-400">
 	<NavBar />
 

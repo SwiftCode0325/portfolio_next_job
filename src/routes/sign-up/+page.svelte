@@ -85,7 +85,7 @@
 </script>
 
 <svelte:head>
-	<title>Create User | Next Jobs</title>
+	<title>Sign Up | Next Jobs</title>
 	<script src="/aws-sdk-s3.min.js"></script>
 </svelte:head>
 
