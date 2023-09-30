@@ -544,10 +544,10 @@
 												</div>
 											</div>
 
-											<!-- Company Logo Image -->
+											<!-- Upload Company Logo -->
 											<div class="sm:col-span-6 col-span-full p-2">
 												<label for="photo" class="block text-xl font-medium leading-6 text-gray-900"
-													>Upload Company Logo Image</label
+													>Upload Company Logo</label
 												>
 												<div class="mt-2 flex items-center gap-x-3">
 													{#if $isUploadFlipCardFile == true}
@@ -1165,12 +1165,12 @@
 														</div>
 													</div>
 
-													<!-- Company Logo Image -->
+													<!-- Upload Company Logo -->
 													<div class="sm:col-span-6 col-span-full p-2">
 														<label
 															for="photo"
 															class="block text-sm font-medium leading-6 text-gray-900"
-															>Upload Company Logo Image</label
+															>Upload Company Logo</label
 														>
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}

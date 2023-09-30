@@ -585,10 +585,10 @@
 												</div>
 											</div>
 
-											<!-- Company Logo Image -->
+											<!-- Upload Company Logo -->
 											<div class="sm:col-span-6 col-span-full p-2">
 												<span class="block text-xl font-medium text-gray-900"
-													>Upload Company Logo Image</span
+													>Upload Company Logo</span
 												>
 												<div class="mt-2 flex items-center gap-x-3">
 													{#if $isUploadFlipCardFile == true}
@@ -1205,11 +1205,11 @@
 														</div>
 													</div>
 
-													<!-- Company Logo Image -->
+													<!-- Upload Company Logo -->
 													<div class="sm:col-span-6 col-span-full p-2">
 														<span
 															class="block text-sm font-medium text-gray-900"
-															>Upload Company Logo Image</span
+															>Upload Company Logo</span
 														>
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}
