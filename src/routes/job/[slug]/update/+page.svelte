@@ -587,8 +587,8 @@
 
 											<!-- Company Logo Image -->
 											<div class="sm:col-span-6 col-span-full p-2">
-												<label for="photo" class="block text-xl font-medium text-gray-900"
-													>Upload Company Logo Image</label
+												<span class="block text-xl font-medium text-gray-900"
+													>Upload Company Logo Image</span
 												>
 												<div class="mt-2 flex items-center gap-x-3">
 													{#if $isUploadFlipCardFile == true}
@@ -620,11 +620,11 @@
 														<span>Change Image</span>
 													</label>
 													{#if $isUploadFlipCardFile == true}
-													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+													<label for="flipCard-file-upload" class="text-gray-900 h-4 flex items-center"
 														>{$selectedFile.slice(0, 20)}...</label
 													>
 													{:else}
-													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+													<label for="flipCard-file-upload" class="text-gray-900 h-4 flex items-center"
 														>{data.jobs.image_url.slice(0, 20)}...</label
 													>
 													{/if}
@@ -1207,10 +1207,9 @@
 
 													<!-- Company Logo Image -->
 													<div class="sm:col-span-6 col-span-full p-2">
-														<label
-															for="photo"
+														<span
 															class="block text-sm font-medium text-gray-900"
-															>Upload Company Logo Image</label
+															>Upload Company Logo Image</span
 														>
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}
@@ -1242,11 +1241,11 @@
 																<span>Change Image</span>
 															</label>
 															{#if $isUpload}
-																<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+																<label for="file-upload" class="text-gray-900 h-4 flex items-center"
 																	>{$selectedFile.slice(0, 20)}...</label
 																>
 															{:else}
-																<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+																<label for="file-upload" class="text-gray-900 h-4 flex items-center"
 																	>{data.jobs.image_url.slice(0, 20)}...</label
 																>
 															{/if}
