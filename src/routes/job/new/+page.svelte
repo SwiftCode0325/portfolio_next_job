@@ -546,8 +546,8 @@
 
 											<!-- Upload Company Logo -->
 											<div class="sm:col-span-6 col-span-full p-2">
-												<label for="photo" class="block text-xl font-medium leading-6 text-gray-900"
-													>Upload Company Logo</label
+												<span for="photo" class="block text-xl font-medium leading-6 text-gray-900 text-left"
+													>Upload Company Logo</span
 												>
 												<div class="mt-2 flex items-center gap-x-3">
 													{#if $isUploadFlipCardFile == true}
@@ -587,11 +587,11 @@
 														<span>Change Image</span>
 													</label>
 													{#if $isUploadFlipCardFile == true}
-													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+													<label for="flipCard-file-upload" class="text-gray-900 h-4 flex items-center"
 														>{$selectedFile.slice(0,15)}</label
 													>
 													{:else}
-													<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+													<label for="flipCard-file-upload" class="text-gray-900 h-4 flex items-center"
 														>{$selectedFile}</label
 													>
 													{/if}
@@ -1167,10 +1167,9 @@
 
 													<!-- Upload Company Logo -->
 													<div class="sm:col-span-6 col-span-full p-2">
-														<label
-															for="photo"
-															class="block text-sm font-medium leading-6 text-gray-900"
-															>Upload Company Logo</label
+														<span
+															class="block text-sm font-medium leading-6 text-gray-900 text-left"
+															>Upload Company Logo</span
 														>
 														<div class="mt-2 flex items-center gap-x-3">
 															{#if $isUpload == true}
@@ -1211,11 +1210,11 @@
 															</label>
 
 															{#if $isUpload == true}
-															<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+															<label for="file-upload" class="text-gray-900 h-4 flex items-center"
 																>{$selectedFile.slice(0,20)}</label
 															>
 															{:else}
-															<label for="fileInput" class="text-gray-900 h-4 flex items-center"
+															<label for="file-upload" class="text-gray-900 h-4 flex items-center"
 																>{$selectedFile}</label
 															>
 															{/if}

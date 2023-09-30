@@ -587,7 +587,7 @@
 
 											<!-- Upload Company Logo -->
 											<div class="sm:col-span-6 col-span-full p-2">
-												<span class="block text-xl font-medium text-gray-900"
+												<span class="block text-xl font-medium text-gray-900 text-left"
 													>Upload Company Logo</span
 												>
 												<div class="mt-2 flex items-center gap-x-3">
@@ -1208,7 +1208,7 @@
 													<!-- Upload Company Logo -->
 													<div class="sm:col-span-6 col-span-full p-2">
 														<span
-															class="block text-sm font-medium text-gray-900"
+															class="block text-sm font-medium text-gray-900 text-left"
 															>Upload Company Logo</span
 														>
 														<div class="mt-2 flex items-center gap-x-3">
