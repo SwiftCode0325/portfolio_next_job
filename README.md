@@ -57,13 +57,13 @@ You can preview the production build with `npm run preview`.
 
 4. Homepage - Part 3
 
-![4](https://github.com/kee-siang/portfolio_next_job/assets/59173905/52c7e4e2-361d-4e75-bead-4c39925b4cc1)
+![4](https://github.com/kee-siang/portfolio_next_job/assets/59173905/db179f78-5b55-4c92-9b5b-fa2715a93a47)
 
 
-5. Log In Page
+5. Login Page
 
-- This page is where users can log into their accounts.
-- A warning message will appear from the left corner if incorrect login details are entered.
+- This page is where users can log in their accounts.
+- A warning message will appear from the left corner if incorrect log in details are entered.
 
 ![5](https://github.com/kee-siang/portfolio_next_job/assets/59173905/5990b7f7-cd46-4ead-8c4a-68e891574681)
 
@@ -84,7 +84,7 @@ You can preview the production build with `npm run preview`.
 - A successful message will be pop up from the left corner if the username / image successfully changed.
 
 
-![7](https://github.com/kee-siang/portfolio_next_job/assets/59173905/00260c8b-17a6-4bbc-8839-a570a7d0680c)
+![7](https://github.com/kee-siang/portfolio_next_job/assets/59173905/bf5abf4f-5e69-42f6-ae7f-ace34c80fc44)
 
 
 8. Job Posted Page
@@ -105,19 +105,24 @@ You can preview the production build with `npm run preview`.
 
 - This page will let users to create new job records.
 
-![10](https://github.com/kee-siang/portfolio_next_job/assets/59173905/86d3b526-6d46-4fb3-8312-2c657836a867)
+![10](https://github.com/kee-siang/portfolio_next_job/assets/59173905/d9b6ff13-1369-4229-992f-19aca8ac9084)
 
 
 11. Edit Job Page
 
 - This page will let users to edit specific job records.
 
-![11](https://github.com/kee-siang/portfolio_next_job/assets/59173905/914683d1-79d1-42ec-95ba-a256fb69bd95)
+![11](https://github.com/kee-siang/portfolio_next_job/assets/59173905/37607dac-5367-4f48-8a90-ae10adeb0432)
 
 
 ## Website Layout (Mobile version)
 
-1. Homepage
+1. First Page
+
+<img width="201" alt="Screenshot 2023-10-03 124554" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/8f62893d-5bef-4488-b7f3-3d0788c26561">
+
+
+2. Homepage
    
 <img width="211" alt="Screenshot 2023-10-02 171528" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/d7a14c30-4237-42b0-a1d8-c682f47c238c">
 
@@ -126,41 +131,46 @@ You can preview the production build with `npm run preview`.
 <img width="214" alt="Screenshot 2023-10-02 171759" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/cf7df5aa-3963-476a-a051-929f13e4a4c5">
 
 
-2. Dashboard
+3. Dashboard
 
+- Dashboard Front and Back
 <img width="210" alt="Screenshot 2023-10-02 171835" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/1668db74-6749-4f44-9d10-865c1497e1af">
 
 <img width="209" alt="Screenshot 2023-10-02 171856" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/98c33e7e-e85e-4a73-a196-a127237ee4c4">
 
 
-3. Job Posted Page
+4. Job Posted Page
 
 <img width="202" alt="Screenshot 2023-10-02 171940" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/0b93d0f3-5cb5-4b20-91ab-5d5c1e06e74b">
 
 
-4. Post Job Page
+5. Post Job Page
 
+- Post Job Page Front and Back
 <img width="203" alt="Screenshot 2023-10-02 172005" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/18316dd3-2790-4e8a-995b-32f80a9b7222">
 
 <img width="201" alt="Screenshot 2023-10-02 172029" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/67ebbda0-eff0-4dc6-859b-3ce20e7d581d">
 
 
-5. Edit Job Page
+6. Edit Job Page
 
+- Edit Job Page Front and Back
 <img width="200" alt="Screenshot 2023-10-02 172057" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/f72f7c39-0abe-46b6-bc74-f0941df06fd6">
 
 <img width="200" alt="Screenshot 2023-10-02 172120" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/f27659e2-f97f-4452-9793-90df05a2a6a5">
 
 
-6. Log In Page
+7. Login Page
 
+- Login Page Front and Back
 <img width="202" alt="Screenshot 2023-10-02 172150" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/de91a1d8-173a-48c0-8967-12af8f05ae1b">
 
 <img width="203" alt="Screenshot 2023-10-02 172220" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/cdff785f-4a79-44df-82d3-bcba9c8ed8c7">
 
 
-7. Sign Up Page
+8. Sign Up Page
 
+- Sign Up Page Front and Back
 <img width="200" alt="Screenshot 2023-10-02 172249" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/ce08d935-042c-4f28-9ff4-26ac31ae39d6">
 
 <img width="200" alt="Screenshot 2023-10-02 172315" src="https://github.com/kee-siang/portfolio_next_job/assets/59173905/ed223f0c-d860-4942-9fc6-15584af5b5cf">
