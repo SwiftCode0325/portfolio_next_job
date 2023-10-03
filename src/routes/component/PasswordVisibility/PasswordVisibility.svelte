@@ -13,8 +13,8 @@ function togglePasswordVisibility() {
 
 <!-- password section -->
 							<div>
-								<label for="password" class="block text-lg sm:text-sm font-medium text-gray-900 text-left"
-									>Your Password</label
+								<span class="pb-1 block text-lg sm:text-sm font-medium text-gray-900 text-left"
+									>Your Password</span
 								>
 								<div class="relative">
 									<input

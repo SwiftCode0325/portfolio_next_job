@@ -13,10 +13,9 @@ function togglePasswordConfirmationVisibility() {
 
 <!-- password-confirmation section -->
 							<div>
-								<label
-									for="password-confirmation"
+								<span
 									class="pb-1 block text-lg sm:text-sm font-medium text-gray-900 text-left"
-									>Confirm Password</label
+									>Confirm Password</span
 								>
 								<div class="relative">
 									<input
