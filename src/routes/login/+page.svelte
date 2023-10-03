@@ -231,9 +231,9 @@
 							<!-- username section -->
 							<div>
 								<label
-									for="username"
+									for="flipCardUsername"
 									class="block mb-2 text-lg sm:text-base font-medium text-gray-900 text-left"
-									>Your username</label
+									>Your Username</label
 								>
 								<input
 									type="text"
@@ -242,15 +242,16 @@
 									placeholder="John Doe"
 									required
 									bind:value={username}
+									id="flipCardUsername"
 								/>
 							</div>
 
 							<!-- password section -->
 							<div>
 								<label
-									for="password"
+									for="flipCardPassword"
 									class="block pb-1 text-lg sm:text-base font-medium text-gray-900 text-left"
-									>Your password</label
+									>Your Password</label
 								>
 								<div class="relative">
 									{#if $showPassword}
@@ -261,6 +262,7 @@
 											class="bg-white border border-gray-300 text-gray-900 text-base sm:text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 											required
 											bind:value={password}
+											id="flipCardPassword"
 										/>
 									{:else}
 										<input
@@ -270,6 +272,7 @@
 											class="bg-white border border-gray-300 text-gray-900 text-base sm:text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 											required
 											bind:value={password}
+											id="flipCardPassword"
 										/>
 									{/if}
 									
@@ -459,7 +462,7 @@
 						<label
 							for="username"
 							class="block mb-2 text-sm font-medium text-gray-900"
-							>Your username</label
+							>Your Username</label
 						>
 						<input
 							type="text"
@@ -468,6 +471,7 @@
 							placeholder="John Doe"
 							required
 							bind:value={username}
+							id="username"
 						/>
 					</div>
 
@@ -476,7 +480,7 @@
 						<label
 							for="password"
 							class="block pb-1 text-lg sm:text-sm font-medium text-gray-900 text-left"
-							>Your password</label
+							>Your Password</label
 						>
 						<div class="relative">
 							{#if $showPassword}
@@ -487,6 +491,7 @@
 									class="bg-white border border-gray-300 text-gray-900 text-base sm:text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 									required
 									bind:value={password}
+									id="password"
 								/>
 							{:else}
 								<input
@@ -496,6 +501,7 @@
 									class="bg-white border border-gray-300 text-gray-900 text-base sm:text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 									required
 									bind:value={password}
+									id="password"
 								/>
 							{/if}
 							

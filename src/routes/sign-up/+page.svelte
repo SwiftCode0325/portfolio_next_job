@@ -358,8 +358,8 @@
 
 							<!-- username section -->
 							<div>
-								<label for="username" class="block pb-1 text-lg font-medium text-left text-gray-900"
-									>Your username</label
+								<label for="flipCardUsername" class="block pb-1 text-lg font-medium text-left text-gray-900"
+									>Your Username</label
 								>
 								<input
 									type="text"
@@ -367,6 +367,7 @@
 									class="bg-white border border-gray-300 text-gray-900 text-base rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 									placeholder="John Doe"
 									required
+									id="flipCardUsername"
 								/>
 								<div class="mt-2 flex items-center gap-x-3">
 									{#if $isUploadFlipCardFile == true}
@@ -401,7 +402,7 @@
 										/>
 										<span>Add Profile Picture</span>
 									</label>
-									<label for="fileInput" class="text-gray-500 h-4 flex items-center"
+									<label for="flipCard-file-upload" class="text-gray-500 h-4 flex items-center"
 										>{$selectedFile.slice(0, 15)}</label
 									>
 								</div>
@@ -409,7 +410,7 @@
 
 							<!-- email section -->
 							<div>
-								<label for="email" class="block pb-1 text-lg font-medium text-gray-900 text-left"
+								<label for="flipCardEmail" class="block pb-1 text-lg font-medium text-gray-900 text-left"
 									>Your Email</label
 								>
 								<input
@@ -418,6 +419,7 @@
 									placeholder="johndoe@example.com"
 									class="bg-white border border-gray-300 text-gray-900 text-base rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 									required
+									id="flipCardEmail"
 								/>
 							</div>
 
@@ -623,7 +625,7 @@
 						<label
 							for="username"
 							class="block pb-1 text-sm font-medium text-gray-900"
-							>Your username</label
+							>Your Username</label
 						>
 						<input
 							type="text"
@@ -631,6 +633,7 @@
 							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 							placeholder="John Doe"
 							required
+							id="username"
 						/>
 						<div class="mt-2 flex items-center gap-x-3">
 							{#if $isUpload == true}
@@ -665,7 +668,7 @@
 								/>
 								<span>Add Profile Picture</span>
 							</label>
-							<label for="fileInput" class="text-gray-500 h-4 flex items-center"
+							<label for="file-upload" class="text-gray-500 h-4 flex items-center"
 								>{$selectedFile.slice(0,20)}</label
 							>
 						</div>
@@ -682,6 +685,7 @@
 							placeholder="johndoe@example.com"
 							class="bg-white border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-pink-600 focus:border-pink-600 block w-full p-2.5"
 							required
+							id="email"
 						/>
 					</div>
 
