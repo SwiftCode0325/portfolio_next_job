@@ -712,7 +712,7 @@
 
 								<!-- Slider indicators -->
 								<div
-									class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 bottom-12 left-1/2"
+									class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 left-1/2 bottom-8"
 								>
 									<button
 										id="flip-card-carousel-indicator-1"
