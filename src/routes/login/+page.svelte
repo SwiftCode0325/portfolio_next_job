@@ -150,7 +150,7 @@
 				<button
 					type="button"
 					on:click={flip}
-					class="mr-2 text-2xl sm:text-lg sm:block md:hidden h-20 w-24 absolute left-3 justify-center items-center"
+					class="mr-2 text-2xl sm:text-lg block md:hidden h-20 w-24 absolute left-3 justify-center items-center z-10"
 				>
 					<div class="flex flex-row">
 						<svg
