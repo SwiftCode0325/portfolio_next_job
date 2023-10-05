@@ -52,6 +52,7 @@
 		<div id="flip-card-inner" class="flip-card-inner">
 			<div class="flip-card-front w-full h-full">
 				<button
+					type="button"
 					on:click={flipBack}
 					class="flex block sm:hidden absolute bottom-0 right-0 m-5 text-3xl font-bold text-gray-200"
 				>
@@ -147,6 +148,7 @@
 				{/if}
 
 				<button
+					type="button"
 					on:click={flip}
 					class="mr-2 text-2xl sm:text-lg sm:block md:hidden h-20 w-24 absolute left-3 justify-center items-center"
 				>
