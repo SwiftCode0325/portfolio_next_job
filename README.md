@@ -37,8 +37,9 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
-
 ## Website Layout (Web version)
+
+- For optimal web performance, it is advised to use Google Chrome when accessing the web version and an Android phone when accessing the mobile version.
 
 1. First Page - This is the first page when entering this website.
 
