@@ -156,7 +156,7 @@
 				>
 					Next
 					<svg
-						class="w-6 h-6 mt-2.5 ml-1"
+						class="w-6 h-6 mt-2 ml-1"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -177,7 +177,7 @@
 					<div class="flex">
 						<a href="/Home" class="text-3xl sm:text-xl mb-3 hover:underline">Home</a>
 						<svg
-							class="w-4 h-4 text-gray-200 ml-2 mt-3.5 sm:mt-2"
+							class="w-4 h-4 text-gray-200 ml-2 mt-3 sm:mt-2"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -355,7 +355,7 @@
 				>
 					<div class="flex flex-row">
 						<svg
-							class="w-3 h-3 mt-3 mr-2 text-white"
+							class="w-3 h-3 mt-2.5 mr-2 text-white"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -536,8 +536,8 @@
 									class="py-2 w-48 text-black text-center bg-white rounded-lg border-none mt-2 sm:mt-0 text-lg sm:text-base"
 									value={$isAuthenticated ? authData.userEmail : 'login first to show data'}
 									type="email"
-									name="user-email"
-									id="user-email"
+									name="flip-card-user-email"
+									id="flip-card-user-email"
 									disabled
 								/>
 							</div>

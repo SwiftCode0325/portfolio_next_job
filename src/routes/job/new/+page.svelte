@@ -249,7 +249,7 @@
 					<div class="flex">
 						<a href="/Home" class="text-3xl sm:text-xl mb-3 hover:underline">Home</a>
 						<svg
-							class="w-4 h-4 text-gray-200 ml-2 mt-3.5 sm:mt-2"
+							class="w-4 h-4 text-gray-200 ml-2 mt-3 sm:mt-2"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -274,7 +274,7 @@
 				>
 					Next
 					<svg
-						class="w-6 h-6 mt-2.5 ml-1"
+						class="w-6 h-6 mt-2 ml-1"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -301,7 +301,7 @@
 				>
 					<div class="flex flex-row">
 						<svg
-							class="w-3 h-3 mt-3 mr-2 text-gray-300"
+							class="w-3 h-3 mt-2.5 mr-2 text-gray-300"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -398,7 +398,7 @@
 									data-carousel-item="active"
 								>
 									<div
-										class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400"
+										class="block absolute top-1/2 left-1/2 w-full transform -translate-x-1/2 -translate-y-1/2 p-8 border round rounded-xl bg-gradient-to-br from-pink-500 to-orange-400 flip-card-carousel"
 									>
 										<div class="grid grid-cols-1 gap-x-6 gap-y-8 overflow-y-auto h-96">
 											<!-- Job Title section -->
@@ -712,7 +712,7 @@
 
 								<!-- Slider indicators -->
 								<div
-									class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 left-1/2 bottom-8"
+									class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 left-1/2 bottom-2"
 								>
 									<button
 										id="flip-card-carousel-indicator-1"
@@ -1537,7 +1537,3 @@
 		</div>
 	</div>
 </div>
-
-<style>
-	@import '../new/+page.css';
-</style>
