@@ -123,6 +123,7 @@
 }
 
 
+/* Flip card back side viewport css code */
 @media (min-width: 280px) and (max-width: 768px) {
     .formDivision {
         display: none;
@@ -131,4 +132,42 @@
 
 .carousel-item {
 	    transition: 1s ease-in-out;
+	}
+
+	@media (max-width:360px) {
+	    .carousel-indicator {
+	        bottom: 7px;
+	    }
+	}
+
+	@media (min-width:370px) and (max-width: 380px) {
+	    .carousel-indicator {
+	        bottom: 10px;
+	    }
+
+	    .flip-card-carousel-division {
+	        justify-content: center;
+	        margin-right: 10px;
+	    }
+
+	    .flip-card-carousel-form-division {
+	        margin-top: 0px;
+	    }
+
+	    .flip-back-card-division {
+	        margin-top: 20px;
+	        height: 500px;
+	    }
+	}
+
+	@media (min-width:390px) and (max-width: 400px) {
+	    .carousel-indicator {
+	        bottom: 30px;
+	    }
+	}
+
+	@media (min-width:401px) and (max-width:500px){
+		.carousel-indicator{
+			bottom: 40px;
+		}
 	}
