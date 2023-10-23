@@ -209,7 +209,7 @@
 				evt.target['list-checklist-part'].checked ? 'Part Time' : '',
 				evt.target['list-checklist-remote'].checked ? 'Remote' : ''
 			],
-			image_url: fileUrl
+			image_url: $isUploadFlipCardFile ? fileUrl : data.jobs.image_url
 		};
 
 		const resp = await fetch(
@@ -283,7 +283,7 @@
 					<div class="flex">
 						<a href="/Home" class="text-3xl sm:text-xl mb-3 hover:underline">Home</a>
 						<svg
-							class="w-4 h-4 text-gray-200 ml-2 mt-3.5 sm:mt-2"
+							class="w-4 h-4 text-gray-200 ml-2 mt-3 sm:mt-2"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -308,7 +308,7 @@
 				>
 					Next
 					<svg
-						class="w-6 h-6 mt-2.5 ml-1"
+						class="w-6 h-6 mt-2 ml-1"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -335,7 +335,7 @@
 				>
 					<div class="flex flex-row">
 						<svg
-							class="w-3 h-3 mt-3 mr-2 text-gray-300"
+							class="w-3 h-3 mt-2.5 mr-2 text-gray-300"
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -749,7 +749,7 @@
 
 								<!-- Slider indicators -->
 								<div
-									class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 bottom-12 left-1/2"
+									class="carousel-indicator absolute z-30 flex space-x-3 -translate-x-1/2 bottom-2 left-1/2"
 								>
 									<button
 										id="flip-card-carousel-indicator-1"
@@ -1579,6 +1579,3 @@
 	</div>
 </div>
 
-<style>
-	@import '../update/+page.css';
-</style>
