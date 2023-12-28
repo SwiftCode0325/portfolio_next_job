@@ -1382,7 +1382,7 @@
 						</div>
 					</div>
 
-					<div class="flex items-center justify-center p-2">
+					<div class="flex items-center justify-center">
 						<div class="flex justify-center space-x-4 p-2 w-56">
 							{#if $currentPosition > 0}
 								<!-- prev button -->

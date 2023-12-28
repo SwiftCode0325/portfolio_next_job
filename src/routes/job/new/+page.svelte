@@ -244,7 +244,7 @@
 <div class="flex h-screen w-screen">
 	<!-- Post Job Section -->
 
-	<div id="flip-card" class="sm:w-6/12 w-full h-full">
+	<div id="flip-card" class="sm:w-6/12 w-full h-full ">
 		<div id="flip-card-inner" class="flip-card-inner">
 			<div class="flip-card-front w-full h-full">
 				<div
@@ -949,7 +949,7 @@
 			<div class="slide-down transition">
 				<form on:submit={createJob}>
 					<div class="space-y-10">
-						<div class="pb-2">
+						<div class="pb-2 ">
 							<div class="flex">
 								<svg
 									version="1.1"
@@ -1351,7 +1351,7 @@
 						</div>
 					</div>
 
-					<div class="flex items-center justify-center p-2">
+					<div class="flex items-center justify-center">
 						<div class="flex justify-center space-x-4 p-2 w-56">
 							{#if $currentPosition > 0}
 								<!-- prev button -->
