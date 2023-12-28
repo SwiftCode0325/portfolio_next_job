@@ -166,8 +166,14 @@
 	    }
 	}
 
-	@media (min-width:401px) and (max-width:500px){
+	@media (min-width:401px) and (max-width:429px){
 		.carousel-indicator{
-			bottom: 40px;
+			bottom: 30px;
+		}
+	}
+
+	@media (min-width:430px) and (max-width: 500px){
+		.carousel-indicator{
+			bottom: 50px;
 		}
 	}
