@@ -74,13 +74,13 @@
 	function flip() {
 		flipCardInner = document.getElementById('flip-card-inner');
 
-		flipCardInner.style.transform = 'rotateY(0deg)';
+		flipCardInner.style.cssText = "-o-transform: rotateY(0); -webkit-transform: rotateY(0); -ms-transform: rotateY(0); transform: rotateY(0);";
 	}
 
 	function flipBack() {
 		flipCardInner = document.getElementById('flip-card-inner');
 
-		flipCardInner.style.transform = 'rotateY(180deg)';
+		flipCardInner.style.cssText = "-o-transform: rotateY(-180deg); -webkit-transform: rotateY(-180deg); -ms-transform: rotateY(-180deg); transform: rotateY(-180deg);";
 	}
 </script>
 

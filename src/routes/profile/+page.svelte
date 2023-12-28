@@ -12,6 +12,7 @@
 	let authData = '';
 	let userPic = '';
 	let getError = writable(false);
+	let error = writable(false);
   	let flipCardInner;
 	let successChangedProfileImage = writable(false)
 	let successChangedUsername = writable(false)
@@ -67,6 +68,15 @@
 
 		editForUsername.set(false);
 
+		if(document.getElementById('user-name').value == authData.userName || document.getElementById('flip-card-user-name').value == authData.userName){
+			error.set(true);
+			document.getElementById('user-name').value = authData.userName
+			document.getElementById('flip-card-user-name').value = authData.userName
+			return;
+		}else{
+			error.set(false);
+		}
+
 		const userData = {
 			username: evt.target['user-name'].value
 		};
@@ -90,9 +100,12 @@
 			const res = await resp.json();
 			formErrors = res.data;
 			getError.set(true);
+			document.getElementById('user-name').value = authData.userName;
+			document.getElementById('flip-card-user-name').value = authData.userName;
 		}
 	}
 
+	//function to allow edit//
 	function usernameEdit() {
 		editForUsername.set(true);
 
@@ -116,17 +129,18 @@
 	function flip() {
 		flipCardInner = document.getElementById('flip-card-inner');
 
-		flipCardInner.style.transform = 'rotateY(0deg)';
+		flipCardInner.style.cssText = "-o-transform: rotateY(0); -webkit-transform: rotateY(0); -ms-transform: rotateY(0); transform: rotateY(0);";
 	}
 
 	function flipBack() {
 		flipCardInner = document.getElementById('flip-card-inner');
 
-		flipCardInner.style.transform = 'rotateY(180deg)';
+		flipCardInner.style.cssText = "-o-transform: rotateY(-180deg); -webkit-transform: rotateY(-180deg); -ms-transform: rotateY(-180deg); transform: rotateY(-180deg);";
 	}
 
 	function closeWindow() {
 		getError.set(false);
+		error.set(false);
 	}
 
 	function closeSuccessMessageForChangedProfileImage () {
@@ -199,7 +213,7 @@
 
 			<div class="flip-card-back flex justify-center bg-gradient-to-br from-pink-500 to-orange-400">
 				<!-- Profile detail -->
-				<!-- If loginStatus is true, show the warning message -->
+				<!-- If getError is true, show the warning message -->
 				{#if $getError}
 					<div
 						class="warningMessageSlideRight z-10 flex absolute top-2 right-0 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
@@ -221,6 +235,54 @@
 							{#if 'username' in formErrors}
 								Warning: {formErrors['username'].message}
 							{/if}
+						</div>
+						<button
+							on:click={closeWindow}
+							type="button"
+							class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
+							data-dismiss-target="#alert-2"
+							aria-label="Close"
+						>
+							<span class="sr-only">Close</span>
+							<svg
+								class="w-3 h-3"
+								aria-hidden="true"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 14 14"
+							>
+								<path
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+								/>
+							</svg>
+						</button>
+					</div>
+				{/if}
+
+				<!-- If input value same as original username, this error message will be pop up. -->
+				{#if $error}
+					<div
+						class="warningMessageSlideRight z-10 flex absolute top-2 right-12 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
+						role="alert"
+					>
+						<svg
+							class="flex-shrink-0 w-4 h-4"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+						>
+							<path
+								d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
+							/>
+						</svg>
+						<span class="sr-only">Info</span>
+						<div class="ml-3 text-sm font-medium pr-2">
+							The username already in use. 
 						</div>
 						<button
 							on:click={closeWindow}
@@ -598,6 +660,55 @@
 				</button>
 			</div>
 		{/if}
+
+		<!-- If input value same as original username, this error message will be pop up. -->
+		{#if $error}
+			<div
+				class="warningMessageSlideRight z-10 flex absolute top-2 left-2 items-center p-4 text-yellow-800 rounded-lg bg-yellow-50"
+				role="alert"
+			>
+				<svg
+					class="flex-shrink-0 w-4 h-4"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="currentColor"
+					viewBox="0 0 20 20"
+				>
+					<path
+						d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
+						/>
+				</svg>
+					<span class="sr-only">Info</span>
+					<div class="ml-3 text-sm font-medium pr-2">
+						The username already in use. 
+					</div>
+					<button
+						on:click={closeWindow}
+						type="button"
+						class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-200 inline-flex items-center justify-center h-8 w-8"
+						data-dismiss-target="#alert-2"
+						aria-label="Close"
+					>
+					<span class="sr-only">Close</span>
+					<svg
+						class="w-3 h-3"
+						aria-hidden="true"
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 14 14"
+					>
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+						/>
+					</svg>
+						</button>
+					</div>
+		{/if}
+
 
 		<!-- If success sign up show success notification -->
 				{#if $successChangedProfileImage}

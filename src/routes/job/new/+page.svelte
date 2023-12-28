@@ -219,16 +219,20 @@
 		isLoading.set(false);
 	}
 
+	/*-webkit-: This prefix is used for CSS properties in WebKit-based browsers, like Safari and older versions of Chrome12.
+	  -o-: This prefix is used for CSS properties in Opera browsers1.
+      -ms-: This prefix is used for CSS properties in Microsoft browsers, like Internet Explorer and Edge1 */
+	
 	function flip() {
 		flipCardInner = document.getElementById('flip-card-inner');
 
-		flipCardInner.style.transform = 'rotateY(0deg)';
+		flipCardInner.style.cssText = "-o-transform: rotateY(0); -webkit-transform: rotateY(0); -ms-transform: rotateY(0); transform: rotateY(0);";
 	}
 
 	function flipBack() {
 		flipCardInner = document.getElementById('flip-card-inner');
 
-		flipCardInner.style.transform = 'rotateY(180deg)';
+		flipCardInner.style.cssText = "-o-transform: rotateY(-180deg); -webkit-transform: rotateY(-180deg); -ms-transform: rotateY(-180deg); transform: rotateY(-180deg);";
 	}
 </script>
 
