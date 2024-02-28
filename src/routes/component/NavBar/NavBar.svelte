@@ -8,6 +8,12 @@ import { onMount } from 'svelte';
 
 let profileDropDownMenu = writable(false);
 let authData = '';
+let background_image;
+
+onMount( () => {
+  background_image = "/background-img5.png"
+})
+
 
 onMount(async () => {
   authData = JSON.parse(await isLoggedIn());
@@ -33,7 +39,7 @@ export function openProfileDropDownMenu () {
 </script>
 
 
-<nav class="flex justify-between h-96 bg-cover bg-no-repeat bg-top" style="background-image: url('/background-img5.png');">
+<nav class="flex justify-between h-96 bg-cover bg-no-repeat bg-top" style="background-image: url({background_image});">
   <div class="flex items-center p-4 h-24">
     <!-- Left-hand side content -->
   <a href="/Home" class="flex items-center hover:bg-gray-300 rounded-full p-2 group">
