@@ -15,11 +15,12 @@
 		'background-img4.png'
 	];
 	let currentQuote = quotes[0];
-	let currentBgIndex = backgrounds[0];
+	let currentBgIndex;
 	let quoteIndex = 0;
 	let BgIndex = 0;
 	let fadeIn = true; // To track the fade-in/fade-out state
 	onMount(() => {
+		currentBgIndex = backgrounds[0];
 		// Simulate loading progress increment
 		const interval = setInterval(() => {
 			progress += 10; // Increment by 10 for smoother transitions
