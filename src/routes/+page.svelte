@@ -20,7 +20,12 @@
 	let BgIndex = 0;
 	let fadeIn = true; // To track the fade-in/fade-out state
 	onMount(() => {
-		currentBgIndex = backgrounds[0];
+
+		//preload the background image//
+		const img = new Image();
+		img.src = backgrounds[0];
+		img.onload = () => {
+			currentBgIndex = backgrounds[0];
 		// Simulate loading progress increment
 		const interval = setInterval(() => {
 			progress += 10; // Increment by 10 for smoother transitions
@@ -44,6 +49,8 @@
 				}
 			}
 		}, 2500);
+
+		}
 	});
 </script>
 

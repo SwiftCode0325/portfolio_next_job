@@ -768,9 +768,10 @@
 					>
 						<div class="flex gap-x-4 flex-col md:flex-row">
 							{#if job.image_url}
-								<img class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="" />
+								<img rel="preload" class="h-12 w-12 flex-none rounded-full" src={job.image_url} alt="" />
 							{:else}
 								<img
+									rel="preload"
 									class="h-12 w-12 flex-none rounded-full"
 									src="question-mark.png"
 									alt="question-mark logo"
